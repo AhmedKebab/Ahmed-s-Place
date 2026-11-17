@@ -69,16 +69,16 @@ const enemyCatalog = [
   },
 ];
 const backgroundRenders = [
-  "https://i.ytimg.com/vi/54jnZ_L-CQo/sddefault.jpg",
-  "https://tr.rbxcdn.com/180DAY-17c81fe0bba2dc36d0245a36701fd5ed/768/432/Image/Webp/noFilter",
-  "https://tr.rbxcdn.com/180DAY-05e5b064c5b7b1e373bb6e1722e9c3e2/768/432/Image/Webp/noFilter",
-  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRG0D8IhnA9Rt8ko5NOUDk1z3PZpP4CtELSwilINkqd1uqbqCEEvfgHjRii&s=10",
-  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSc_jGhVRQfeWP3cgqwVIzwnybLjJFPETDHNan89CIBqycBesZY-o9kWrmv&s=10",
-  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQgSb3HLtQqfLAzbswzPlmYc1_Z4GHEKQMdKwWPTiD2TsvwBsZrL5Xr-rTL&s=10",
-  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTTqu9idmuKHU6rKA8MvhzJiP9K2GXuY7uuvXVZVShYZSl_641CzXllwDBh&s=10",
-  "https://i.redd.it/dof7oth5k1sg1.png",
-  "https://preview.redd.it/more-renders-v0-o99f4r2owknh1.png?auto=webp&s=26cf751064f88d82b16b84ff5ac8c17457d5cbc5",
-  "https://pbs.twimg.com/media/G884WCfWUAAgqS-?format=webp&name=large",
+  "assets/background-renders/render-01.webp",
+  "assets/background-renders/render-02.webp",
+  "assets/background-renders/render-03.webp",
+  "assets/background-renders/render-04.webp",
+  "assets/background-renders/render-05.webp",
+  "assets/background-renders/render-06.webp",
+  "assets/background-renders/render-07.webp",
+  "assets/background-renders/render-08.webp",
+  "assets/background-renders/render-09.webp",
+  "assets/background-renders/render-10.webp",
 ];
 const mediaFileDirectories = new Map([
   ["Gilbert's_Execution.mp4", "dc"],
@@ -139,7 +139,7 @@ const beginButton = document.querySelector("#begin-button");
 const backButton = document.querySelector("#back-button");
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 const imageSceneDuration = 12000;
-const minimumBackgroundAspectRatio = 1.3;
+const minimumBackgroundAspectRatio = 1.6;
 const settingsVersion = 2;
 
 let renderQueue = [];
@@ -278,7 +278,7 @@ function shuffledRenderIndices() {
 function takeNextRenderIndex() {
   const availableRenderCount = backgroundRenders.length - excludedRenderIndices.size;
   if (availableRenderCount === 0) {
-    console.error("No suitable background images are available for the main menu.");
+    console.error("No wide background images are available for the main menu.");
     return null;
   }
   if (availableRenderCount <= recentRenderLimit) {
