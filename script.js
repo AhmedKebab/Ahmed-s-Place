@@ -87,6 +87,15 @@ const backgroundRenders = [
   "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTBE--L8q9AhHh5d8jtTms4DHzKSjVXBw8zm_R-uKH6DQ-52sUoyMHrGpU&s=10",
   "https://i.redd.it/qgtmbsh5k1sg1.png",
   "https://i.redd.it/dof7oth5k1sg1.png",
+  "https://tr.rbxcdn.com/180DAY-05e5b064c5b7b1e373bb6e1722e9c3e2/768/432/Image/Webp/noFilter",
+  "https://i.redd.it/zxsffrks0enh1.jpg",
+  "https://tr.rbxcdn.com/180DAY-805b9a80b6e3fe79aa5282ad010d178a/768/432/Image/Webp/noFilter",
+  "https://tr.rbxcdn.com/180DAY-92c5d5b84c0832e6ada24b5632cf8b02/768/432/Image/Webp/noFilter",
+  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT1YGGkeKCEgkPU5rl2dlRSwZZCT7xzKP5clwO2muR89mNP6EjmYorbnzXY&s=10",
+  "https://tr.rbxcdn.com/180DAY-46fb99217316a7403822ac5e3fc377d9/768/432/Image/Webp/noFilter",
+  "https://i.ytimg.com/vi/YKljjTHFP9Y/maxresdefault.jpg",
+  "https://static.deltiasgaming.com/2025/07/EXAMINATION.jpg",
+  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRbmgcXzch5n6A6kHNdEUrTLU9ClbsjyLPRQf2BOod_1Xo42JWKhpeZJTA&s=10",
 ];
 const mediaFileDirectories = new Map([
   ["Gilbert's_Execution.mp4", "dc"],
@@ -143,7 +152,7 @@ const reconstructEffect = document.querySelector("#reconstruct-effect");
 const beginButton = document.querySelector("#begin-button");
 const backButton = document.querySelector("#back-button");
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-const imageSceneDuration = 22000;
+const imageSceneDuration = 3100;
 const settingsVersion = 2;
 
 let renderQueue = [];
@@ -283,10 +292,7 @@ function showNextRender() {
   const source = backgroundRenders[previousRenderIndex];
   nextImage.onload = () => {
     const aspectRatio = nextImage.naturalWidth / nextImage.naturalHeight;
-    const isSmallRender = nextImage.naturalWidth < 1200 ||
-      nextImage.naturalHeight < 700 ||
-      aspectRatio < 1.45;
-    if (isSmallRender) {
+    if (aspectRatio < 1.45) {
       if (mediaModal.hidden) showNextRender();
       return;
     }
@@ -295,7 +301,7 @@ function showNextRender() {
     void nextImage.offsetWidth;
     nextImage.classList.add("is-visible", "is-animating");
 
-    activeBackgroundImage?.classList.remove("is-visible", "is-animating");
+    activeBackgroundImage?.classList.remove("is-visible");
     activeBackgroundImage = nextImage;
     if (mediaModal.hidden) {
       carouselTimer = window.setTimeout(showNextRender, imageSceneDuration);

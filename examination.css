@@ -141,7 +141,7 @@ body {
   filter: brightness(0.78) contrast(1.08) saturate(0.86);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 2800ms ease-in-out;
+  transition: opacity 350ms ease-in-out;
 }
 
 .background-image.is-visible {
@@ -149,7 +149,7 @@ body {
 }
 
 .background-image.is-animating {
-  animation: gta-cinematic-pan 22s ease-in-out both;
+  animation: gta-cinematic-pan 3450ms ease-in-out both;
 }
 
 @keyframes gta-cinematic-pan {
