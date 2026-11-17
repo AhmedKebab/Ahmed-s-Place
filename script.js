@@ -147,6 +147,7 @@ let previousRenderIndex = -1;
 const recentRenderLimit = 7;
 const recentRenderIndices = [];
 const excludedRenderIndices = new Set();
+const uiSoundControlSelector = "button, .settings-menu summary, .settings-field select, .wiki-link";
 let carouselTimer;
 let activeScreen = introScreen;
 let pendingScreen = null;
@@ -155,7 +156,61 @@ let currentEnemyId = null;
 let enemyCatalogScrollTop = 0;
 let activeMediaTrigger = null;
 let activeBackgroundImage = null;
+let uiAudioContext = null;
 const settingsStorageKey = "examination-site-settings";
+
+function scheduleUiTone(context, frequencyStart, frequencyEnd, duration, volume, waveform) {
+  const startedAt = context.currentTime;
+  const oscillator = context.createOscillator();
+  const envelope = context.createGain();
+
+  oscillator.type = waveform;
+  oscillator.frequency.setValueAtTime(frequencyStart, startedAt);
+  oscillator.frequency.exponentialRampToValueAtTime(frequencyEnd, startedAt + duration);
+  envelope.gain.setValueAtTime(0.0001, startedAt);
+  envelope.gain.exponentialRampToValueAtTime(volume, startedAt + 0.008);
+  envelope.gain.exponentialRampToValueAtTime(0.0001, startedAt + duration);
+  oscillator.connect(envelope);
+  envelope.connect(context.destination);
+  oscillator.addEventListener("ended", () => {
+    oscillator.disconnect();
+    envelope.disconnect();
+  }, { once: true });
+  oscillator.start(startedAt);
+  oscillator.stop(startedAt + duration);
+}
+
+function playUiSound(kind) {
+  if (document.visibilityState !== "visible") return;
+
+  if (!uiAudioContext) {
+    const AudioContextConstructor = window.AudioContext ?? window.webkitAudioContext;
+    if (!AudioContextConstructor) {
+      console.error("Web Audio is not supported; interface sounds are unavailable.");
+      return;
+    }
+    uiAudioContext = new AudioContextConstructor();
+  }
+
+  const play = () => {
+    if (kind === "hover") {
+      scheduleUiTone(uiAudioContext, 760, 960, 0.065, 0.022, "sine");
+      return;
+    }
+    scheduleUiTone(uiAudioContext, 520, 310, 0.11, 0.05, "triangle");
+    scheduleUiTone(uiAudioContext, 780, 560, 0.08, 0.018, "sine");
+  };
+
+  if (uiAudioContext.state === "running") {
+    play();
+    return;
+  }
+  uiAudioContext.resume().then(play).catch((error) => {
+    if (error.name !== "NotAllowedError") {
+      console.error("Unable to resume interface sounds.", error);
+    }
+  });
+}
 
 function setSettingsStatus(message) {
   settingsStatus.textContent = message;
@@ -664,6 +719,17 @@ mediaModal.addEventListener("click", (event) => {
 });
 window.addEventListener("keydown", (event) => {
   if (event.key === "Escape" && !mediaModal.hidden) closeMediaVideo();
+});
+
+document.addEventListener("pointerover", (event) => {
+  if (event.pointerType !== "mouse" || !(event.target instanceof Element)) return;
+  const control = event.target.closest(uiSoundControlSelector);
+  if (!control || (event.relatedTarget instanceof Node && control.contains(event.relatedTarget))) return;
+  playUiSound("hover");
+});
+document.addEventListener("click", (event) => {
+  if (!(event.target instanceof Element) || !event.target.closest(uiSoundControlSelector)) return;
+  playUiSound("press");
 });
 
 mediaPlayer.addEventListener("pause", () => {
