@@ -95,6 +95,9 @@ const detailScreen = document.querySelector("#detail-screen");
 const detailTitle = document.querySelector("#detail-title");
 const detailViewport = document.querySelector("#detail-viewport");
 const enemyWikiLink = document.querySelector("#enemy-wiki-link");
+const mediaModal = document.querySelector("#media-modal");
+const mediaPlayer = document.querySelector("#media-player");
+const mediaClose = document.querySelector("#media-close");
 const reconstructEffect = document.querySelector("#reconstruct-effect");
 const beginButton = document.querySelector("#begin-button");
 const backButton = document.querySelector("#back-button");
@@ -108,6 +111,9 @@ let transitionTimer;
 let activeScreen = introScreen;
 let pendingScreen = null;
 let isTransitioning = false;
+let currentEnemyId = null;
+let enemyCatalogScrollTop = 0;
+let activeMediaTrigger = null;
 
 function shuffledClipIndices() {
   const queue = clips.map((_, index) => index);
@@ -200,6 +206,12 @@ categoryScreen.addEventListener("click", (event) => {
   transitionTo(detailScreen);
 });
 
+function getEnemyId(section, enemy) {
+  const sectionId = section.label.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+  const enemyId = enemy.name.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+  return `${sectionId}-${enemyId}`;
+}
+
 function renderEnemyCatalog() {
   detailViewport.innerHTML = enemyCatalog
     .map(
@@ -210,7 +222,7 @@ function renderEnemyCatalog() {
             ${section.enemies
               .map(
                 (enemy) => `
-                  <button class="enemy-card" type="button" data-enemy-name="${enemy.name}" aria-label="View ${enemy.name}">
+                  <button class="enemy-card" type="button" data-enemy-id="${getEnemyId(section, enemy)}" aria-label="View ${enemy.name}">
                     <img src="${enemy.image}" alt="${enemy.name}" loading="lazy" />
                     <span>${enemy.name}</span>
                   </button>
@@ -225,21 +237,227 @@ function renderEnemyCatalog() {
 
   detailViewport.querySelectorAll(".enemy-card").forEach((card) => {
     card.addEventListener("click", () => {
-      const enemyName = card.dataset.enemyName;
-      detailViewport.setAttribute("data-selected-enemy", enemyName);
-      detailViewport.querySelectorAll(".enemy-card").forEach((item) => {
-        const isSelected = item.dataset.enemyName === enemyName;
-        item.classList.toggle("is-selected", isSelected);
-      });
+      enemyCatalogScrollTop = detailViewport.scrollTop;
+      currentEnemyId = card.dataset.enemyId;
+      const enemy = enemyCatalog
+        .flatMap((section) => section.enemies.map((item) => ({
+          ...item,
+          category: section.label,
+          id: getEnemyId(section, item),
+        })))
+        .find((item) => item.id === currentEnemyId);
+      if (!enemy) {
+        console.error(`Unable to find enemy data for ${currentEnemyId}.`);
+        return;
+      }
+
+      detailTitle.textContent = enemy.name;
+      enemyWikiLink.hidden = true;
+      backButton.textContent = "Back to Enemies";
+      if (currentEnemyId === "regulars-lurker") {
+        renderLurkerDetail(enemy);
+      } else {
+        renderEnemyPlaceholder(enemy);
+      }
+      detailViewport.scrollTop = 0;
+      detailTitle.focus();
     });
   });
+}
+
+function renderEnemyPlaceholder(enemy) {
+  detailViewport.innerHTML = `
+    <article class="enemy-detail enemy-detail-placeholder">
+      <img class="enemy-detail-portrait" src="${enemy.image}" alt="${enemy.name}" />
+      <div>
+        <p class="enemy-category-label">${enemy.category}</p>
+        <h2>${enemy.name}</h2>
+        <p>Information for this enemy will be added when it is ready.</p>
+      </div>
+    </article>
+  `;
+}
+
+function renderLurkerDetail(enemy) {
+  const variantImages = [
+    { name: "Engineer", image: "https://static.wikitide.net/examinationwiki/7/7b/Engineer_Lurker.png" },
+    { name: "Welder", image: "https://static.wikitide.net/examinationwiki/a/ae/Welder_Lurker.png" },
+    { name: "RSU", image: "https://static.wikitide.net/examinationwiki/thumb/f/fb/RSU_Lurker.png/600px-RSU_Lurker.png" },
+    { name: "MMS", image: "https://static.wikitide.net/examinationwiki/e/e7/MMS_Lurker.png" },
+    { name: "HPCA", image: "https://static.wikitide.net/examinationwiki/b/b2/HPCA_Lurker.png" },
+    { name: "RIF OZK", image: "https://static.wikitide.net/examinationwiki/f/f3/OZK_Lurker.png" },
+  ];
+  const animations = [
+    { name: "Execution animation 1", file: "Lurker_Execution_1.mp4" },
+    { name: "Execution animation 2", file: "Lurker_Execution_2.mp4" },
+    { name: "Execution animation 3", file: "Lurker_Execution_3.mp4" },
+    { name: "Save animation", file: "Lurker_Save.mp4" },
+    { name: "Maul animation", file: "Lurker_Maul.mp4" },
+  ];
+  const wikiFile = (file) => `${examinationWiki}/Special:FilePath/${encodeURIComponent(file)}`;
+
+  detailViewport.innerHTML = `
+    <article class="enemy-detail">
+      <header class="enemy-detail-hero">
+        <img class="enemy-detail-portrait" src="${enemy.image}" alt="${enemy.name}" />
+        <div>
+          <p class="enemy-category-label">Regulars · Combat Archive</p>
+          <h2>Lurker</h2>
+          <p>Simple basic things. Basic fodder, basic everywhere. Just don't let them have their bloody hands on you.</p>
+          <p>Lurker is the most common type of enemy in Examination. They have average speed and damage, possessing no special attributes of their own. They are only dangerous in groups.</p>
+        </div>
+      </header>
+
+      <section class="enemy-info-section">
+        <h3>Variants</h3>
+        <div class="lurker-variant-grid">
+          ${variantImages.map((variant) => `
+            <figure class="lurker-variant">
+              <img src="${variant.image}" alt="${variant.name} Lurker" loading="lazy" />
+              <figcaption>${variant.name}</figcaption>
+            </figure>
+          `).join("")}
+        </div>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Health and stats</h3>
+        <div class="enemy-table-wrap">
+          <table class="enemy-stats">
+            <tbody>
+              <tr><th scope="row">Health</th><td>150 HP</td></tr>
+              <tr><th scope="row">Regeneration</th><td>1.5 HP/s</td></tr>
+              <tr><th scope="row">Walk speed</th><td>9</td></tr>
+              <tr><th scope="row">Run speed</th><td>17</td></tr>
+              <tr><th scope="row">Primary equipment</th><td>Fists</td></tr>
+              <tr><th scope="row">Damage</th><td>15</td></tr>
+              <tr><th scope="row">Execution threshold</th><td>Below 30 HP</td></tr>
+              <tr><th scope="row">Respawn time</th><td>2 minutes 10 seconds</td></tr>
+              <tr><th scope="row">Drop</th><td>None</td></tr>
+              <tr><th scope="row">Gender</th><td>Male</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Behavior and spawns</h3>
+        <p>Six Lurkers spawn on the map by default. More may spawn as the player count increases. Each variant has a prioritized spawn location.</p>
+        <div class="enemy-table-wrap">
+          <table class="enemy-stats spawn-table">
+            <thead><tr><th scope="col">Variant</th><th scope="col">Prioritized spawn location</th></tr></thead>
+            <tbody>
+              <tr><td>Engineer</td><td>Near Sector 1 entrance</td></tr>
+              <tr><td>Welder</td><td>Near Sector 1 entrance</td></tr>
+              <tr><td>RSU</td><td>Sector 1, near Generator 2</td></tr>
+              <tr><td>MMS</td><td>Center of Sector 1</td></tr>
+              <tr><td>HPCA</td><td>Sector 2, near Library and Resting rooms</td></tr>
+              <tr><td>RIF OZK</td><td>Sector 3, in Subsector-1</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Lurkers take 2 minutes and 10 seconds to respawn after death.</p>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Attacks</h3>
+        <p>Lurkers punch their target, dealing 15 damage per hit with a 1-second cooldown and short attack range.</p>
+        <p>If a Lurker hits a player below 30 HP, it attempts an execution. There is a 50% chance that a save animation plays instead: the player fights back and kicks the Lurker away, becomes infected, and is healed to 15 HP. The Lurker cannot attack for 3 seconds afterward.</p>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Rage</h3>
+        <p>Near a Viral Leader, a Lurker becomes enraged: its eyes turn red and it screams constantly. Its damage drops to 10, attack cooldown to 0.6 seconds, and chase speed increases to 30 studs/s. It also gains the Maul ability.</p>
+        <h4>Maul</h4>
+        <p>After landing four punches, the Lurker mauls the next player it hits. The special animation makes the Lurker completely invincible. The player loses 45 HP and becomes Marked. Marked players turn into a Viral on death even if they were not infected. Maul cannot reduce a player's HP below 1.</p>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Sounds</h3>
+        <p>Enraged Lurker — plays on loop while the Lurker is enraged.</p>
+        <audio class="enemy-audio" controls preload="none" src="${wikiFile("Enraged_Lurker.mp3")}">
+          Your browser does not support audio playback.
+        </audio>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Animation gallery</h3>
+        <div class="animation-grid">
+          ${animations.map((animation) => `
+            <button class="animation-card" type="button" data-video-src="${wikiFile(animation.file)}" aria-label="Play ${animation.name}">
+              <span class="animation-play-icon" aria-hidden="true">▶</span>
+              <span>${animation.name}</span>
+            </button>
+          `).join("")}
+        </div>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Lore</h3>
+        <p>Lurkers are the “standard” variant of those affected by the WE-30 pathogen. Their durability and strength are nearly identical to a healthy human, but their awareness and intelligence are significantly impaired, making them predictable as they always take direct paths to their prey.</p>
+        <p>Given enough lifetime, Lurkers have the potential to mutate into other variants of the pathogen.</p>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Trivia</h3>
+        <p>Early in Examination's development, Lurkers could grab both of a player's arms and hold them in place for other infected to attack. The code was considered too complicated, so the feature was scrapped; Virals were given the Maul ability instead.</p>
+        <p>This may have been inspired by the grab ability of Shamblers from Guts &amp; Blackpowder.</p>
+      </section>
+    </article>
+  `;
+
+  detailViewport.querySelectorAll("[data-video-src]").forEach((button) => {
+    button.addEventListener("click", () => openMediaVideo(button.dataset.videoSrc, button));
+  });
+}
+
+function openMediaVideo(source, trigger) {
+  activeMediaTrigger = trigger;
+  mediaPlayer.src = source;
+  mediaModal.hidden = false;
+  mediaClose.focus();
+  const playback = mediaPlayer.play();
+  if (playback) {
+    playback.catch((error) => {
+      console.error("Unable to play the selected enemy animation.", error);
+    });
+  }
+}
+
+function closeMediaVideo() {
+  mediaPlayer.pause();
+  mediaPlayer.removeAttribute("src");
+  mediaPlayer.load();
+  mediaModal.hidden = true;
+  activeMediaTrigger?.focus();
+  activeMediaTrigger = null;
 }
 
 detailScreen.addEventListener("animationend", (event) => {
   if (event.target === detailScreen) detailScreen.classList.remove("is-entering");
 });
 
-backButton.addEventListener("click", () => transitionTo(categoryScreen));
+backButton.addEventListener("click", () => {
+  if (currentEnemyId) {
+    currentEnemyId = null;
+    detailTitle.textContent = "Enemies";
+    enemyWikiLink.hidden = false;
+    backButton.textContent = "Back";
+    renderEnemyCatalog();
+    detailViewport.scrollTop = enemyCatalogScrollTop;
+    detailTitle.focus();
+    return;
+  }
+  transitionTo(categoryScreen);
+});
+
+mediaClose.addEventListener("click", closeMediaVideo);
+mediaModal.addEventListener("click", (event) => {
+  if (event.target === mediaModal) closeMediaVideo();
+});
+window.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && !mediaModal.hidden) closeMediaVideo();
+});
 
 soundButton.addEventListener("click", () => {
   video.muted = !video.muted;

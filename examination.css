@@ -266,15 +266,18 @@ body {
 
 .detail-screen {
   place-items: stretch;
+  padding: clamp(12px, 2vw, 24px);
 }
 
 .detail-content {
   display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
   justify-items: stretch;
   gap: 18px;
   width: min(100%, 1260px);
   min-width: min(100%, 300px);
-  max-height: calc(100vh - 60px);
+  max-height: 100%;
+  min-height: 0;
   padding: clamp(16px, 2vw, 28px);
   border: 1px solid rgba(205, 211, 221, 0.14);
   background: rgba(5, 6, 9, 0.32);
@@ -295,6 +298,7 @@ body {
   display: grid;
   width: 100%;
   gap: 24px;
+  min-height: 0;
   overflow-y: auto;
   padding-right: 8px;
 }
@@ -383,6 +387,211 @@ body {
   font-weight: 600;
   letter-spacing: 0.11em;
   text-transform: uppercase;
+}
+
+.enemy-detail {
+  display: grid;
+  gap: 28px;
+  color: #dce2eb;
+  line-height: 1.65;
+}
+
+.enemy-detail h2,
+.enemy-detail h3,
+.enemy-detail h4 {
+  margin: 0;
+  color: #edf3ff;
+}
+
+.enemy-detail h2 {
+  margin-bottom: 12px;
+  font-size: clamp(24px, 3vw, 38px);
+  letter-spacing: 0.08em;
+}
+
+.enemy-detail h3 {
+  margin-bottom: 12px;
+  font-size: clamp(18px, 2vw, 24px);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.enemy-detail h4 {
+  margin: 18px 0 6px;
+}
+
+.enemy-detail p {
+  margin: 0 0 12px;
+}
+
+.enemy-detail-hero {
+  display: grid;
+  grid-template-columns: minmax(180px, 300px) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(20px, 4vw, 44px);
+}
+
+.enemy-detail-portrait {
+  display: block;
+  width: 100%;
+  max-height: 280px;
+  object-fit: contain;
+  border: 1px solid rgba(192, 199, 210, 0.2);
+  background: rgba(0, 0, 0, 0.14);
+}
+
+.enemy-category-label {
+  color: #aebccd;
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.enemy-info-section {
+  padding-top: 20px;
+  border-top: 1px solid rgba(205, 211, 221, 0.15);
+}
+
+.lurker-variant-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 12px;
+}
+
+.lurker-variant {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 10px;
+  border: 1px solid rgba(192, 199, 210, 0.2);
+  background: rgba(8, 10, 14, 0.4);
+  text-align: center;
+}
+
+.lurker-variant img {
+  width: 100%;
+  height: 130px;
+  object-fit: contain;
+}
+
+.lurker-variant figcaption {
+  color: #edf3ff;
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.enemy-table-wrap {
+  overflow-x: auto;
+}
+
+.enemy-stats {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.enemy-stats th,
+.enemy-stats td {
+  padding: 9px 12px;
+  border-bottom: 1px solid rgba(205, 211, 221, 0.12);
+}
+
+.enemy-stats th {
+  color: #edf3ff;
+  font-weight: 600;
+}
+
+.enemy-stats tbody th {
+  width: 38%;
+}
+
+.enemy-stats thead th {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.enemy-audio {
+  display: block;
+  width: min(100%, 560px);
+}
+
+.animation-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 12px;
+}
+
+.animation-card {
+  display: grid;
+  min-height: 110px;
+  place-content: center;
+  gap: 8px;
+  padding: 14px;
+  border: 1px solid rgba(192, 199, 210, 0.28);
+  background: linear-gradient(135deg, rgba(28, 32, 39, 0.56), rgba(8, 10, 14, 0.48));
+  color: #edf3ff;
+  cursor: pointer;
+  font: inherit;
+  text-align: center;
+}
+
+.animation-card:hover,
+.animation-card:focus-visible {
+  border-color: rgba(225, 230, 238, 0.7);
+  outline: 2px solid rgba(225, 230, 238, 0.45);
+  outline-offset: 2px;
+}
+
+.animation-play-icon {
+  font-size: 1.5rem;
+}
+
+.enemy-detail-placeholder {
+  grid-template-columns: minmax(160px, 260px) minmax(0, 1fr);
+  align-items: start;
+}
+
+.enemy-detail-placeholder .enemy-detail-portrait {
+  grid-row: span 2;
+}
+
+.media-modal {
+  position: fixed;
+  z-index: 5;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(0, 0, 0, 0.96);
+}
+
+.media-modal[hidden] {
+  display: none;
+}
+
+.media-modal video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.media-close {
+  position: absolute;
+  z-index: 1;
+  top: 16px;
+  right: 20px;
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  border: 1px solid rgba(225, 230, 238, 0.7);
+  border-radius: 50%;
+  background: rgba(5, 6, 9, 0.8);
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+  font-size: 30px;
+  line-height: 1;
 }
 
 .wiki-link {
@@ -523,6 +732,23 @@ body {
   .detail-content {
     min-width: min(100%, 280px);
     padding: 28px 22px;
+  }
+
+  .detail-screen {
+    padding: 14px;
+  }
+
+  .enemy-detail-hero,
+  .enemy-detail-placeholder {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .enemy-detail-portrait {
+    max-height: 220px;
+  }
+
+  .media-modal {
+    padding: 12px;
   }
 
   .cinematic-mask::before,
