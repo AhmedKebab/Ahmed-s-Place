@@ -144,6 +144,42 @@ body {
   opacity: 0;
 }
 
+.background-image {
+  position: absolute;
+  z-index: -2;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 34%;
+  filter: brightness(0.78) contrast(1.08) saturate(0.86);
+  opacity: 1;
+  pointer-events: none;
+  transition: opacity 350ms ease;
+}
+
+.background-image.is-fading {
+  opacity: 0;
+}
+
+.background-image.is-animating {
+  animation: gilbert-cinematic-pan 12s ease-in-out both;
+}
+
+.background-image.is-paused {
+  animation-play-state: paused;
+}
+
+@keyframes gilbert-cinematic-pan {
+  from {
+    transform: scale(1.04) translate3d(1%, 0.6%, 0);
+  }
+
+  to {
+    transform: scale(1.16) translate3d(-1.5%, -1%, 0);
+  }
+}
+
 .showcase-shade {
   position: absolute;
   z-index: -1;

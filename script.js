@@ -72,6 +72,7 @@ const clips = [
   "Cerberus_Intro_Cutscene.mp4",
   "Sinitzyn_QTE_Success.mp4",
   "Sinitzyn_P2_Execution.mp4",
+  "Official_render_of_Gilbert.png",
 ];
 const mediaFileDirectories = new Map([
   ["Gilbert's_Execution.mp4", "dc"],
@@ -81,6 +82,7 @@ const mediaFileDirectories = new Map([
   ["Chimera_Alt_P2_Execution.mp4", "2a"],
   ["Sinitzyn_P2_Execution.mp4", "2d"],
   ["Sinitzyn_QTE_Success.mp4", "57"],
+  ["Official_render_of_Gilbert.png", "70"],
   ["Sinitzyn_QTE_Fail.mp4", "e1"],
   ["Cerberus_Intro_Cutscene.mp4", "6b"],
   ["CI_Turn_1.mp4", "4e"],
@@ -107,6 +109,7 @@ function mediaFileUrl(filename) {
 }
 
 const video = document.querySelector("#examination-video");
+const backgroundImage = document.querySelector("#background-image");
 const showcase = document.querySelector(".showcase");
 const introScreen = document.querySelector("#intro-screen");
 const categoryScreen = document.querySelector("#category-screen");
@@ -126,6 +129,7 @@ const beginButton = document.querySelector("#begin-button");
 const backButton = document.querySelector("#back-button");
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 const fadeDuration = 350;
+const imageSceneDuration = 12000;
 const settingsVersion = 2;
 
 let clipQueue = [];
@@ -139,6 +143,7 @@ let isTransitioning = false;
 let currentEnemyId = null;
 let enemyCatalogScrollTop = 0;
 let activeMediaTrigger = null;
+let activeBackgroundImage = false;
 let backgroundSoundEnabled = backgroundSoundSetting.checked;
 let backgroundSoundStarted = false;
 let isBackgroundSuspendedForGallery = false;
@@ -269,7 +274,7 @@ function playBackgroundClip(filename) {
 function startBackgroundPlayback() {
   backgroundSoundStarted = true;
   updateSoundControls();
-  playBackgroundClip(clips[previousClipIndex]);
+  if (!activeBackgroundImage) playBackgroundClip(clips[previousClipIndex]);
 }
 
 function startBackgroundPlaybackFromGesture() {
@@ -315,12 +320,46 @@ function playNextClip() {
   recentClipIndices.push(previousClipIndex);
   if (recentClipIndices.length > recentClipLimit) recentClipIndices.shift();
   const filename = clips[previousClipIndex];
+  window.clearTimeout(transitionTimer);
+  if (filename.endsWith(".png")) {
+    playBackgroundImage(filename);
+    return;
+  }
+
+  activeBackgroundImage = false;
+  backgroundImage.classList.add("is-fading");
+  backgroundImage.classList.remove("is-paused");
   video.classList.add("is-fading");
   video.autoplay = true;
   video.controls = false;
   video.src = mediaFileUrl(filename);
   video.load();
   playBackgroundClip(filename);
+}
+
+function playBackgroundImage(filename) {
+  activeBackgroundImage = true;
+  isBackgroundSuspendedForGallery = true;
+  video.pause();
+  video.removeAttribute("src");
+  video.load();
+  isBackgroundSuspendedForGallery = false;
+  video.classList.add("is-fading");
+  backgroundImage.classList.add("is-fading");
+  backgroundImage.classList.remove("is-animating", "is-paused");
+  backgroundImage.onload = () => {
+    backgroundImage.classList.remove("is-fading");
+    backgroundImage.classList.add("is-animating");
+    transitionTimer = window.setTimeout(() => {
+      backgroundImage.classList.add("is-fading");
+      transitionTimer = window.setTimeout(playNextClip, fadeDuration);
+    }, imageSceneDuration);
+  };
+  backgroundImage.onerror = () => {
+    console.error(`Unable to load background image ${filename}.`);
+    transitionTimer = window.setTimeout(playNextClip, 2000);
+  };
+  backgroundImage.src = mediaFileUrl(filename);
 }
 
 function showScreen(screen) {
@@ -598,6 +637,7 @@ function openMediaVideo(source, trigger) {
   activeMediaTrigger = trigger;
   isBackgroundSuspendedForGallery = true;
   window.clearTimeout(transitionTimer);
+  if (activeBackgroundImage) backgroundImage.classList.add("is-paused");
   video.pause();
   mediaPlayer.classList.remove("is-fading");
   mediaPlayer.controls = false;
@@ -624,7 +664,13 @@ function closeMediaVideo() {
   activeMediaTrigger?.focus();
   activeMediaTrigger = null;
   isBackgroundSuspendedForGallery = false;
-  if (video.ended) {
+  if (activeBackgroundImage) {
+    backgroundImage.classList.remove("is-paused");
+    transitionTimer = window.setTimeout(() => {
+      backgroundImage.classList.add("is-fading");
+      transitionTimer = window.setTimeout(playNextClip, fadeDuration);
+    }, imageSceneDuration);
+  } else if (video.ended) {
     playNextClip();
   } else {
     playBackgroundClip(clips[previousClipIndex]);
@@ -704,6 +750,7 @@ video.addEventListener("ended", () => {
 });
 
 video.addEventListener("error", () => {
+  if (isBackgroundSuspendedForGallery || activeBackgroundImage) return;
   const filename = clips[previousClipIndex];
   console.error(`Unable to load Examination clip ${filename}.`, video.error);
   window.clearTimeout(transitionTimer);
