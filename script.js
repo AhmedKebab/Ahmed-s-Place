@@ -118,6 +118,7 @@ let currentEnemyId = null;
 let enemyCatalogScrollTop = 0;
 let activeMediaTrigger = null;
 let backgroundSoundEnabled = backgroundSoundSetting.checked;
+let backgroundSoundStarted = false;
 const settingsStorageKey = "examination-site-settings";
 
 function setSettingsStatus(message) {
@@ -205,11 +206,12 @@ function applyVisualSettings() {
 }
 
 function updateSoundControls() {
-  video.muted = !backgroundSoundEnabled;
+  video.muted = !backgroundSoundStarted || !backgroundSoundEnabled;
   backgroundSoundSetting.checked = backgroundSoundEnabled;
 }
 
 function startBackgroundPlayback() {
+  backgroundSoundStarted = true;
   video.muted = !backgroundSoundEnabled;
   const playback = video.play();
   if (playback) {
@@ -241,7 +243,6 @@ function playNextClip() {
   previousClipIndex = clipQueue.pop();
   const filename = clips[previousClipIndex];
   video.classList.add("is-fading");
-  video.muted = !backgroundSoundEnabled;
   video.autoplay = true;
   video.controls = false;
   video.src = `${examinationWiki}/Special:FilePath/${encodeURIComponent(filename).replaceAll("'", "%27")}`;
@@ -586,6 +587,7 @@ window.addEventListener("keydown", (event) => {
 });
 
 video.addEventListener("volumechange", () => {
+  if (!backgroundSoundStarted) return;
   const enabled = !video.muted;
   if (enabled === backgroundSoundEnabled) return;
   backgroundSoundEnabled = enabled;
@@ -595,6 +597,20 @@ video.addEventListener("volumechange", () => {
 
 video.addEventListener("loadeddata", () => {
   window.requestAnimationFrame(() => video.classList.remove("is-fading"));
+});
+
+video.addEventListener("pause", () => {
+  if (video.ended || video.readyState === 0) return;
+  const playback = video.play();
+  if (playback) {
+    playback.catch((error) => {
+      if (error.name === "NotAllowedError") {
+        console.info("Background playback is waiting for browser permission.");
+      } else {
+        console.error("Unable to resume background Examination playback.", error);
+      }
+    });
+  }
 });
 
 video.addEventListener("timeupdate", () => {
