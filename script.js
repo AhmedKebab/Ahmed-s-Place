@@ -144,6 +144,8 @@ const settingsVersion = 2;
 
 let clipQueue = [];
 let previousClipIndex = -1;
+const recentClipLimit = 7;
+const recentClipIndices = [];
 let transitionTimer;
 let activeScreen = introScreen;
 let pendingScreen = null;
@@ -288,16 +290,28 @@ function shuffledClipIndices() {
     const swapIndex = Math.floor(Math.random() * (index + 1));
     [queue[index], queue[swapIndex]] = [queue[swapIndex], queue[index]];
   }
-  if (queue.length > 1 && queue.at(-1) === previousClipIndex) {
-    [queue[0], queue[queue.length - 1]] = [queue.at(-1), queue[0]];
-  }
   return queue;
 }
 
-function playNextClip() {
-  if (clipQueue.length === 0) clipQueue = shuffledClipIndices();
+function takeNextClipIndex() {
+  const recentClips = new Set(recentClipIndices);
+  while (true) {
+    if (clipQueue.length === 0) clipQueue = shuffledClipIndices();
 
-  previousClipIndex = clipQueue.pop();
+    for (let index = clipQueue.length - 1; index >= 0; index -= 1) {
+      if (!recentClips.has(clipQueue[index])) {
+        return clipQueue.splice(index, 1)[0];
+      }
+    }
+
+    clipQueue = [];
+  }
+}
+
+function playNextClip() {
+  previousClipIndex = takeNextClipIndex();
+  recentClipIndices.push(previousClipIndex);
+  if (recentClipIndices.length > recentClipLimit) recentClipIndices.shift();
   const filename = clips[previousClipIndex];
   video.classList.add("is-fading");
   video.autoplay = true;
