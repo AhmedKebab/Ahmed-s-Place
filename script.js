@@ -673,18 +673,9 @@ video.addEventListener("pause", () => {
   playBackgroundClip(clips[previousClipIndex]);
 });
 
-video.addEventListener("timeupdate", () => {
-  if (!Number.isFinite(video.duration)) return;
-  const remaining = video.duration - video.currentTime;
-  if (remaining > 0 && remaining <= fadeDuration / 1000) {
-    video.classList.add("is-fading");
-  }
-});
-
 video.addEventListener("ended", () => {
-  const needsFade = !video.classList.contains("is-fading");
   video.classList.add("is-fading");
-  transitionTimer = window.setTimeout(playNextClip, needsFade ? fadeDuration : 0);
+  transitionTimer = window.setTimeout(playNextClip, fadeDuration);
 });
 
 video.addEventListener("error", () => {
