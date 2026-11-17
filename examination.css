@@ -70,12 +70,12 @@ body {
 }
 
 .showcase[data-theme="city"] .brand-panel {
-  background-color: #2a1213;
+  background-color: rgba(42, 18, 19, 0.18);
   border-color: rgba(213, 132, 112, 0.28);
 }
 
 .showcase[data-theme="rasonian"] .brand-panel {
-  background-color: #141c13;
+  background-color: rgba(20, 28, 19, 0.18);
   border-color: rgba(177, 190, 133, 0.28);
 }
 
@@ -118,7 +118,7 @@ body {
   backdrop-filter: blur(5px);
 }
 
-.showcase[data-quality="extreme"] :is(.category-card, .enemy-card, .animation-card, .detail-content, .brand-panel) {
+.showcase[data-quality="extreme"] :is(.category-card, .enemy-card, .animation-card, .detail-content) {
   background-image:
     radial-gradient(ellipse at var(--pointer-x, 50%) var(--pointer-y, 50%), rgba(255, 255, 255, 0.13), transparent 48%),
     linear-gradient(135deg, var(--theme-panel), rgba(8, 10, 14, 0.58));
@@ -153,10 +153,10 @@ body {
 }
 
 .background-image.is-side-render {
-  inset: 4% 2% 4% var(--menu-width);
+  inset: 0 0 0 var(--menu-width);
   width: auto;
-  height: 92%;
-  object-fit: contain;
+  height: 100%;
+  object-fit: cover;
   object-position: left center;
   filter: drop-shadow(0 16px 42px rgba(0, 0, 0, 0.6)) brightness(0.86) contrast(1.06) saturate(0.9);
 }
@@ -230,7 +230,7 @@ body {
   display: flex;
   width: var(--menu-width);
   padding: clamp(28px, 4vw, 64px) clamp(24px, 3.5vw, 52px);
-  background: #050609;
+  background: rgba(5, 6, 9, 0.18);
   border-right: 1px solid rgba(205, 211, 221, 0.1);
   backdrop-filter: blur(2px);
   transition:
@@ -1076,9 +1076,9 @@ body {
   }
 
   .background-image.is-side-render {
-    inset: 6% 1% 6% var(--menu-width);
+    inset: 0 0 0 var(--menu-width);
     width: auto;
-    height: 88%;
+    height: 100%;
     object-position: left center;
   }
 }
