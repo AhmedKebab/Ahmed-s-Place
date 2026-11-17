@@ -160,7 +160,10 @@ let enemyCatalogScrollTop = 0;
 let activeMediaTrigger = null;
 let activeBackgroundImage = null;
 let uiAudioContext = null;
-let settingsMenuAnimation = null;
+let settingsMenuIsAnimating = false;
+let settingsPanelHasFinished = false;
+let settingsGearHasFinished = true;
+let settingsMenuTransitionTimer;
 const settingsStorageKey = "examination-site-settings";
 
 function scheduleUiTone(context, frequencyStart, frequencyEnd, duration, volume, waveform) {
@@ -214,6 +217,21 @@ function playUiSound(kind) {
       console.error("Unable to resume interface sounds.", error);
     }
   });
+}
+
+function finishSettingsMenuTransition(force = false) {
+  if (!settingsMenuIsAnimating) return;
+  if (!force && (!settingsPanelHasFinished || !settingsGearHasFinished)) return;
+  window.clearTimeout(settingsMenuTransitionTimer);
+  if (settingsMenu.classList.contains("is-closing")) {
+    settingsMenu.open = false;
+  }
+  settingsMenu.classList.remove("is-opening", "is-closing");
+  settingsControls.style.removeProperty("max-height");
+  settingsControls.style.removeProperty("opacity");
+  settingsControls.style.removeProperty("transform");
+  settingsControls.style.removeProperty("overflow-y");
+  settingsMenuIsAnimating = false;
 }
 
 function setSettingsStatus(message) {
@@ -733,38 +751,56 @@ document.addEventListener("pointerover", (event) => {
 });
 settingsMenuSummary.addEventListener("click", (event) => {
   event.preventDefault();
-  if (settingsMenuAnimation) return;
+  if (settingsMenuIsAnimating) return;
+  const isClosing = settingsMenu.open;
+  settingsMenuIsAnimating = true;
+  settingsPanelHasFinished = false;
+  settingsGearHasFinished = isClosing;
+  settingsControls.style.overflowY = "hidden";
 
   if (settingsMenu.open) {
     settingsMenu.classList.add("is-closing");
     const height = settingsControls.getBoundingClientRect().height;
-    settingsMenuAnimation = settingsControls.animate([
-      { maxHeight: `${height}px`, opacity: 1, transform: "translateY(0) scaleY(1)" },
-      { maxHeight: "0px", opacity: 0, transform: "translateY(-18px) scaleY(0.9)" },
-    ], {
-      duration: prefersReducedMotion.matches ? 1 : 420,
-      easing: "cubic-bezier(0.4, 0, 0.2, 1)",
+    settingsControls.style.maxHeight = `${height}px`;
+    settingsControls.style.opacity = "1";
+    settingsControls.style.transform = "translateY(0)";
+    void settingsControls.offsetHeight;
+    requestAnimationFrame(() => {
+      settingsControls.style.maxHeight = "0px";
+      settingsControls.style.opacity = "0";
+      settingsControls.style.transform = "translateY(-24px)";
     });
-    settingsMenuAnimation.onfinish = () => {
-      settingsMenu.open = false;
-      settingsMenu.classList.remove("is-closing");
-      settingsMenuAnimation = null;
-    };
-    return;
+  } else {
+    settingsMenu.classList.remove("is-closing");
+    settingsMenu.open = true;
+    settingsControls.style.maxHeight = "0px";
+    settingsControls.style.opacity = "0";
+    settingsControls.style.transform = "translateY(-24px)";
+    void settingsControls.offsetHeight;
+    const maxHeight = Math.min(settingsControls.scrollHeight, window.innerHeight * 0.58, 480);
+    requestAnimationFrame(() => {
+      settingsMenu.classList.add("is-opening");
+      settingsControls.style.maxHeight = `${maxHeight}px`;
+      settingsControls.style.opacity = "1";
+      settingsControls.style.transform = "translateY(0)";
+    });
   }
 
-  settingsMenu.open = true;
-  const maxHeight = Math.min(settingsControls.scrollHeight, window.innerHeight * 0.58, 480);
-  settingsMenuAnimation = settingsControls.animate([
-    { maxHeight: "0px", opacity: 0, transform: "translateY(-18px) scaleY(0.9)" },
-    { maxHeight: `${maxHeight}px`, opacity: 1, transform: "translateY(0) scaleY(1)" },
-  ], {
-    duration: prefersReducedMotion.matches ? 1 : 520,
-    easing: "cubic-bezier(0.2, 0.8, 0.2, 1)",
-  });
-  settingsMenuAnimation.onfinish = () => {
-    settingsMenuAnimation = null;
-  };
+  settingsMenuTransitionTimer = window.setTimeout(
+    () => finishSettingsMenuTransition(true),
+    prefersReducedMotion.matches ? 100 : 820,
+  );
+});
+settingsControls.addEventListener("transitionend", (event) => {
+  if (event.target === settingsControls && event.propertyName === "max-height") {
+    settingsPanelHasFinished = true;
+    finishSettingsMenuTransition();
+  }
+});
+settingsMenu.querySelector(".settings-gear").addEventListener("animationend", (event) => {
+  if (event.animationName !== "settings-gear-spin") return;
+  settingsGearHasFinished = true;
+  finishSettingsMenuTransition();
 });
 document.addEventListener("click", (event) => {
   if (!(event.target instanceof Element) || !event.target.closest(uiSoundControlSelector)) return;
