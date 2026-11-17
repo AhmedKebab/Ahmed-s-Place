@@ -153,12 +153,14 @@ const beginButton = document.querySelector("#begin-button");
 const backButton = document.querySelector("#back-button");
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 const imageSceneDuration = 12000;
+const minimumBackgroundAspectRatio = 1.6;
 const settingsVersion = 2;
 
 let renderQueue = [];
 let previousRenderIndex = -1;
 const recentRenderLimit = 7;
 const recentRenderIndices = [];
+const excludedRenderIndices = new Set();
 let carouselTimer;
 let activeScreen = introScreen;
 let pendingScreen = null;
@@ -252,7 +254,9 @@ function applyVisualSettings() {
 }
 
 function shuffledRenderIndices() {
-  const queue = backgroundRenders.map((_, index) => index);
+  const queue = backgroundRenders
+    .map((_, index) => index)
+    .filter((index) => !excludedRenderIndices.has(index));
   for (let index = queue.length - 1; index > 0; index -= 1) {
     const swapIndex = Math.floor(Math.random() * (index + 1));
     [queue[index], queue[swapIndex]] = [queue[swapIndex], queue[index]];
@@ -261,7 +265,12 @@ function shuffledRenderIndices() {
 }
 
 function takeNextRenderIndex() {
-  if (backgroundRenders.length <= recentRenderLimit) {
+  const availableRenderCount = backgroundRenders.length - excludedRenderIndices.size;
+  if (availableRenderCount === 0) {
+    console.error("No wide background images are available for the main menu.");
+    return null;
+  }
+  if (availableRenderCount <= recentRenderLimit) {
     if (renderQueue.length === 0) renderQueue = shuffledRenderIndices();
     return renderQueue.pop();
   }
@@ -283,6 +292,7 @@ function takeNextRenderIndex() {
 function showNextRender() {
   window.clearTimeout(carouselTimer);
   previousRenderIndex = takeNextRenderIndex();
+  if (previousRenderIndex === null) return;
   recentRenderIndices.push(previousRenderIndex);
   if (recentRenderIndices.length > recentRenderLimit) recentRenderIndices.shift();
 
@@ -291,6 +301,13 @@ function showNextRender() {
     : backgroundImages[0];
   const source = backgroundRenders[previousRenderIndex];
   nextImage.onload = () => {
+    if (nextImage.naturalWidth / nextImage.naturalHeight < minimumBackgroundAspectRatio) {
+      excludedRenderIndices.add(previousRenderIndex);
+      renderQueue = renderQueue.filter((index) => index !== previousRenderIndex);
+      if (mediaModal.hidden) showNextRender();
+      return;
+    }
+
     nextImage.classList.remove("is-visible", "is-animating");
     void nextImage.offsetWidth;
     nextImage.classList.add("is-visible", "is-animating");
