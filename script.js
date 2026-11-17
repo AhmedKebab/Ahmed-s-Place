@@ -71,6 +71,7 @@ const enemyCatalog = [
 const clips = [
   "Cerberus_Intro_Cutscene.mp4",
   "Sinitzyn_QTE_Success.mp4",
+  "Sinitzyn_P2_Execution.mp4",
 ];
 const mediaFileDirectories = new Map([
   ["Gilbert's_Execution.mp4", "dc"],
