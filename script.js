@@ -98,12 +98,10 @@ const enemyWikiLink = document.querySelector("#enemy-wiki-link");
 const themeSetting = document.querySelector("#theme-setting");
 const qualitySetting = document.querySelector("#quality-setting");
 const backgroundSoundSetting = document.querySelector("#background-sound-setting");
-const gallerySoundSetting = document.querySelector("#gallery-sound-setting");
 const settingsStatus = document.querySelector("#settings-status");
 const mediaModal = document.querySelector("#media-modal");
 const mediaPlayer = document.querySelector("#media-player");
 const mediaClose = document.querySelector("#media-close");
-const gallerySoundButton = document.querySelector("#gallery-sound-button");
 const reconstructEffect = document.querySelector("#reconstruct-effect");
 const beginButton = document.querySelector("#begin-button");
 const backButton = document.querySelector("#back-button");
@@ -120,7 +118,6 @@ let currentEnemyId = null;
 let enemyCatalogScrollTop = 0;
 let activeMediaTrigger = null;
 let backgroundSoundEnabled = backgroundSoundSetting.checked;
-let gallerySoundEnabled = gallerySoundSetting.checked;
 const settingsStorageKey = "examination-site-settings";
 
 function setSettingsStatus(message) {
@@ -178,12 +175,6 @@ function loadSavedSettings() {
   } else {
     invalidFields.push("background sound");
   }
-  if (typeof savedSettings.gallerySound === "boolean") {
-    gallerySoundSetting.checked = savedSettings.gallerySound;
-  } else {
-    invalidFields.push("gallery sound");
-  }
-
   if (invalidFields.length > 0) {
     console.error(`Saved Examination settings have invalid fields: ${invalidFields.join(", ")}.`);
     setSettingsStatus(`Some saved settings were invalid and have been reset: ${invalidFields.join(", ")}.`);
@@ -197,7 +188,6 @@ function saveSettings() {
     theme: themeSetting.value,
     quality: qualitySetting.value,
     backgroundSound: backgroundSoundEnabled,
-    gallerySound: gallerySoundEnabled,
   };
   try {
     window.localStorage.setItem(settingsStorageKey, JSON.stringify(settings));
@@ -217,11 +207,6 @@ function applyVisualSettings() {
 function updateSoundControls() {
   video.muted = !backgroundSoundEnabled;
   backgroundSoundSetting.checked = backgroundSoundEnabled;
-
-  mediaPlayer.muted = !gallerySoundEnabled;
-  gallerySoundSetting.checked = gallerySoundEnabled;
-  gallerySoundButton.textContent = gallerySoundEnabled ? "Video sound: On" : "Video sound: Off";
-  gallerySoundButton.setAttribute("aria-pressed", String(gallerySoundEnabled));
 }
 
 function startBackgroundPlayback() {
@@ -322,13 +307,6 @@ backgroundSoundSetting.addEventListener("change", () => {
   saveSettings();
   if (backgroundSoundEnabled) startBackgroundPlayback();
 });
-gallerySoundSetting.addEventListener("change", () => {
-  gallerySoundEnabled = gallerySoundSetting.checked;
-  updateSoundControls();
-  saveSettings();
-  if (gallerySoundEnabled && !mediaModal.hidden) startGalleryPlayback();
-});
-
 reconstructEffect.addEventListener("animationend", (event) => {
   if (event.target !== reconstructEffect || !pendingScreen) return;
   const screen = pendingScreen;
@@ -560,7 +538,6 @@ function renderLurkerDetail(enemy) {
 
 function openMediaVideo(source, trigger) {
   activeMediaTrigger = trigger;
-  mediaPlayer.muted = !gallerySoundEnabled;
   mediaPlayer.src = source;
   mediaModal.hidden = false;
   mediaClose.focus();
@@ -571,19 +548,6 @@ function openMediaVideo(source, trigger) {
         console.info("Gallery playback with sound is waiting for browser permission.");
       } else {
         console.error("Unable to play the selected enemy animation.", error);
-      }
-    });
-  }
-}
-
-function startGalleryPlayback() {
-  const playback = mediaPlayer.play();
-  if (playback) {
-    playback.catch((error) => {
-      if (error.name === "NotAllowedError") {
-        console.info("Gallery playback with sound is waiting for browser permission.");
-      } else {
-        console.error("Unable to enable sound for the selected enemy animation.", error);
       }
     });
   }
@@ -624,25 +588,10 @@ window.addEventListener("keydown", (event) => {
   if (event.key === "Escape" && !mediaModal.hidden) closeMediaVideo();
 });
 
-gallerySoundButton.addEventListener("click", () => {
-  gallerySoundEnabled = !gallerySoundEnabled;
-  updateSoundControls();
-  saveSettings();
-  if (gallerySoundEnabled) startGalleryPlayback();
-});
-
 video.addEventListener("volumechange", () => {
   const enabled = !video.muted;
   if (enabled === backgroundSoundEnabled) return;
   backgroundSoundEnabled = enabled;
-  updateSoundControls();
-  saveSettings();
-});
-
-mediaPlayer.addEventListener("volumechange", () => {
-  const enabled = !mediaPlayer.muted;
-  if (enabled === gallerySoundEnabled) return;
-  gallerySoundEnabled = enabled;
   updateSoundControls();
   saveSettings();
 });
@@ -675,7 +624,7 @@ video.addEventListener("error", () => {
 prefersReducedMotion.addEventListener("change", playNextClip);
 showcase.addEventListener("pointermove", (event) => {
   const interactive = event.target.closest(
-    ".category-card, .enemy-card, .animation-card, .begin-button, .media-close, .gallery-sound-button, .settings-menu summary, .settings-field select, .sound-setting, .wiki-link",
+    ".category-card, .enemy-card, .animation-card, .begin-button, .media-close, .settings-menu summary, .settings-field select, .sound-setting, .wiki-link",
   );
   if (!interactive || !showcase.contains(interactive)) return;
   const bounds = interactive.getBoundingClientRect();
@@ -685,7 +634,6 @@ showcase.addEventListener("pointermove", (event) => {
 
 loadSavedSettings();
 backgroundSoundEnabled = backgroundSoundSetting.checked;
-gallerySoundEnabled = gallerySoundSetting.checked;
 applyVisualSettings();
 updateSoundControls();
 playNextClip();

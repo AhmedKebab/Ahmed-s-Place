@@ -321,12 +321,12 @@ body {
   line-height: 1.45;
 }
 
-.showcase :is(.category-card, .enemy-card, .animation-card, .begin-button, .media-close, .gallery-sound-button, .settings-menu summary, .settings-field select, .sound-setting, .wiki-link) {
+.showcase :is(.category-card, .enemy-card, .animation-card, .begin-button, .media-close, .settings-menu summary, .settings-field select, .sound-setting, .wiki-link) {
   position: relative;
   isolation: isolate;
 }
 
-.showcase :is(.category-card, .enemy-card, .animation-card, .begin-button, .media-close, .gallery-sound-button, .settings-menu summary, .settings-field select, .sound-setting, .wiki-link)::after {
+.showcase :is(.category-card, .enemy-card, .animation-card, .begin-button, .media-close, .settings-menu summary, .settings-field select, .sound-setting, .wiki-link)::after {
   position: absolute;
   inset: 0;
   z-index: 1;
@@ -353,18 +353,18 @@ body {
   mix-blend-mode: screen;
 }
 
-.showcase :is(.category-card, .enemy-card, .animation-card, .begin-button, .media-close, .gallery-sound-button, .settings-menu summary, .settings-field select, .sound-setting, .wiki-link):hover::after,
-.showcase :is(.category-card, .enemy-card, .animation-card, .begin-button, .media-close, .gallery-sound-button, .settings-menu summary, .settings-field select, .sound-setting, .wiki-link):focus-visible::after {
+.showcase :is(.category-card, .enemy-card, .animation-card, .begin-button, .media-close, .settings-menu summary, .settings-field select, .sound-setting, .wiki-link):hover::after,
+.showcase :is(.category-card, .enemy-card, .animation-card, .begin-button, .media-close, .settings-menu summary, .settings-field select, .sound-setting, .wiki-link):focus-visible::after {
   animation: mirror-glass-sweep 760ms ease-out both;
 }
 
-.showcase[data-quality="low"] :is(.category-card, .enemy-card, .animation-card, .begin-button, .media-close, .gallery-sound-button, .settings-menu summary, .settings-field select, .sound-setting, .wiki-link)::after {
+.showcase[data-quality="low"] :is(.category-card, .enemy-card, .animation-card, .begin-button, .media-close, .settings-menu summary, .settings-field select, .sound-setting, .wiki-link)::after {
   background:
     linear-gradient(112deg, transparent 35%, rgba(238, 247, 255, 0.22) 50%, transparent 65%);
 }
 
-.showcase[data-quality="high"] :is(.category-card, .enemy-card, .animation-card, .begin-button, .media-close, .gallery-sound-button, .settings-menu summary, .settings-field select, .sound-setting, .wiki-link):hover,
-.showcase[data-quality="extreme"] :is(.category-card, .enemy-card, .animation-card, .begin-button, .media-close, .gallery-sound-button, .settings-menu summary, .settings-field select, .sound-setting, .wiki-link):hover {
+.showcase[data-quality="high"] :is(.category-card, .enemy-card, .animation-card, .begin-button, .media-close, .settings-menu summary, .settings-field select, .sound-setting, .wiki-link):hover,
+.showcase[data-quality="extreme"] :is(.category-card, .enemy-card, .animation-card, .begin-button, .media-close, .settings-menu summary, .settings-field select, .sound-setting, .wiki-link):hover {
   animation: glass-hover 1100ms ease-out both;
 }
 
@@ -835,23 +835,6 @@ body {
   line-height: 1;
 }
 
-.gallery-sound-button {
-  position: absolute;
-  z-index: 1;
-  top: 16px;
-  left: 20px;
-  min-height: 44px;
-  padding: 8px 14px;
-  border: 1px solid rgba(225, 230, 238, 0.7);
-  background: rgba(5, 6, 9, 0.8);
-  color: #fff;
-  cursor: pointer;
-  font: inherit;
-  font-size: 12px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-
 .wiki-link {
   color: #d6dbe2;
   font-size: 13px;
@@ -1065,14 +1048,6 @@ body {
     padding: 12px;
   }
 
-  .gallery-sound-button {
-    top: 10px;
-    left: 10px;
-    min-height: 40px;
-    padding: 7px 10px;
-    font-size: 10px;
-  }
-
   .media-close {
     top: 10px;
     right: 10px;
@@ -1093,12 +1068,12 @@ body {
 
   .category-screen.is-entering,
   .enemy-detail,
-  .showcase :is(.category-card, .enemy-card, .animation-card, .begin-button, .media-close, .gallery-sound-button, .settings-menu summary, .settings-field select, .sound-setting, .wiki-link):hover::after,
-  .showcase :is(.category-card, .enemy-card, .animation-card, .begin-button, .media-close, .gallery-sound-button, .settings-menu summary, .settings-field select, .sound-setting, .wiki-link):focus-visible::after,
+  .showcase :is(.category-card, .enemy-card, .animation-card, .begin-button, .media-close, .settings-menu summary, .settings-field select, .sound-setting, .wiki-link):hover::after,
+  .showcase :is(.category-card, .enemy-card, .animation-card, .begin-button, .media-close, .settings-menu summary, .settings-field select, .sound-setting, .wiki-link):focus-visible::after,
   .showcase[data-quality="low"] :is(.category-card, .enemy-card, .animation-card, .begin-button):hover,
   .showcase[data-quality="medium"] :is(.category-card, .enemy-card, .animation-card, .begin-button):hover,
-  .showcase[data-quality="high"] :is(.category-card, .enemy-card, .animation-card, .begin-button, .media-close, .gallery-sound-button, .settings-menu summary, .settings-field select, .sound-setting, .wiki-link):hover,
-  .showcase[data-quality="extreme"] :is(.category-card, .enemy-card, .animation-card, .begin-button, .media-close, .gallery-sound-button, .settings-menu summary, .settings-field select, .sound-setting, .wiki-link):hover,
+  .showcase[data-quality="high"] :is(.category-card, .enemy-card, .animation-card, .begin-button, .media-close, .settings-menu summary, .settings-field select, .sound-setting, .wiki-link):hover,
+  .showcase[data-quality="extreme"] :is(.category-card, .enemy-card, .animation-card, .begin-button, .media-close, .settings-menu summary, .settings-field select, .sound-setting, .wiki-link):hover,
   .showcase.is-reconstructing .reconstruct-effect,
   .showcase.is-reconstructing .video-frame {
     animation-duration: 0.01ms;
