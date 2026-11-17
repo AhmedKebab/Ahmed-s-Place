@@ -101,7 +101,13 @@
       </section>
       <div class="media-modal" id="media-modal" role="dialog" aria-modal="true" aria-label="Animation video" hidden>
         <button class="media-close" id="media-close" type="button" aria-label="Close video">×</button>
-        <video id="media-player" controls playsinline></video>
+        <video
+          id="media-player"
+          playsinline
+          tabindex="-1"
+          disablepictureinpicture
+          disableremoteplayback
+        ></video>
       </div>
       <div class="reconstruct-effect" id="reconstruct-effect" aria-hidden="true"></div>
     </main>

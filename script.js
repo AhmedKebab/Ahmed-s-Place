@@ -87,6 +87,39 @@ const clips = [
   "CI_QTE_Death.mp4",
   "Taunt_animation.mp4",
 ];
+const mediaFileDirectories = new Map([
+  ["Gilbert's_Execution.mp4", "dc"],
+  ["Chimera_Execution.mp4", "82"],
+  ["Chimera_P1_TP.mp4", "23"],
+  ["Chimera_P2_TP.mp4", "46"],
+  ["Chimera_Alt_P2_Execution.mp4", "2a"],
+  ["Sinitzyn_P2_Execution.mp4", "2d"],
+  ["Sinitzyn_QTE_Success.mp4", "57"],
+  ["Sinitzyn_QTE_Fail.mp4", "e1"],
+  ["Cerberus_Intro_Cutscene.mp4", "6b"],
+  ["CI_Turn_1.mp4", "4e"],
+  ["CI_Turn_2.mp4", "b0"],
+  ["CI_Execution_1.mp4", "6c"],
+  ["CI_Execution_2.mp4", "d8"],
+  ["CI_Execution_3.mp4", "9a"],
+  ["CI_Counter_1.mp4", "85"],
+  ["CI_QTE_Death.mp4", "26"],
+  ["Taunt_animation.mp4", "9c"],
+  ["Lurker_Execution_1.mp4", "0f"],
+  ["Lurker_Execution_2.mp4", "5a"],
+  ["Lurker_Execution_3.mp4", "e8"],
+  ["Lurker_Save.mp4", "6e"],
+  ["Lurker_Maul.mp4", "3d"],
+  ["Enraged_Lurker.mp3", "cb"],
+]);
+
+function mediaFileUrl(filename) {
+  const directory = mediaFileDirectories.get(filename);
+  if (!directory) throw new Error(`Unknown Examination media file: ${filename}`);
+  const encodedFilename = encodeURIComponent(filename).replaceAll("'", "%27");
+  return `https://static.wikitide.net/examinationwiki/${directory[0]}/${directory}/${encodedFilename}`;
+}
+
 const video = document.querySelector("#examination-video");
 const showcase = document.querySelector(".showcase");
 const introScreen = document.querySelector("#intro-screen");
@@ -245,7 +278,7 @@ function playNextClip() {
   video.classList.add("is-fading");
   video.autoplay = true;
   video.controls = false;
-  video.src = `${examinationWiki}/Special:FilePath/${encodeURIComponent(filename).replaceAll("'", "%27")}`;
+  video.src = mediaFileUrl(filename);
   video.load();
 
   const playback = video.play();
@@ -253,7 +286,7 @@ function playNextClip() {
     playback.catch((error) => {
       if (filename !== clips[previousClipIndex]) return;
       if (error.name === "NotAllowedError") {
-        console.info("Background playback with sound is waiting for a user interaction.");
+        console.info("Background video autoplay is waiting for browser permission.");
       } else {
         console.error(`Unable to play Examination clip ${filename}.`, error);
       }
@@ -417,8 +450,6 @@ function renderLurkerDetail(enemy) {
     { name: "Save animation", file: "Lurker_Save.mp4" },
     { name: "Maul animation", file: "Lurker_Maul.mp4" },
   ];
-  const wikiFile = (file) => `${examinationWiki}/Special:FilePath/${encodeURIComponent(file)}`;
-
   detailViewport.innerHTML = `
     <article class="enemy-detail">
       <header class="enemy-detail-hero">
@@ -498,7 +529,7 @@ function renderLurkerDetail(enemy) {
       <section class="enemy-info-section">
         <h3>Sounds</h3>
         <p>Enraged Lurker — plays on loop while the Lurker is enraged.</p>
-        <audio class="enemy-audio" controls preload="none" src="${wikiFile("Enraged_Lurker.mp3")}">
+        <audio class="enemy-audio" controls preload="none" src="${mediaFileUrl("Enraged_Lurker.mp3")}">
           Your browser does not support audio playback.
         </audio>
       </section>
@@ -507,7 +538,7 @@ function renderLurkerDetail(enemy) {
         <h3>Animation gallery</h3>
         <div class="animation-grid">
           ${animations.map((animation) => `
-            <button class="animation-card" type="button" data-video-src="${wikiFile(animation.file)}" aria-label="Play ${animation.name}">
+            <button class="animation-card" type="button" data-video-src="${mediaFileUrl(animation.file)}" aria-label="Play ${animation.name}">
               <span class="animation-play-icon" aria-hidden="true">▶</span>
               <span>${animation.name}</span>
             </button>
@@ -536,6 +567,7 @@ function renderLurkerDetail(enemy) {
 
 function openMediaVideo(source, trigger) {
   activeMediaTrigger = trigger;
+  mediaPlayer.controls = false;
   mediaPlayer.src = source;
   mediaModal.hidden = false;
   mediaClose.focus();
@@ -584,6 +616,20 @@ mediaModal.addEventListener("click", (event) => {
 });
 window.addEventListener("keydown", (event) => {
   if (event.key === "Escape" && !mediaModal.hidden) closeMediaVideo();
+});
+
+mediaPlayer.addEventListener("pause", () => {
+  if (mediaModal.hidden || mediaPlayer.ended || mediaPlayer.readyState === 0) return;
+  const playback = mediaPlayer.play();
+  if (playback) {
+    playback.catch((error) => {
+      if (error.name === "NotAllowedError") {
+        console.info("Gallery playback is waiting for browser permission.");
+      } else {
+        console.error("Unable to resume the selected enemy animation.", error);
+      }
+    });
+  }
 });
 
 video.addEventListener("volumechange", () => {
