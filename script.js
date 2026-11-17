@@ -608,6 +608,7 @@ function openMediaVideo(source, trigger) {
   isBackgroundSuspendedForGallery = true;
   window.clearTimeout(transitionTimer);
   video.pause();
+  mediaPlayer.classList.remove("is-fading");
   mediaPlayer.controls = false;
   mediaPlayer.src = source;
   mediaModal.hidden = false;
@@ -684,6 +685,14 @@ mediaPlayer.addEventListener("pause", () => {
       }
     });
   }
+});
+
+mediaPlayer.addEventListener("loadeddata", () => {
+  window.requestAnimationFrame(() => mediaPlayer.classList.remove("is-fading"));
+});
+
+mediaPlayer.addEventListener("ended", () => {
+  mediaPlayer.classList.add("is-fading");
 });
 
 video.addEventListener("loadeddata", () => {

@@ -817,7 +817,13 @@ body {
   height: auto;
   max-width: 90vw;
   max-height: 80vh;
+  opacity: 1;
   object-fit: contain;
+  transition: opacity 350ms ease;
+}
+
+.media-modal video.is-fading {
+  opacity: 0;
 }
 
 .media-close {
