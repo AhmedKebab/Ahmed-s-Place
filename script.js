@@ -1,4 +1,73 @@
 const examinationWiki = "https://examination.miraheze.org/wiki";
+const enemyCatalog = [
+  {
+    label: "Regulars",
+    enemies: [
+      { name: "LURKER", image: "https://static.wikitide.net/examinationwiki/thumb/7/7b/Engineer_Lurker.png/305px-Engineer_Lurker.png" },
+      { name: "MUTANT", image: "https://static.wikitide.net/examinationwiki/thumb/a/aa/Engineer_Mutant.png/304px-Engineer_Mutant.png" },
+      { name: "CRAWLER", image: "https://static.wikitide.net/examinationwiki/thumb/4/48/Crawler.png/360px-Crawler.png" },
+      { name: "GRABBY", image: "https://static.wikitide.net/examinationwiki/thumb/9/96/Grabby.png/360px-Grabby.png" },
+      { name: "BARNACLES", image: "https://static.wikitide.net/examinationwiki/thumb/9/92/Barnacles.png/540px-Barnacles.png" },
+      { name: "RISER", image: "https://static.wikitide.net/examinationwiki/thumb/8/8b/HPCA_Riser.png/322px-HPCA_Riser.png" },
+      { name: "KAMIKAZE", image: "https://static.wikitide.net/examinationwiki/thumb/f/fd/HPCA_Kamikaze.png/313px-HPCA_Kamikaze.png" },
+      { name: "SHIELDER", image: "https://static.wikitide.net/examinationwiki/thumb/e/e5/MNPA_Shielder_2.png/299px-MNPA_Shielder_2.png" },
+      { name: "SLASHER", image: "https://static.wikitide.net/examinationwiki/thumb/4/4f/HPCA_Slasher.png/312px-HPCA_Slasher.png" },
+      { name: "RADAWAY", image: "https://static.wikitide.net/examinationwiki/thumb/f/f4/Radaway.png/276px-Radaway.png" },
+      { name: "GUNNER", image: "https://static.wikitide.net/examinationwiki/thumb/b/bc/RSU_Gunner_1.png/337px-RSU_Gunner_1.png" },
+      { name: "FURY", image: "https://static.wikitide.net/examinationwiki/thumb/6/68/RSU_Fury_2.png/325px-RSU_Fury_2.png" },
+      { name: "ENGINEER", image: "https://static.wikitide.net/examinationwiki/thumb/d/d8/Engineer.png/262px-Engineer.png" },
+      { name: "VORAX", image: "https://static.wikitide.net/examinationwiki/thumb/d/d2/RSU_Vorax.png/257px-RSU_Vorax.png" },
+      { name: "DECEIVER", image: "https://static.wikitide.net/examinationwiki/thumb/e/e1/Standard_Deceiver.png/346px-Standard_Deceiver.png" },
+    ],
+  },
+  {
+    label: "Virals",
+    enemies: [
+      { name: "VIRAL RUNNER", image: "https://static.wikitide.net/examinationwiki/thumb/c/cf/Viral_Standard.png/313px-Viral_Standard.png" },
+      { name: "VIRAL EXECUTIONER", image: "https://static.wikitide.net/examinationwiki/thumb/2/25/Standard_Executioner.png/321px-Standard_Executioner.png" },
+      { name: "VIRAL LEADER", image: "https://static.wikitide.net/examinationwiki/thumb/0/03/Viral_Leader.png/333px-Viral_Leader.png" },
+      { name: "VIRAL ENFORCER", image: "https://static.wikitide.net/examinationwiki/thumb/9/9f/Viral_Enforcer.png/305px-Viral_Enforcer.png" },
+    ],
+  },
+  {
+    label: "Rasonians",
+    enemies: [
+      { name: "INFANTRYMAN", image: "https://static.wikitide.net/examinationwiki/thumb/a/a3/RIF_Infantryman.png/332px-RIF_Infantryman.png" },
+      { name: "COMBAT MEDIC", image: "https://static.wikitide.net/examinationwiki/thumb/7/79/RIF_Combat_Medic.png/284px-RIF_Combat_Medic.png" },
+      { name: "SHOTGUNNER", image: "https://static.wikitide.net/examinationwiki/thumb/5/50/RIF_Shotgunner.png/298px-RIF_Shotgunner.png" },
+      { name: "MACHINE GUNNER", image: "https://static.wikitide.net/examinationwiki/thumb/2/2a/RIF_Machine_Gunner.png/354px-RIF_Machine_Gunner.png" },
+      { name: "SHIELDER", image: "https://static.wikitide.net/examinationwiki/thumb/d/d9/RIF_Shielder.png/333px-RIF_Shielder.png" },
+    ],
+  },
+  {
+    label: "Mini-Bosses",
+    enemies: [
+      { name: "LEAPER", image: "https://static.wikitide.net/examinationwiki/thumb/5/54/Leaper.png/284px-Leaper.png" },
+      { name: "MIKHAIL WILLIAMS", image: "https://static.wikitide.net/examinationwiki/thumb/c/cc/Mikhail_Williams.png/307px-Mikhail_Williams.png" },
+      { name: "DAVE", image: "https://static.wikitide.net/examinationwiki/thumb/6/6d/Dave_Render.webp/360px-Dave_Render.webp.png" },
+      { name: "YAKOV ZHUKOV", image: "https://static.wikitide.net/examinationwiki/thumb/d/d1/Yakov_Zhukov_Render.png/360px-Yakov_Zhukov_Render.png" },
+    ],
+  },
+  {
+    label: "Bosses",
+    enemies: [
+      { name: "GILBERT", image: "https://static.wikitide.net/examinationwiki/thumb/b/b7/Gilbert_Var_2.png/296px-Gilbert_Var_2.png" },
+      { name: "CHIMERA", image: "https://static.wikitide.net/examinationwiki/thumb/d/dc/Chimera_Var_2.png/306px-Chimera_Var_2.png" },
+      { name: "SINITZYN 'SIN' KOMAREK", image: "https://static.wikitide.net/examinationwiki/thumb/d/d6/Sinitzyn_Komarek.png/348px-Sinitzyn_Komarek.png" },
+      { name: "CERBERUS", image: "https://static.wikitide.net/examinationwiki/thumb/c/c9/Cerberus_V2.png/540px-Cerberus_V2.png" },
+      { name: "D-ZERO", image: "https://static.wikitide.net/examinationwiki/thumb/8/8a/D-Zero_Var_2.png/274px-D-Zero_Var_2.png" },
+    ],
+  },
+  {
+    label: "City Infected",
+    enemies: [
+      { name: "RUNNER", image: "https://static.wikitide.net/examinationwiki/thumb/3/3c/Civilian_City_Runner.png/340px-Civilian_City_Runner.png" },
+      { name: "SHIELDER", image: "https://static.wikitide.net/examinationwiki/thumb/c/cd/MNPA_City_Shielder.png/315px-MNPA_City_Shielder.png" },
+      { name: "FURY", image: "https://static.wikitide.net/examinationwiki/thumb/1/10/City_Fury.png/299px-City_Fury.png" },
+      { name: "DREADNOUGHT", image: "https://static.wikitide.net/examinationwiki/thumb/6/68/City_Dreadnought.png/326px-City_Dreadnought.png" },
+    ],
+  },
+];
 const clips = [
   "Gilbert's_Execution.mp4",
   "Chimera_Execution.mp4",
@@ -24,6 +93,7 @@ const introScreen = document.querySelector("#intro-screen");
 const categoryScreen = document.querySelector("#category-screen");
 const detailScreen = document.querySelector("#detail-screen");
 const detailTitle = document.querySelector("#detail-title");
+const detailViewport = document.querySelector("#detail-viewport");
 const enemyWikiLink = document.querySelector("#enemy-wiki-link");
 const reconstructEffect = document.querySelector("#reconstruct-effect");
 const beginButton = document.querySelector("#begin-button");
@@ -124,8 +194,46 @@ categoryScreen.addEventListener("click", (event) => {
   const category = card.dataset.category;
   detailTitle.textContent = category;
   enemyWikiLink.hidden = category !== "Enemies";
+  if (category === "Enemies") {
+    renderEnemyCatalog();
+  }
   transitionTo(detailScreen);
 });
+
+function renderEnemyCatalog() {
+  detailViewport.innerHTML = enemyCatalog
+    .map(
+      (section) => `
+        <section class="enemy-section" aria-labelledby="${section.label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-heading">
+          <h2 class="enemy-section-title" id="${section.label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-heading">${section.label}</h2>
+          <div class="enemy-grid">
+            ${section.enemies
+              .map(
+                (enemy) => `
+                  <button class="enemy-card" type="button" data-enemy-name="${enemy.name}" aria-label="View ${enemy.name}">
+                    <img src="${enemy.image}" alt="${enemy.name}" loading="lazy" />
+                    <span>${enemy.name}</span>
+                  </button>
+                `
+              )
+              .join("")}
+          </div>
+        </section>
+      `
+    )
+    .join("");
+
+  detailViewport.querySelectorAll(".enemy-card").forEach((card) => {
+    card.addEventListener("click", () => {
+      const enemyName = card.dataset.enemyName;
+      detailViewport.setAttribute("data-selected-enemy", enemyName);
+      detailViewport.querySelectorAll(".enemy-card").forEach((item) => {
+        const isSelected = item.dataset.enemyName === enemyName;
+        item.classList.toggle("is-selected", isSelected);
+      });
+    });
+  });
+}
 
 detailScreen.addEventListener("animationend", (event) => {
   if (event.target === detailScreen) detailScreen.classList.remove("is-entering");
