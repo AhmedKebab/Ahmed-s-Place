@@ -137,11 +137,11 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 34%;
+  object-position: center center;
   filter: brightness(0.78) contrast(1.08) saturate(0.86);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 350ms ease-in-out;
+  transition: opacity 2200ms ease-in-out;
 }
 
 .background-image.is-visible {
@@ -149,16 +149,16 @@ body {
 }
 
 .background-image.is-animating {
-  animation: gta-cinematic-pan 3450ms ease-in-out both;
+  animation: gta-cinematic-pan 12200ms ease-in-out both;
 }
 
 @keyframes gta-cinematic-pan {
   from {
-    transform: scale(1.025) translate3d(0.5%, 0.35%, 0);
+    transform: scale(1.025) translate3d(0.4%, 0.25%, 0);
   }
 
   to {
-    transform: scale(1.11) translate3d(-1%, -0.5%, 0);
+    transform: scale(1.08) translate3d(-0.4%, -0.25%, 0);
   }
 }
 

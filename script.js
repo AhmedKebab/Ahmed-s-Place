@@ -152,7 +152,7 @@ const reconstructEffect = document.querySelector("#reconstruct-effect");
 const beginButton = document.querySelector("#begin-button");
 const backButton = document.querySelector("#back-button");
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-const imageSceneDuration = 3100;
+const imageSceneDuration = 10000;
 const settingsVersion = 2;
 
 let renderQueue = [];
@@ -291,12 +291,6 @@ function showNextRender() {
     : backgroundImages[0];
   const source = backgroundRenders[previousRenderIndex];
   nextImage.onload = () => {
-    const aspectRatio = nextImage.naturalWidth / nextImage.naturalHeight;
-    if (aspectRatio < 1.45) {
-      if (mediaModal.hidden) showNextRender();
-      return;
-    }
-
     nextImage.classList.remove("is-visible", "is-animating");
     void nextImage.offsetWidth;
     nextImage.classList.add("is-visible", "is-animating");
