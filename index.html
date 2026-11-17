@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Choose your next Roblox adventure: Examination, Bee Swarm Simulator, or BRM5."
+    />
+    <meta name="theme-color" content="#090c12" />
+    <title>PLAYGROUND — Pick your next world</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="script.js" defer></script>
+  </head>
+  <body id="top">
+    <div class="page-shell">
+      <header class="topbar">
+        <a class="wordmark" href="#top" aria-label="Playground home">
+          <span class="wordmark-icon" aria-hidden="true">P</span>
+          <span>PLAYGROUND<span class="wordmark-period">.</span></span>
+        </a>
+        <nav class="top-nav" aria-label="Main navigation">
+          <a class="nav-link is-current" href="#worlds">Worlds</a>
+          <a class="nav-link" href="#about">About</a>
+        </nav>
+        <a class="top-cta" href="#worlds">
+          <span>Choose a game</span>
+          <span aria-hidden="true">↗</span>
+        </a>
+      </header>
+
+      <main>
+        <section class="hero" aria-labelledby="hero-title">
+          <div class="hero-scenes" aria-hidden="true">
+            <div class="hero-scene scene-examination is-active" data-scene="examination">
+              <div class="exam-moon"></div>
+              <div class="exam-light"></div>
+              <div class="exam-hall">
+                <div class="hall-wall hall-left"></div>
+                <div class="hall-wall hall-right"></div>
+                <div class="hall-ceiling"></div>
+                <div class="hall-floor"></div>
+                <div class="hall-door"><span></span></div>
+                <div class="hall-lamp lamp-one"></div>
+                <div class="hall-lamp lamp-two"></div>
+                <div class="hall-lamp lamp-three"></div>
+                <div class="hall-shadow"></div>
+              </div>
+              <div class="exam-grain"></div>
+            </div>
+
+            <div class="hero-scene scene-bees" data-scene="bees">
+              <div class="bee-sun"></div>
+              <div class="bee-hill hill-back"></div>
+              <div class="bee-hill hill-front"></div>
+              <div class="flower flower-one"><i></i><i></i><i></i><i></i><i></i><b></b></div>
+              <div class="flower flower-two"><i></i><i></i><i></i><i></i><i></i><b></b></div>
+              <div class="flower flower-three"><i></i><i></i><i></i><i></i><i></i><b></b></div>
+              <div class="bee bee-one"><i></i><b></b><span></span></div>
+              <div class="bee bee-two"><i></i><b></b><span></span></div>
+              <div class="bee bee-three"><i></i><b></b><span></span></div>
+              <div class="honeycomb" aria-hidden="true">✳</div>
+            </div>
+
+            <div class="hero-scene scene-brm" data-scene="brm5">
+              <div class="brm-sky-glow"></div>
+              <div class="brm-ridge ridge-far"></div>
+              <div class="brm-ridge ridge-near"></div>
+              <div class="brm-ground"></div>
+              <div class="brm-sun"></div>
+              <div class="brm-tower"><i></i><i></i><i></i></div>
+              <div class="helicopter">
+                <span class="heli-rotor"></span>
+                <span class="heli-body"></span>
+                <span class="heli-tail"></span>
+                <span class="heli-window"></span>
+              </div>
+              <div class="brm-dust"></div>
+            </div>
+          </div>
+          <div class="hero-vignette" aria-hidden="true"></div>
+          <div class="hero-noise" aria-hidden="true"></div>
+
+          <div class="hero-content">
+            <div class="eyebrow"><span class="eyebrow-dot"></span> YOUR NEXT WORLD IS WAITING</div>
+            <h1 id="hero-title">Pick your<br />next <span>world.</span></h1>
+            <p class="hero-description">
+              Three very different adventures. One click to drop in.
+            </p>
+            <a class="primary-button" href="#worlds">
+              <span>Explore the games</span>
+              <span class="button-arrow" aria-hidden="true">↓</span>
+            </a>
+          </div>
+
+          <div class="hero-caption" aria-live="polite">
+            <span class="caption-line"></span>
+            <span class="caption-name" id="scene-caption">EXAMINATION</span>
+            <span class="caption-divider">/</span>
+            <span class="caption-subtitle" id="scene-subtitle">DON'T LOOK BACK</span>
+          </div>
+
+          <div class="hero-controls" aria-label="Choose animated background">
+            <span class="controls-label">SCENE</span>
+            <button class="scene-control is-active" type="button" data-index="0" aria-label="Show Examination scene" aria-pressed="true"><span>01</span></button>
+            <button class="scene-control" type="button" data-index="1" aria-label="Show Bee Swarm Simulator scene" aria-pressed="false"><span>02</span></button>
+            <button class="scene-control" type="button" data-index="2" aria-label="Show BRM5 scene" aria-pressed="false"><span>03</span></button>
+            <span class="controls-track"><i></i></span>
+          </div>
+
+          <div class="hero-index" aria-hidden="true"><span>01</span><i></i><span>03</span></div>
+        </section>
+
+        <section class="worlds-section" id="worlds" aria-labelledby="worlds-title">
+          <div class="section-heading">
+            <div>
+              <div class="eyebrow section-eyebrow"><span class="eyebrow-dot"></span> THE LINEUP</div>
+              <h2 id="worlds-title">Choose your <span>adventure.</span></h2>
+            </div>
+            <p>Pick a world. Make it yours.</p>
+          </div>
+
+          <div class="game-grid">
+            <a class="game-card card-examination" href="https://www.roblox.com/search/experiences?keyword=Examination" target="_blank" rel="noreferrer" aria-label="Find Examination on Roblox">
+              <div class="card-art" aria-hidden="true">
+                <div class="card-exam-door"></div>
+                <div class="card-exam-haze"></div>
+                <span class="card-art-tag">SURVIVAL HORROR</span>
+                <span class="card-art-number">01</span>
+              </div>
+              <div class="card-info">
+                <div><h3>Examination</h3><p>Keep your eyes open.</p></div>
+                <span class="card-arrow" aria-hidden="true">↗</span>
+              </div>
+            </a>
+
+            <a class="game-card card-bees" href="https://www.roblox.com/search/experiences?keyword=Bee%20Swarm%20Simulator" target="_blank" rel="noreferrer" aria-label="Find Bee Swarm Simulator on Roblox">
+              <div class="card-art" aria-hidden="true">
+                <div class="card-bee-sun"></div>
+                <div class="card-bee-hill"></div>
+                <div class="card-flower flower-card-one"><i></i><i></i><i></i><i></i><i></i><b></b></div>
+                <div class="card-flower flower-card-two"><i></i><i></i><i></i><i></i><i></i><b></b></div>
+                <div class="card-bee"><i></i><b></b></div>
+                <span class="card-art-tag">HONEY &amp; HIVE</span>
+                <span class="card-art-number">02</span>
+              </div>
+              <div class="card-info">
+                <div><h3>Bee Swarm Simulator</h3><p>Grow your own buzzing crew.</p></div>
+                <span class="card-arrow" aria-hidden="true">↗</span>
+              </div>
+            </a>
+
+            <a class="game-card card-brm" href="https://www.roblox.com/search/experiences?keyword=Blackhawk%20Rescue%20Mission%205" target="_blank" rel="noreferrer" aria-label="Find Blackhawk Rescue Mission 5 on Roblox">
+              <div class="card-art" aria-hidden="true">
+                <div class="card-brm-sun"></div>
+                <div class="card-brm-ridge"></div>
+                <div class="card-brm-tower"></div>
+                <div class="card-heli"><i></i><b></b></div>
+                <span class="card-art-tag">TACTICAL SANDBOX</span>
+                <span class="card-art-number">03</span>
+              </div>
+              <div class="card-info">
+                <div><h3>BRM5</h3><p>Blackhawk Rescue Mission 5.</p></div>
+                <span class="card-arrow" aria-hidden="true">↗</span>
+              </div>
+            </a>
+          </div>
+        </section>
+      </main>
+
+      <footer class="footer" id="about">
+        <span class="footer-brand">PLAYGROUND<span class="wordmark-period">.</span></span>
+        <span>Three worlds. Endless ways to play.</span>
+        <span class="footer-note">FAN-MADE ROBLOX GAME GUIDE</span>
+      </footer>
+    </div>
+  </body>
+</html>
