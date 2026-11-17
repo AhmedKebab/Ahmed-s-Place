@@ -28,6 +28,7 @@ body {
   overflow: hidden;
   isolation: isolate;
   --menu-width: clamp(250px, 26vw, 390px);
+  --frame-inset: clamp(18px, 2.1vw, 30px);
   --frame-accent: rgba(165, 208, 216, 0.82);
   --frame-warning: rgba(224, 172, 103, 0.88);
   --frame-glow: rgba(120, 196, 215, 0.42);
@@ -139,9 +140,17 @@ body {
   backdrop-filter: blur(8px) brightness(1.08);
 }
 
-.background-image {
+.background-stage {
   position: absolute;
   z-index: -2;
+  inset: var(--frame-inset);
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.background-image {
+  position: absolute;
+  z-index: 0;
   inset: 0;
   width: 100%;
   height: 100%;
@@ -219,7 +228,7 @@ body {
 
 .frame-corners {
   position: absolute;
-  inset: clamp(18px, 2.1vw, 30px);
+  inset: var(--frame-inset);
   background:
     linear-gradient(var(--frame-accent), var(--frame-accent)) center top / 1px 10px no-repeat,
     linear-gradient(var(--frame-accent), var(--frame-accent)) center bottom / 1px 10px no-repeat,

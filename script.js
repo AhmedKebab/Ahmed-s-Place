@@ -136,6 +136,7 @@ const backgroundImages = [
   document.querySelector("#background-image-next"),
 ];
 const showcase = document.querySelector(".showcase");
+const backgroundStage = document.querySelector(".background-stage");
 const frameScale = document.querySelector("#frame-scale");
 const sourceScale = document.querySelector("#source-scale");
 const introScreen = document.querySelector("#intro-screen");
@@ -256,15 +257,15 @@ function applyVisualSettings() {
 }
 
 function updateFrameScale() {
-  const width = Math.round(showcase.clientWidth);
-  const height = Math.round(showcase.clientHeight);
+  const width = Math.round(backgroundStage.clientWidth);
+  const height = Math.round(backgroundStage.clientHeight);
   if (width === 0 || height === 0) return;
 
   const isCompact = window.matchMedia("(max-width: 600px)").matches;
   const viewportRatio = (width / height).toFixed(2);
   frameScale.textContent = isCompact
-    ? `V ${viewportRatio}:1`
-    : `VIEW ${width} x ${height} px / ${viewportRatio}:1`;
+    ? `F ${viewportRatio}:1`
+    : `FRAME ${width} x ${height} px / ${viewportRatio}:1`;
   if (!activeBackgroundImage) {
     sourceScale.textContent = isCompact ? "I --" : "SOURCE --";
     return;

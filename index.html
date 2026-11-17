@@ -11,20 +11,20 @@
   </head>
   <body>
     <main class="showcase" aria-label="Examination">
-      <img
-        class="background-image"
-        id="background-image"
-        alt=""
-        aria-hidden="true"
-        inert
-      />
-      <img
-        class="background-image"
-        id="background-image-next"
-        alt=""
-        aria-hidden="true"
-        inert
-      />
+      <div class="background-stage" aria-hidden="true">
+        <img
+          class="background-image"
+          id="background-image"
+          alt=""
+          inert
+        />
+        <img
+          class="background-image"
+          id="background-image-next"
+          alt=""
+          inert
+        />
+      </div>
       <div class="showcase-shade" aria-hidden="true"></div>
       <div class="cinematic-mask" aria-hidden="true"></div>
       <div class="examination-frame">
@@ -39,7 +39,7 @@
           <output class="frame-readout-value" id="frame-scale"></output>
           <output class="frame-readout-source" id="source-scale"></output>
         </div>
-        <span class="frame-caption">FULL-FRAME / CENTER CROP</span>
+        <span class="frame-caption">CALIBRATED FRAME / CENTER CROP</span>
       </div>
       <aside class="brand-panel" id="intro-screen" aria-labelledby="game-title">
         <div class="menu-content">
