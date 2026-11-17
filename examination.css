@@ -265,19 +265,21 @@ body {
 }
 
 .detail-screen {
-  place-items: center;
+  place-items: stretch;
 }
 
 .detail-content {
   display: grid;
-  justify-items: start;
+  justify-items: stretch;
   gap: 24px;
   width: min(100%, 1180px);
   min-width: min(100%, 300px);
+  max-height: 100vh;
   padding: clamp(24px, 4vw, 48px);
   border: 1px solid rgba(205, 211, 221, 0.14);
   background: rgba(5, 6, 9, 0.32);
   backdrop-filter: blur(3px);
+  overflow: hidden;
 }
 
 .detail-header {
@@ -293,6 +295,21 @@ body {
   display: grid;
   width: 100%;
   gap: 24px;
+  overflow-y: auto;
+  padding-right: 8px;
+}
+
+.detail-viewport::-webkit-scrollbar {
+  width: 10px;
+}
+
+.detail-viewport::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.detail-viewport::-webkit-scrollbar-thumb {
+  background: rgba(205, 211, 221, 0.35);
+  border-radius: 999px;
 }
 
 .enemy-section {
