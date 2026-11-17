@@ -139,6 +139,7 @@ const mediaModal = document.querySelector("#media-modal");
 const mediaPlayer = document.querySelector("#media-player");
 const mediaClose = document.querySelector("#media-close");
 const reconstructEffect = document.querySelector("#reconstruct-effect");
+const analogGhostImage = document.querySelector("#analog-ghost");
 const beginButton = document.querySelector("#begin-button");
 const backButton = document.querySelector("#back-button");
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -443,6 +444,7 @@ function showNextRender() {
       return;
     }
 
+    analogGhostImage.src = source;
     nextImage.classList.remove("is-visible", "is-animating");
     void nextImage.offsetWidth;
     nextImage.classList.add("is-visible", "is-animating");
