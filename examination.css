@@ -152,20 +152,6 @@ body {
   animation: gta-cinematic-pan 22s ease-in-out both;
 }
 
-.background-image.is-side-render {
-  inset: 0 0 0 var(--menu-width);
-  width: calc(100% - var(--menu-width));
-  height: 100%;
-  object-fit: cover;
-  object-position: left center;
-  filter: drop-shadow(0 16px 42px rgba(0, 0, 0, 0.6)) brightness(0.86) contrast(1.06) saturate(0.9);
-}
-
-.background-image.is-side-render.is-animating {
-  animation-name: gta-side-cinematic-pan;
-  transform-origin: left center;
-}
-
 @keyframes gta-cinematic-pan {
   from {
     transform: scale(1.025) translate3d(0.5%, 0.35%, 0);
@@ -173,16 +159,6 @@ body {
 
   to {
     transform: scale(1.11) translate3d(-1%, -0.5%, 0);
-  }
-}
-
-@keyframes gta-side-cinematic-pan {
-  from {
-    transform: scale(1.08) translate3d(0, 0.2%, 0);
-  }
-
-  to {
-    transform: scale(1.2) translate3d(0, -0.2%, 0);
   }
 }
 

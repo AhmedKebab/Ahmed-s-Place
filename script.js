@@ -283,8 +283,14 @@ function showNextRender() {
   const source = backgroundRenders[previousRenderIndex];
   nextImage.onload = () => {
     const aspectRatio = nextImage.naturalWidth / nextImage.naturalHeight;
-    const isSmallRender = aspectRatio < 1.45;
-    nextImage.classList.toggle("is-side-render", isSmallRender);
+    const isSmallRender = nextImage.naturalWidth < 1200 ||
+      nextImage.naturalHeight < 700 ||
+      aspectRatio < 1.45;
+    if (isSmallRender) {
+      if (mediaModal.hidden) showNextRender();
+      return;
+    }
+
     nextImage.classList.remove("is-visible", "is-animating");
     void nextImage.offsetWidth;
     nextImage.classList.add("is-visible", "is-animating");
