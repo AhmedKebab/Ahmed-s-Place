@@ -82,28 +82,35 @@
         </aside>
 
         <section class="showcase" aria-label="Selected game video showcase">
+          <video class="video-frame" id="mp4-player" autoplay muted playsinline preload="auto" hidden></video>
+          <img
+            class="artwork-frame"
+            id="artwork-frame"
+            src="https://static.wikitide.net/examinationwiki/thumb/0/06/Chimera_artwork.png/240px-Chimera_artwork.png"
+            alt="Chimera artwork from the Examination Wiki"
+            hidden
+          />
           <iframe
             class="video-frame"
             id="video-frame"
-            src="https://www.youtube-nocookie.com/embed/I2TCZT6SeoY?autoplay=1&amp;mute=1&amp;controls=0&amp;loop=1&amp;playlist=I2TCZT6SeoY%2CPptVk9qyb5Q%2CqHmCyjaCTsE%2CAQrZNLgAmoI%2Cm4_M4IjqLPg&amp;playsinline=1&amp;rel=0&amp;modestbranding=1&amp;enablejsapi=1"
-            title="Examination executions and quick-time event gameplay"
+            title="Selected game video showcase"
             allow="autoplay; encrypted-media; picture-in-picture; fullscreen; web-share"
             referrerpolicy="strict-origin-when-cross-origin"
             allowfullscreen
+            hidden
           ></iframe>
           <div class="showcase-shade" aria-hidden="true"></div>
+          <div class="cinematic-mask" aria-hidden="true"></div>
           <div class="showcase-topline">
             <div class="feed-label"><span class="feed-dot"></span><span id="feed-label">EXAMINATION · COMMUNITY GAMEPLAY</span></div>
-            <button class="media-toggle" id="media-toggle" type="button" aria-pressed="false">
-              <span class="toggle-icon" aria-hidden="true">Ⅱ</span><span id="toggle-label">PAUSE VIDEO</span>
-            </button>
+            <div class="media-status" id="media-status"><span class="status-pulse"></span><span id="media-status-text">AUTO-PLAYING · MUTED</span></div>
           </div>
           <div class="showcase-caption">
             <div class="caption-kicker"><span class="caption-rule"></span><span id="caption-category">EXECUTIONS · QTE MOMENTS</span></div>
             <h2 id="showcase-title">EXAMINATION</h2>
             <p id="showcase-subtitle">A closer look at the moments that make it tense.</p>
-            <a class="featured-source" id="featured-source" href="https://www.youtube.com/watch?v=I2TCZT6SeoY" target="_blank" rel="noreferrer">
-              VIEW FEATURED VIDEO <span aria-hidden="true">↗</span>
+            <a class="featured-source" id="featured-source" href="https://examination.miraheze.org/wiki/Gilbert" target="_blank" rel="noreferrer">
+              VIEW MEDIA SOURCE <span aria-hidden="true">↗</span>
             </a>
           </div>
           <div class="showcase-index" aria-hidden="true"><span id="current-index">01</span><i></i><span>03</span></div>
