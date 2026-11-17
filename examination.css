@@ -177,35 +177,6 @@ body {
   bottom: 0;
 }
 
-.sound-button {
-  position: absolute;
-  z-index: 2;
-  top: clamp(18px, 3vw, 36px);
-  right: clamp(18px, 3vw, 36px);
-  padding: 11px 15px;
-  border: 1px solid rgba(192, 199, 210, 0.42);
-  background: rgba(5, 6, 9, 0.38);
-  color: #e4e6e9;
-  cursor: pointer;
-  font: inherit;
-  font-size: 12px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  backdrop-filter: blur(3px);
-}
-
-.sound-button:hover,
-.sound-button:focus-visible {
-  border-color: rgba(225, 230, 238, 0.85);
-  background: rgba(28, 32, 39, 0.66);
-  color: #fff;
-}
-
-.sound-button:focus-visible {
-  outline: 2px solid rgba(225, 230, 238, 0.85);
-  outline-offset: 3px;
-}
-
 .brand-panel {
   position: absolute;
   z-index: 1;
@@ -350,12 +321,12 @@ body {
   line-height: 1.45;
 }
 
-.showcase :is(.category-card, .enemy-card, .animation-card, .begin-button, .sound-button, .media-close, .gallery-sound-button, .settings-menu summary, .settings-field select, .sound-setting, .wiki-link) {
+.showcase :is(.category-card, .enemy-card, .animation-card, .begin-button, .media-close, .gallery-sound-button, .settings-menu summary, .settings-field select, .sound-setting, .wiki-link) {
   position: relative;
   isolation: isolate;
 }
 
-.showcase :is(.category-card, .enemy-card, .animation-card, .begin-button, .sound-button, .media-close, .gallery-sound-button, .settings-menu summary, .settings-field select, .sound-setting, .wiki-link)::after {
+.showcase :is(.category-card, .enemy-card, .animation-card, .begin-button, .media-close, .gallery-sound-button, .settings-menu summary, .settings-field select, .sound-setting, .wiki-link)::after {
   position: absolute;
   inset: 0;
   z-index: 1;
@@ -377,17 +348,17 @@ body {
   mix-blend-mode: screen;
 }
 
-.showcase :is(.category-card, .enemy-card, .animation-card, .begin-button, .sound-button, .media-close, .gallery-sound-button, .settings-menu summary, .settings-field select, .sound-setting, .wiki-link):hover::after,
-.showcase :is(.category-card, .enemy-card, .animation-card, .begin-button, .sound-button, .media-close, .gallery-sound-button, .settings-menu summary, .settings-field select, .sound-setting, .wiki-link):focus-visible::after {
+.showcase :is(.category-card, .enemy-card, .animation-card, .begin-button, .media-close, .gallery-sound-button, .settings-menu summary, .settings-field select, .sound-setting, .wiki-link):hover::after,
+.showcase :is(.category-card, .enemy-card, .animation-card, .begin-button, .media-close, .gallery-sound-button, .settings-menu summary, .settings-field select, .sound-setting, .wiki-link):focus-visible::after {
   animation: mirror-deconstruct 720ms steps(7, end) both;
 }
 
-.showcase[data-quality="low"] :is(.category-card, .enemy-card, .animation-card, .begin-button, .sound-button, .media-close, .gallery-sound-button, .settings-menu summary, .settings-field select, .sound-setting, .wiki-link)::after {
+.showcase[data-quality="low"] :is(.category-card, .enemy-card, .animation-card, .begin-button, .media-close, .gallery-sound-button, .settings-menu summary, .settings-field select, .sound-setting, .wiki-link)::after {
   display: none;
 }
 
-.showcase[data-quality="high"] :is(.category-card, .enemy-card, .animation-card, .begin-button, .sound-button, .media-close, .gallery-sound-button, .settings-menu summary, .settings-field select, .sound-setting, .wiki-link):hover,
-.showcase[data-quality="extreme"] :is(.category-card, .enemy-card, .animation-card, .begin-button, .sound-button, .media-close, .gallery-sound-button, .settings-menu summary, .settings-field select, .sound-setting, .wiki-link):hover {
+.showcase[data-quality="high"] :is(.category-card, .enemy-card, .animation-card, .begin-button, .media-close, .gallery-sound-button, .settings-menu summary, .settings-field select, .sound-setting, .wiki-link):hover,
+.showcase[data-quality="extreme"] :is(.category-card, .enemy-card, .animation-card, .begin-button, .media-close, .gallery-sound-button, .settings-menu summary, .settings-field select, .sound-setting, .wiki-link):hover {
   animation: water-float 3.2s ease-in-out infinite;
 }
 
@@ -1054,11 +1025,11 @@ body {
 
   .category-screen.is-entering,
   .enemy-detail,
-  .showcase :is(.category-card, .enemy-card, .animation-card, .begin-button, .sound-button, .media-close, .gallery-sound-button, .settings-menu summary, .settings-field select, .sound-setting, .wiki-link):hover::after,
-  .showcase :is(.category-card, .enemy-card, .animation-card, .begin-button, .sound-button, .media-close, .gallery-sound-button, .settings-menu summary, .settings-field select, .sound-setting, .wiki-link):focus-visible::after,
+  .showcase :is(.category-card, .enemy-card, .animation-card, .begin-button, .media-close, .gallery-sound-button, .settings-menu summary, .settings-field select, .sound-setting, .wiki-link):hover::after,
+  .showcase :is(.category-card, .enemy-card, .animation-card, .begin-button, .media-close, .gallery-sound-button, .settings-menu summary, .settings-field select, .sound-setting, .wiki-link):focus-visible::after,
   .showcase[data-quality="medium"] :is(.category-card, .enemy-card, .animation-card, .begin-button):hover,
-  .showcase[data-quality="high"] :is(.category-card, .enemy-card, .animation-card, .begin-button, .sound-button, .media-close, .gallery-sound-button, .settings-menu summary, .settings-field select, .sound-setting, .wiki-link):hover,
-  .showcase[data-quality="extreme"] :is(.category-card, .enemy-card, .animation-card, .begin-button, .sound-button, .media-close, .gallery-sound-button, .settings-menu summary, .settings-field select, .sound-setting, .wiki-link):hover,
+  .showcase[data-quality="high"] :is(.category-card, .enemy-card, .animation-card, .begin-button, .media-close, .gallery-sound-button, .settings-menu summary, .settings-field select, .sound-setting, .wiki-link):hover,
+  .showcase[data-quality="extreme"] :is(.category-card, .enemy-card, .animation-card, .begin-button, .media-close, .gallery-sound-button, .settings-menu summary, .settings-field select, .sound-setting, .wiki-link):hover,
   .showcase.is-reconstructing .reconstruct-effect,
   .showcase.is-reconstructing .video-frame {
     animation-duration: 0.01ms;

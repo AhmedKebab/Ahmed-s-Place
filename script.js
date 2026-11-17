@@ -106,7 +106,6 @@ const gallerySoundButton = document.querySelector("#gallery-sound-button");
 const reconstructEffect = document.querySelector("#reconstruct-effect");
 const beginButton = document.querySelector("#begin-button");
 const backButton = document.querySelector("#back-button");
-const soundButton = document.querySelector("#sound-button");
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 const fadeDuration = 350;
 
@@ -129,12 +128,6 @@ function applyVisualSettings() {
 
 function updateSoundControls() {
   video.muted = !backgroundSoundEnabled;
-  soundButton.textContent = backgroundSoundEnabled ? "Background: On" : "Background: Off";
-  soundButton.setAttribute(
-    "aria-label",
-    backgroundSoundEnabled ? "Turn background video sound off" : "Turn background video sound on",
-  );
-  soundButton.setAttribute("aria-pressed", String(backgroundSoundEnabled));
   backgroundSoundSetting.checked = backgroundSoundEnabled;
 
   mediaPlayer.muted = !gallerySoundEnabled;
@@ -535,12 +528,6 @@ window.addEventListener("keydown", (event) => {
   if (event.key === "Escape" && !mediaModal.hidden) closeMediaVideo();
 });
 
-soundButton.addEventListener("click", () => {
-  backgroundSoundEnabled = !backgroundSoundEnabled;
-  updateSoundControls();
-  if (backgroundSoundEnabled) startBackgroundPlayback();
-});
-
 gallerySoundButton.addEventListener("click", () => {
   gallerySoundEnabled = !gallerySoundEnabled;
   updateSoundControls();
@@ -589,7 +576,7 @@ video.addEventListener("error", () => {
 prefersReducedMotion.addEventListener("change", playNextClip);
 showcase.addEventListener("pointermove", (event) => {
   const interactive = event.target.closest(
-    ".category-card, .enemy-card, .animation-card, .begin-button, .sound-button, .media-close, .gallery-sound-button, .settings-menu summary, .settings-field select, .sound-setting, .wiki-link",
+    ".category-card, .enemy-card, .animation-card, .begin-button, .media-close, .gallery-sound-button, .settings-menu summary, .settings-field select, .sound-setting, .wiki-link",
   );
   if (!interactive || !showcase.contains(interactive)) return;
   const bounds = interactive.getBoundingClientRect();
