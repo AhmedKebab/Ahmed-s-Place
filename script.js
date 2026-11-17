@@ -166,8 +166,8 @@ let settingsGearHasFinished = true;
 let settingsMenuTransitionTimer;
 const settingsStorageKey = "examination-site-settings";
 
-function scheduleUiTone(context, frequencyStart, frequencyEnd, duration, volume, waveform) {
-  const startedAt = context.currentTime;
+function scheduleUiTone(context, frequencyStart, frequencyEnd, duration, volume, waveform, offset = 0) {
+  const startedAt = context.currentTime + offset;
   const oscillator = context.createOscillator();
   const envelope = context.createGain();
 
@@ -187,6 +187,48 @@ function scheduleUiTone(context, frequencyStart, frequencyEnd, duration, volume,
   oscillator.stop(startedAt + duration);
 }
 
+function scheduleGearTurn(context, isClosing) {
+  const startedAt = context.currentTime;
+  const duration = 0.9;
+  const oscillator = context.createOscillator();
+  const filter = context.createBiquadFilter();
+  const envelope = context.createGain();
+
+  oscillator.type = "sawtooth";
+  oscillator.frequency.setValueAtTime(isClosing ? 230 : 95, startedAt);
+  oscillator.frequency.exponentialRampToValueAtTime(isClosing ? 85 : 220, startedAt + duration);
+  filter.type = "lowpass";
+  filter.frequency.setValueAtTime(isClosing ? 720 : 560, startedAt);
+  filter.frequency.exponentialRampToValueAtTime(isClosing ? 300 : 980, startedAt + duration);
+  envelope.gain.setValueAtTime(0.0001, startedAt);
+  envelope.gain.exponentialRampToValueAtTime(0.028, startedAt + 0.04);
+  envelope.gain.exponentialRampToValueAtTime(0.0001, startedAt + duration);
+  oscillator.connect(filter);
+  filter.connect(envelope);
+  envelope.connect(context.destination);
+  oscillator.addEventListener("ended", () => {
+    oscillator.disconnect();
+    filter.disconnect();
+    envelope.disconnect();
+  }, { once: true });
+  oscillator.start(startedAt);
+  oscillator.stop(startedAt + duration);
+
+  for (let tick = 0; tick < 7; tick += 1) {
+    const frequency = isClosing ? 780 - tick * 48 : 420 + tick * 52;
+    scheduleUiTone(context, frequency, frequency * 0.82, 0.035, 0.012, "triangle", 0.06 + tick * 0.11);
+  }
+  scheduleUiTone(
+    context,
+    isClosing ? 340 : 760,
+    isClosing ? 180 : 960,
+    0.09,
+    0.026,
+    "sine",
+    0.78,
+  );
+}
+
 function playUiSound(kind) {
   if (document.visibilityState !== "visible") return;
 
@@ -202,6 +244,10 @@ function playUiSound(kind) {
   const play = () => {
     if (kind === "hover") {
       scheduleUiTone(uiAudioContext, 760, 960, 0.065, 0.022, "sine");
+      return;
+    }
+    if (kind === "gear-open" || kind === "gear-close") {
+      scheduleGearTurn(uiAudioContext, kind === "gear-close");
       return;
     }
     scheduleUiTone(uiAudioContext, 520, 310, 0.11, 0.05, "triangle");
@@ -753,12 +799,12 @@ settingsMenuSummary.addEventListener("click", (event) => {
   event.preventDefault();
   if (settingsMenuIsAnimating) return;
   const isClosing = settingsMenu.open;
+  playUiSound(isClosing ? "gear-close" : "gear-open");
   settingsMenuIsAnimating = true;
   settingsPanelHasFinished = false;
-  settingsGearHasFinished = isClosing;
+  settingsGearHasFinished = false;
 
   if (settingsMenu.open) {
-    settingsMenu.classList.add("is-closing");
     const height = settingsControls.getBoundingClientRect().height;
     settingsControls.style.overflowY = "hidden";
     settingsControls.style.maxHeight = `${height}px`;
@@ -766,6 +812,7 @@ settingsMenuSummary.addEventListener("click", (event) => {
     settingsControls.style.transform = "translateY(0)";
     void settingsControls.offsetHeight;
     window.requestAnimationFrame(() => {
+      settingsMenu.classList.add("is-closing");
       settingsControls.style.maxHeight = "0px";
       settingsControls.style.opacity = "0";
       settingsControls.style.transform = "translateY(-24px)";
@@ -793,7 +840,7 @@ settingsMenuSummary.addEventListener("click", (event) => {
 
   settingsMenuTransitionTimer = window.setTimeout(
     () => finishSettingsMenuTransition(true),
-    820,
+    1000,
   );
 });
 settingsControls.addEventListener("transitionend", (event) => {
@@ -803,7 +850,7 @@ settingsControls.addEventListener("transitionend", (event) => {
   }
 });
 settingsMenu.querySelector(".settings-gear").addEventListener("animationend", (event) => {
-  if (event.animationName !== "settings-gear-spin") return;
+  if (!["settings-gear-spin", "settings-gear-spin-reverse"].includes(event.animationName)) return;
   settingsGearHasFinished = true;
   finishSettingsMenuTransition();
 });
