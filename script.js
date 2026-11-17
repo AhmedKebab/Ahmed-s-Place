@@ -22,14 +22,20 @@ const video = document.querySelector("#examination-video");
 const showcase = document.querySelector(".showcase");
 const introScreen = document.querySelector("#intro-screen");
 const categoryScreen = document.querySelector("#category-screen");
+const detailScreen = document.querySelector("#detail-screen");
+const detailTitle = document.querySelector("#detail-title");
 const reconstructEffect = document.querySelector("#reconstruct-effect");
 const beginButton = document.querySelector("#begin-button");
+const backButton = document.querySelector("#back-button");
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 const fadeDuration = 350;
 
 let clipQueue = [];
 let previousClipIndex = -1;
 let transitionTimer;
+let activeScreen = introScreen;
+let pendingScreen = null;
+let isTransitioning = false;
 
 function shuffledClipIndices() {
   const queue = clips.map((_, index) => index);
@@ -69,32 +75,59 @@ function playNextClip() {
   }
 }
 
-function showCategoryScreen() {
+function showScreen(screen) {
   showcase.classList.remove("is-reconstructing");
-  introScreen.hidden = true;
-  categoryScreen.hidden = false;
-  categoryScreen.classList.add("is-entering");
-  categoryScreen.querySelector("#category-title").focus();
+  activeScreen.hidden = true;
+  screen.hidden = false;
+  screen.classList.add("is-entering");
+  activeScreen = screen;
+  isTransitioning = false;
+  screen.querySelector("[data-screen-title]").focus();
 }
 
-beginButton.addEventListener("click", () => {
-  beginButton.disabled = true;
+function transitionTo(screen) {
+  if (isTransitioning) return;
 
+  isTransitioning = true;
+  pendingScreen = screen;
   if (prefersReducedMotion.matches) {
-    showCategoryScreen();
+    showScreen(screen);
+    pendingScreen = null;
     return;
   }
 
   showcase.classList.add("is-reconstructing");
+}
+
+beginButton.addEventListener("click", () => {
+  beginButton.disabled = true;
+  transitionTo(categoryScreen);
 });
 
 reconstructEffect.addEventListener("animationend", (event) => {
-  if (event.target === reconstructEffect) showCategoryScreen();
+  if (event.target !== reconstructEffect || !pendingScreen) return;
+  const screen = pendingScreen;
+  pendingScreen = null;
+  showScreen(screen);
 });
 
 categoryScreen.addEventListener("animationend", (event) => {
   if (event.target === categoryScreen) categoryScreen.classList.remove("is-entering");
 });
+
+categoryScreen.addEventListener("click", (event) => {
+  const card = event.target.closest("[data-category]");
+  if (!card || isTransitioning) return;
+
+  detailTitle.textContent = card.dataset.category;
+  transitionTo(detailScreen);
+});
+
+detailScreen.addEventListener("animationend", (event) => {
+  if (event.target === detailScreen) detailScreen.classList.remove("is-entering");
+});
+
+backButton.addEventListener("click", () => transitionTo(categoryScreen));
 
 video.addEventListener("loadeddata", () => {
   window.requestAnimationFrame(() => video.classList.remove("is-fading"));

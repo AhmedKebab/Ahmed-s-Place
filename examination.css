@@ -168,7 +168,7 @@ body {
 }
 
 .category-screen.is-entering {
-  animation: assemble-screen 700ms steps(7, end) both;
+  animation: assemble-screen 950ms steps(9, end) both;
 }
 
 @keyframes assemble-screen {
@@ -204,6 +204,9 @@ body {
     linear-gradient(135deg, rgba(28, 32, 39, 0.54), rgba(8, 10, 14, 0.42));
   box-shadow: inset 0 0 32px rgba(0, 0, 0, 0.24), 0 8px 26px rgba(0, 0, 0, 0.18);
   backdrop-filter: blur(3px);
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
   transition:
     border-color 180ms ease,
     background-color 180ms ease,
@@ -225,6 +228,30 @@ body {
   text-align: center;
   text-shadow: 0 2px 12px rgba(0, 0, 0, 0.9);
   text-transform: uppercase;
+}
+
+.category-card:focus-visible {
+  outline: 2px solid rgba(225, 230, 238, 0.85);
+  outline-offset: 4px;
+}
+
+.detail-screen {
+  place-items: center;
+}
+
+.detail-content {
+  display: grid;
+  justify-items: start;
+  gap: 30px;
+  min-width: min(100%, 300px);
+  padding: clamp(24px, 4vw, 48px);
+  border: 1px solid rgba(205, 211, 221, 0.14);
+  background: rgba(5, 6, 9, 0.32);
+  backdrop-filter: blur(3px);
+}
+
+.detail-content .game-title {
+  margin: 0;
 }
 
 .reconstruct-effect {
@@ -262,11 +289,11 @@ body {
 }
 
 .showcase.is-reconstructing .reconstruct-effect {
-  animation: digital-reconstruct 950ms steps(8, end) both;
+  animation: digital-reconstruct 1400ms steps(11, end) both;
 }
 
 .showcase.is-reconstructing .video-frame {
-  animation: video-reconstruct 950ms steps(8, end) both;
+  animation: video-reconstruct 1400ms steps(11, end) both;
 }
 
 @keyframes digital-reconstruct {
@@ -341,6 +368,11 @@ body {
 
   .category-card {
     min-height: clamp(92px, 14vh, 140px);
+  }
+
+  .detail-content {
+    min-width: min(100%, 280px);
+    padding: 28px 22px;
   }
 
   .cinematic-mask::before,
