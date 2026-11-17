@@ -146,6 +146,61 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
 const imageSceneDuration = 12000;
 const minimumBackgroundAspectRatio = 1.6;
 const settingsVersion = 2;
+const backgroundCueScenes = new Map([
+  [
+    backgroundRenders[2],
+    {
+      cues: [{
+        source: "assets/background-audio/render-03-pride-of-rasonia.ogg",
+        maxPlaybackSeconds: imageSceneDuration / 1000,
+      }],
+    },
+  ],
+  [
+    backgroundRenders[3],
+    { cues: [{ source: "assets/background-audio/render-04-gilbert-callingtroy1.ogg" }] },
+  ],
+  [
+    backgroundRenders[4],
+    { cues: [{ source: "assets/background-audio/render-05-gilbert-to-toc1.ogg" }] },
+  ],
+  [
+    backgroundRenders[5],
+    { cues: [{ source: "assets/background-audio/render-06-gilbert-playerkill2.ogg" }] },
+  ],
+  [
+    backgroundRenders[6],
+    { cues: [{ source: "assets/background-audio/render-07-bill-rif-squad.mp3" }] },
+  ],
+  [
+    backgroundRenders[7],
+    { cues: [{ source: "assets/background-audio/render-08-post-gilbert.mp3" }] },
+  ],
+  [
+    backgroundRenders[8],
+    {
+      cues: [{
+        source: "assets/background-audio/render-09-enraged-lurker.mp3",
+        maxPlaybackSeconds: 5,
+        muffled: true,
+      }],
+    },
+  ],
+  [
+    backgroundRenders[9],
+    {
+      cues: [
+        { source: "assets/background-audio/render-10-radio-5.mp3" },
+        { source: "assets/background-audio/render-10-radio-2.mp3" },
+        {
+          source: "assets/background-audio/render-10-radio-1.mp3",
+          trimEndSeconds: 7,
+        },
+      ],
+      waitForCues: true,
+    },
+  ],
+]);
 
 let renderQueue = [];
 let previousRenderIndex = -1;
@@ -161,6 +216,14 @@ let currentEnemyId = null;
 let enemyCatalogScrollTop = 0;
 let activeMediaTrigger = null;
 let activeBackgroundImage = null;
+let activeBackgroundRender = null;
+let activeBackgroundCueAudio = null;
+let activeBackgroundCueCleanup = null;
+let backgroundCueGeneration = 0;
+let backgroundCueSequenceIsActive = false;
+let backgroundCueNeedsGesture = false;
+let backgroundCueAdvancePending = false;
+let backgroundAudioUnlocked = false;
 let uiAudioContext = null;
 let settingsMenuIsAnimating = false;
 let settingsPanelHasFinished = false;
@@ -389,6 +452,164 @@ function updateFrameScale() {
 
 window.addEventListener("resize", updateFrameScale);
 
+function stopBackgroundCue() {
+  backgroundCueGeneration += 1;
+  backgroundCueNeedsGesture = false;
+  backgroundCueSequenceIsActive = false;
+
+  const audio = activeBackgroundCueAudio;
+  const cleanup = activeBackgroundCueCleanup;
+  activeBackgroundCueAudio = null;
+  activeBackgroundCueCleanup = null;
+  audio?.pause();
+  cleanup?.();
+}
+
+function finishBackgroundCue(source, cues, cueIndex, generation) {
+  if (generation !== backgroundCueGeneration) return;
+  if (cueIndex + 1 < cues.length) {
+    playBackgroundCue(source, cues, cueIndex + 1, generation);
+    return;
+  }
+
+  backgroundCueSequenceIsActive = false;
+  if (
+    backgroundCueAdvancePending
+    && activeBackgroundRender === source
+    && mediaModal.hidden
+  ) {
+    backgroundCueAdvancePending = false;
+    showNextRender();
+  }
+}
+
+function playBackgroundCue(source, cues, cueIndex, generation) {
+  if (generation !== backgroundCueGeneration) return;
+
+  const cue = cues[cueIndex];
+  const audio = new Audio(cue.source);
+  audio.preload = "auto";
+  if (cue.muffled) audio.volume = 0.8;
+
+  let cueFinished = false;
+  let cleanupAudioGraph = () => {};
+  const releaseAudio = () => {
+    if (activeBackgroundCueAudio === audio) {
+      activeBackgroundCueAudio = null;
+      activeBackgroundCueCleanup = null;
+    }
+    cleanupAudioGraph();
+  };
+  const finishCue = () => {
+    if (cueFinished) return;
+    cueFinished = true;
+    audio.pause();
+    releaseAudio();
+    finishBackgroundCue(source, cues, cueIndex, generation);
+  };
+  const handlePlayFailure = (error) => {
+    if (cueFinished || generation !== backgroundCueGeneration) return;
+    if (error.name === "NotAllowedError") {
+      cueFinished = true;
+      backgroundCueSequenceIsActive = false;
+      backgroundCueNeedsGesture = true;
+      audio.pause();
+      releaseAudio();
+      return;
+    }
+    console.error(`Unable to play background cue ${cue.source}.`, error);
+    finishCue();
+  };
+  const checkPlaybackLimit = () => {
+    const sourceDuration = Number.isFinite(audio.duration)
+      ? audio.duration - (cue.trimEndSeconds ?? 0)
+      : Number.POSITIVE_INFINITY;
+    const playbackLimit = Math.min(
+      sourceDuration,
+      cue.maxPlaybackSeconds ?? Number.POSITIVE_INFINITY,
+    );
+    if (Number.isFinite(playbackLimit) && audio.currentTime >= playbackLimit) {
+      finishCue();
+    }
+  };
+
+  audio.addEventListener("ended", finishCue, { once: true });
+  audio.addEventListener("error", () => {
+    if (generation !== backgroundCueGeneration) return;
+    console.error(`Unable to load background cue ${cue.source}.`);
+    finishCue();
+  }, { once: true });
+  audio.addEventListener("loadedmetadata", checkPlaybackLimit);
+  audio.addEventListener("timeupdate", checkPlaybackLimit);
+
+  if (cue.muffled) {
+    const AudioContextConstructor = window.AudioContext ?? window.webkitAudioContext;
+    if (AudioContextConstructor) {
+      if (!uiAudioContext) uiAudioContext = new AudioContextConstructor();
+      const mediaSource = uiAudioContext.createMediaElementSource(audio);
+      const filter = uiAudioContext.createBiquadFilter();
+      filter.type = "lowpass";
+      filter.frequency.value = 900;
+      filter.Q.value = 0.7;
+      mediaSource.connect(filter);
+      filter.connect(uiAudioContext.destination);
+      cleanupAudioGraph = () => {
+        mediaSource.disconnect();
+        filter.disconnect();
+      };
+    } else {
+      console.error("Web Audio is unavailable; the render 9 cue cannot be muffled.");
+    }
+  }
+
+  activeBackgroundCueAudio = audio;
+  activeBackgroundCueCleanup = cleanupAudioGraph;
+  const startPlayback = () => {
+    if (cueFinished || generation !== backgroundCueGeneration) return;
+    const playback = audio.play();
+    if (playback) playback.catch(handlePlayFailure);
+  };
+  if (cue.muffled && uiAudioContext && uiAudioContext.state !== "running") {
+    uiAudioContext.resume().then(startPlayback).catch(handlePlayFailure);
+  } else {
+    startPlayback();
+  }
+}
+
+function startBackgroundCue(source) {
+  stopBackgroundCue();
+  const scene = backgroundCueScenes.get(source);
+  if (!scene) return;
+  if (!backgroundAudioUnlocked) {
+    backgroundCueNeedsGesture = true;
+    return;
+  }
+
+  const generation = backgroundCueGeneration;
+  backgroundCueSequenceIsActive = true;
+  playBackgroundCue(source, scene.cues, 0, generation);
+}
+
+function enableBackgroundAudio() {
+  backgroundAudioUnlocked = true;
+  if (backgroundCueNeedsGesture && activeBackgroundRender && mediaModal.hidden) {
+    startBackgroundCue(activeBackgroundRender);
+  }
+}
+
+function advanceAfterScene() {
+  const scene = backgroundCueScenes.get(activeBackgroundRender);
+  if (scene?.waitForCues && backgroundCueSequenceIsActive) {
+    backgroundCueAdvancePending = true;
+    return;
+  }
+  showNextRender();
+}
+
+function scheduleNextRender(delay = imageSceneDuration) {
+  carouselTimer = window.setTimeout(advanceAfterScene, delay);
+}
+
 function shuffledRenderIndices() {
   const queue = backgroundRenders
     .map((_, index) => index)
@@ -427,6 +648,8 @@ function takeNextRenderIndex() {
 
 function showNextRender() {
   window.clearTimeout(carouselTimer);
+  backgroundCueAdvancePending = false;
+  stopBackgroundCue();
   previousRenderIndex = takeNextRenderIndex();
   if (previousRenderIndex === null) return;
   recentRenderIndices.push(previousRenderIndex);
@@ -451,9 +674,11 @@ function showNextRender() {
 
     activeBackgroundImage?.classList.remove("is-visible");
     activeBackgroundImage = nextImage;
+    activeBackgroundRender = source;
     updateFrameScale();
+    startBackgroundCue(source);
     if (mediaModal.hidden) {
-      carouselTimer = window.setTimeout(showNextRender, imageSceneDuration);
+      scheduleNextRender();
     }
   };
   nextImage.onerror = () => {
@@ -762,7 +987,7 @@ function closeMediaVideo() {
   mediaPlayer.load();
   activeMediaTrigger?.focus();
   activeMediaTrigger = null;
-  carouselTimer = window.setTimeout(showNextRender, imageSceneDuration);
+  scheduleNextRender();
 }
 
 detailScreen.addEventListener("animationend", (event) => {
@@ -804,6 +1029,8 @@ document.addEventListener("pointerover", (event) => {
   if (!control || (event.relatedTarget instanceof Node && control.contains(event.relatedTarget))) return;
   playUiSound("hover");
 });
+window.addEventListener("pointerdown", enableBackgroundAudio, { passive: true });
+window.addEventListener("keydown", enableBackgroundAudio);
 settingsMenuSummary.addEventListener("click", (event) => {
   event.preventDefault();
   if (settingsMenuIsAnimating) return;
