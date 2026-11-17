@@ -1290,13 +1290,8 @@ body {
     transition-duration: 0.01ms;
   }
 
-  .settings-controls {
-    transition-duration: 0.01ms;
-  }
-
   .category-screen.is-entering,
   .enemy-detail,
-  .settings-menu.is-opening .settings-gear,
   .showcase :is(.category-card, .enemy-card, .animation-card, .begin-button, .media-close, .settings-menu summary, .settings-field select, .wiki-link):hover::after,
   .showcase :is(.category-card, .enemy-card, .animation-card, .begin-button, .media-close, .settings-menu summary, .settings-field select, .wiki-link):focus-visible::after,
   .showcase[data-quality="low"] :is(.category-card, .enemy-card, .animation-card, .begin-button):hover,

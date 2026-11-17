@@ -756,16 +756,16 @@ settingsMenuSummary.addEventListener("click", (event) => {
   settingsMenuIsAnimating = true;
   settingsPanelHasFinished = false;
   settingsGearHasFinished = isClosing;
-  settingsControls.style.overflowY = "hidden";
 
   if (settingsMenu.open) {
     settingsMenu.classList.add("is-closing");
     const height = settingsControls.getBoundingClientRect().height;
+    settingsControls.style.overflowY = "hidden";
     settingsControls.style.maxHeight = `${height}px`;
     settingsControls.style.opacity = "1";
     settingsControls.style.transform = "translateY(0)";
     void settingsControls.offsetHeight;
-    requestAnimationFrame(() => {
+    window.requestAnimationFrame(() => {
       settingsControls.style.maxHeight = "0px";
       settingsControls.style.opacity = "0";
       settingsControls.style.transform = "translateY(-24px)";
@@ -773,12 +773,17 @@ settingsMenuSummary.addEventListener("click", (event) => {
   } else {
     settingsMenu.classList.remove("is-closing");
     settingsMenu.open = true;
+    settingsControls.style.removeProperty("max-height");
+    settingsControls.style.removeProperty("opacity");
+    settingsControls.style.removeProperty("transform");
+    settingsControls.style.removeProperty("overflow-y");
+    const maxHeight = Math.min(settingsControls.scrollHeight, window.innerHeight * 0.58, 480);
+    settingsControls.style.overflowY = "hidden";
     settingsControls.style.maxHeight = "0px";
     settingsControls.style.opacity = "0";
     settingsControls.style.transform = "translateY(-24px)";
     void settingsControls.offsetHeight;
-    const maxHeight = Math.min(settingsControls.scrollHeight, window.innerHeight * 0.58, 480);
-    requestAnimationFrame(() => {
+    window.requestAnimationFrame(() => {
       settingsMenu.classList.add("is-opening");
       settingsControls.style.maxHeight = `${maxHeight}px`;
       settingsControls.style.opacity = "1";
@@ -788,7 +793,7 @@ settingsMenuSummary.addEventListener("click", (event) => {
 
   settingsMenuTransitionTimer = window.setTimeout(
     () => finishSettingsMenuTransition(true),
-    prefersReducedMotion.matches ? 100 : 820,
+    820,
   );
 });
 settingsControls.addEventListener("transitionend", (event) => {
