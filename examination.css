@@ -28,7 +28,7 @@ body {
   overflow: hidden;
   isolation: isolate;
   --menu-width: clamp(250px, 26vw, 390px);
-  --frame-inset: clamp(18px, 2.1vw, 30px);
+  --frame-inset: 0px;
   --frame-accent: rgba(165, 208, 216, 0.82);
   --frame-warning: rgba(224, 172, 103, 0.88);
   --frame-glow: rgba(120, 196, 215, 0.42);
@@ -265,8 +265,8 @@ body {
 }
 
 .frame-corner--top-left::after {
-  top: -3px;
-  left: -3px;
+  top: 1px;
+  left: 1px;
 }
 
 .frame-corner--top-right {
@@ -277,8 +277,8 @@ body {
 }
 
 .frame-corner--top-right::after {
-  top: -3px;
-  right: -3px;
+  top: 1px;
+  right: 1px;
 }
 
 .frame-corner--bottom-left {
@@ -289,8 +289,8 @@ body {
 }
 
 .frame-corner--bottom-left::after {
-  bottom: -3px;
-  left: -3px;
+  bottom: 1px;
+  left: 1px;
 }
 
 .frame-corner--bottom-right {
@@ -301,8 +301,8 @@ body {
 }
 
 .frame-corner--bottom-right::after {
-  right: -3px;
-  bottom: -3px;
+  right: 1px;
+  bottom: 1px;
 }
 
 .frame-readout,
@@ -343,7 +343,7 @@ body {
 }
 
 .frame-caption {
-  bottom: var(--frame-inset);
+  bottom: clamp(18px, 2.1vw, 30px);
   border-right: 1px solid var(--frame-accent);
 }
 
