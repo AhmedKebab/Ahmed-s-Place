@@ -434,8 +434,7 @@ body {
   list-style: none;
   text-transform: uppercase;
   transition:
-    color 220ms ease,
-    transform 280ms ease;
+    color 220ms ease;
 }
 
 .settings-menu summary::-webkit-details-marker {
@@ -452,23 +451,39 @@ body {
 }
 
 .settings-gear {
+  position: relative;
   display: inline-grid;
   width: 20px;
   height: 20px;
   place-items: center;
   font-size: 18px;
   line-height: 1;
-  transform: rotate(0);
-  transition: transform 420ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  transform: rotate(0deg);
+  transition: transform 520ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.settings-gear::after {
+  position: absolute;
+  top: 2px;
+  right: 1px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--frame-warning);
+  box-shadow: 0 0 6px var(--frame-glow);
+  content: "";
 }
 
 .settings-menu[open] summary {
   color: #fff;
-  transform: translateX(6px);
 }
 
 .settings-menu[open] .settings-gear {
-  transform: rotate(90deg);
+  transform: rotate(180deg);
+}
+
+.settings-menu.is-closing .settings-gear {
+  transform: rotate(0deg);
 }
 
 .settings-menu summary:focus-visible,
@@ -483,23 +498,6 @@ body {
   max-height: min(58vh, 480px);
   overflow-y: auto;
   padding: 8px 4px 8px 0;
-}
-
-.settings-menu[open] .settings-controls {
-  animation: settings-panel-drop 360ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
-  transform-origin: top;
-}
-
-@keyframes settings-panel-drop {
-  from {
-    opacity: 0;
-    transform: translateY(-9px) scaleY(0.94);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0) scaleY(1);
-  }
 }
 
 .settings-field {
@@ -1284,10 +1282,6 @@ body {
   .settings-menu summary,
   .settings-gear {
     transition-duration: 0.01ms;
-  }
-
-  .settings-menu[open] .settings-controls {
-    animation-duration: 0.01ms;
   }
 
   .category-screen.is-entering,

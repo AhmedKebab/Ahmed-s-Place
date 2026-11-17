@@ -131,6 +131,9 @@ const enemyWikiLink = document.querySelector("#enemy-wiki-link");
 const themeSetting = document.querySelector("#theme-setting");
 const qualitySetting = document.querySelector("#quality-setting");
 const settingsStatus = document.querySelector("#settings-status");
+const settingsMenu = document.querySelector(".settings-menu");
+const settingsMenuSummary = settingsMenu.querySelector("summary");
+const settingsControls = settingsMenu.querySelector(".settings-controls");
 const mediaModal = document.querySelector("#media-modal");
 const mediaPlayer = document.querySelector("#media-player");
 const mediaClose = document.querySelector("#media-close");
@@ -157,6 +160,7 @@ let enemyCatalogScrollTop = 0;
 let activeMediaTrigger = null;
 let activeBackgroundImage = null;
 let uiAudioContext = null;
+let settingsMenuAnimation = null;
 const settingsStorageKey = "examination-site-settings";
 
 function scheduleUiTone(context, frequencyStart, frequencyEnd, duration, volume, waveform) {
@@ -726,6 +730,41 @@ document.addEventListener("pointerover", (event) => {
   const control = event.target.closest(uiSoundControlSelector);
   if (!control || (event.relatedTarget instanceof Node && control.contains(event.relatedTarget))) return;
   playUiSound("hover");
+});
+settingsMenuSummary.addEventListener("click", (event) => {
+  event.preventDefault();
+  if (settingsMenuAnimation) return;
+
+  if (settingsMenu.open) {
+    settingsMenu.classList.add("is-closing");
+    const height = settingsControls.getBoundingClientRect().height;
+    settingsMenuAnimation = settingsControls.animate([
+      { maxHeight: `${height}px`, opacity: 1, transform: "translateY(0) scaleY(1)" },
+      { maxHeight: "0px", opacity: 0, transform: "translateY(-18px) scaleY(0.9)" },
+    ], {
+      duration: prefersReducedMotion.matches ? 1 : 420,
+      easing: "cubic-bezier(0.4, 0, 0.2, 1)",
+    });
+    settingsMenuAnimation.onfinish = () => {
+      settingsMenu.open = false;
+      settingsMenu.classList.remove("is-closing");
+      settingsMenuAnimation = null;
+    };
+    return;
+  }
+
+  settingsMenu.open = true;
+  const maxHeight = Math.min(settingsControls.scrollHeight, window.innerHeight * 0.58, 480);
+  settingsMenuAnimation = settingsControls.animate([
+    { maxHeight: "0px", opacity: 0, transform: "translateY(-18px) scaleY(0.9)" },
+    { maxHeight: `${maxHeight}px`, opacity: 1, transform: "translateY(0) scaleY(1)" },
+  ], {
+    duration: prefersReducedMotion.matches ? 1 : 520,
+    easing: "cubic-bezier(0.2, 0.8, 0.2, 1)",
+  });
+  settingsMenuAnimation.onfinish = () => {
+    settingsMenuAnimation = null;
+  };
 });
 document.addEventListener("click", (event) => {
   if (!(event.target instanceof Element) || !event.target.closest(uiSoundControlSelector)) return;
