@@ -183,7 +183,7 @@ body {
 .showcase-shade {
   position: absolute;
   z-index: -1;
-  inset: 0;
+  inset: var(--frame-inset);
   background:
     radial-gradient(ellipse at 58% 45%, transparent 30%, rgba(3, 4, 7, 0.34) 100%),
     linear-gradient(90deg, rgba(4, 5, 8, 0.17), transparent 48%, rgba(4, 5, 8, 0.12)),
@@ -194,7 +194,7 @@ body {
 .cinematic-mask {
   position: absolute;
   z-index: 0;
-  inset: 0;
+  inset: var(--frame-inset);
   box-shadow: inset 0 42px 62px rgba(0, 0, 0, 0.28), inset 0 -48px 66px rgba(0, 0, 0, 0.32);
   pointer-events: none;
 }
@@ -219,7 +219,7 @@ body {
 
 .examination-frame {
   position: absolute;
-  z-index: 0;
+  z-index: 2;
   inset: 0;
   color: var(--frame-accent);
   font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
@@ -343,16 +343,17 @@ body {
 }
 
 .frame-caption {
-  bottom: clamp(18px, 2.1vw, 30px);
+  bottom: var(--frame-inset);
   border-right: 1px solid var(--frame-accent);
 }
 
 .brand-panel {
   position: absolute;
   z-index: 1;
-  inset: 0 auto 0 0;
+  inset: var(--frame-inset) auto var(--frame-inset) var(--frame-inset);
   display: flex;
   width: var(--menu-width);
+  overflow-y: auto;
   padding: clamp(28px, 4vw, 64px) clamp(24px, 3.5vw, 52px);
   background: rgba(5, 6, 9, 0.18);
   border-right: 1px solid rgba(205, 211, 221, 0.1);
@@ -567,10 +568,11 @@ body {
 .category-screen {
   position: absolute;
   z-index: 1;
-  inset: 0;
+  inset: var(--frame-inset);
   display: grid;
   align-content: center;
   gap: clamp(24px, 5vh, 52px);
+  overflow-y: auto;
   padding: clamp(28px, 6vw, 88px);
   background: rgba(5, 6, 9, 0.14);
   backdrop-filter: blur(1px);
@@ -655,6 +657,7 @@ body {
 .detail-screen {
   place-items: stretch;
   padding: clamp(12px, 2vw, 24px);
+  inset: var(--frame-inset);
 }
 
 .detail-content {
@@ -949,7 +952,7 @@ body {
 .media-modal {
   position: fixed;
   z-index: 5;
-  inset: 0;
+  inset: var(--frame-inset);
   display: grid;
   place-items: center;
   padding: 24px;
@@ -964,8 +967,8 @@ body {
   display: block;
   width: auto;
   height: auto;
-  max-width: 90vw;
-  max-height: 80vh;
+  max-width: 100%;
+  max-height: 100%;
   opacity: 1;
   object-fit: contain;
   transition: opacity 350ms ease;
@@ -1016,7 +1019,7 @@ body {
 .reconstruct-effect {
   position: absolute;
   z-index: 3;
-  inset: 0;
+  inset: var(--frame-inset);
   overflow: hidden;
   opacity: 0;
   pointer-events: none;
