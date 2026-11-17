@@ -136,6 +136,8 @@ const backgroundImages = [
   document.querySelector("#background-image-next"),
 ];
 const showcase = document.querySelector(".showcase");
+const frameScale = document.querySelector("#frame-scale");
+const sourceScale = document.querySelector("#source-scale");
 const introScreen = document.querySelector("#intro-screen");
 const categoryScreen = document.querySelector("#category-screen");
 const detailScreen = document.querySelector("#detail-screen");
@@ -253,6 +255,31 @@ function applyVisualSettings() {
   showcase.dataset.quality = qualitySetting.value;
 }
 
+function updateFrameScale() {
+  const width = Math.round(showcase.clientWidth);
+  const height = Math.round(showcase.clientHeight);
+  if (width === 0 || height === 0) return;
+
+  const isCompact = window.matchMedia("(max-width: 600px)").matches;
+  const viewportRatio = (width / height).toFixed(2);
+  frameScale.textContent = isCompact
+    ? `V ${viewportRatio}:1`
+    : `VIEW ${width} x ${height} px / ${viewportRatio}:1`;
+  if (!activeBackgroundImage) {
+    sourceScale.textContent = isCompact ? "I --" : "SOURCE --";
+    return;
+  }
+
+  const imageRatio = (
+    activeBackgroundImage.naturalWidth / activeBackgroundImage.naturalHeight
+  ).toFixed(2);
+  sourceScale.textContent = isCompact
+    ? `I ${imageRatio}:1`
+    : `SOURCE ${activeBackgroundImage.naturalWidth} x ${activeBackgroundImage.naturalHeight} px`;
+}
+
+window.addEventListener("resize", updateFrameScale);
+
 function shuffledRenderIndices() {
   const queue = backgroundRenders
     .map((_, index) => index)
@@ -314,6 +341,7 @@ function showNextRender() {
 
     activeBackgroundImage?.classList.remove("is-visible");
     activeBackgroundImage = nextImage;
+    updateFrameScale();
     if (mediaModal.hidden) {
       carouselTimer = window.setTimeout(showNextRender, imageSceneDuration);
     }
@@ -688,4 +716,5 @@ showcase.addEventListener("pointermove", (event) => {
 
 loadSavedSettings();
 applyVisualSettings();
+updateFrameScale();
 showNextRender();

@@ -28,6 +28,9 @@ body {
   overflow: hidden;
   isolation: isolate;
   --menu-width: clamp(250px, 26vw, 390px);
+  --frame-accent: rgba(165, 208, 216, 0.82);
+  --frame-warning: rgba(224, 172, 103, 0.88);
+  --frame-glow: rgba(120, 196, 215, 0.42);
   --theme-accent: rgba(192, 199, 210, 0.48);
   --theme-glow: rgba(151, 196, 218, 0.2);
   --theme-panel: rgba(8, 10, 14, 0.42);
@@ -36,12 +39,18 @@ body {
 }
 
 .showcase[data-theme="city"] {
+  --frame-accent: rgba(224, 151, 129, 0.86);
+  --frame-warning: rgba(237, 129, 104, 0.92);
+  --frame-glow: rgba(208, 97, 74, 0.36);
   --theme-accent: rgba(213, 132, 112, 0.68);
   --theme-glow: rgba(219, 92, 75, 0.25);
   --theme-panel: rgba(42, 18, 19, 0.48);
 }
 
 .showcase[data-theme="rasonian"] {
+  --frame-accent: rgba(188, 198, 145, 0.86);
+  --frame-warning: rgba(222, 190, 104, 0.92);
+  --frame-glow: rgba(151, 173, 100, 0.38);
   --theme-accent: rgba(177, 190, 133, 0.68);
   --theme-glow: rgba(161, 181, 102, 0.24);
   --theme-panel: rgba(20, 28, 19, 0.5);
@@ -197,6 +206,136 @@ body {
 
 .cinematic-mask::after {
   bottom: 0;
+}
+
+.examination-frame {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  color: var(--frame-accent);
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  pointer-events: none;
+}
+
+.frame-corners {
+  position: absolute;
+  inset: clamp(18px, 2.1vw, 30px);
+  background:
+    linear-gradient(var(--frame-accent), var(--frame-accent)) center top / 1px 10px no-repeat,
+    linear-gradient(var(--frame-accent), var(--frame-accent)) center bottom / 1px 10px no-repeat,
+    linear-gradient(var(--frame-accent), var(--frame-accent)) left center / 10px 1px no-repeat,
+    linear-gradient(var(--frame-accent), var(--frame-accent)) right center / 10px 1px no-repeat;
+  opacity: 0.68;
+}
+
+.frame-corner {
+  position: absolute;
+  width: clamp(28px, 3vw, 46px);
+  height: clamp(28px, 3vw, 46px);
+  border-color: var(--frame-accent);
+  border-style: solid;
+  border-width: 0;
+  filter: drop-shadow(0 0 8px var(--frame-glow));
+}
+
+.frame-corner::after {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border: 1px solid var(--frame-warning);
+  background: var(--frame-accent);
+  box-shadow: 0 0 8px var(--frame-glow);
+  content: "";
+}
+
+.frame-corner--top-left {
+  top: 0;
+  left: 0;
+  border-top-width: 2px;
+  border-left-width: 2px;
+}
+
+.frame-corner--top-left::after {
+  top: -3px;
+  left: -3px;
+}
+
+.frame-corner--top-right {
+  top: 0;
+  right: 0;
+  border-top-width: 2px;
+  border-right-width: 2px;
+}
+
+.frame-corner--top-right::after {
+  top: -3px;
+  right: -3px;
+}
+
+.frame-corner--bottom-left {
+  bottom: 0;
+  left: 0;
+  border-bottom-width: 2px;
+  border-left-width: 2px;
+}
+
+.frame-corner--bottom-left::after {
+  bottom: -3px;
+  left: -3px;
+}
+
+.frame-corner--bottom-right {
+  right: 0;
+  bottom: 0;
+  border-right-width: 2px;
+  border-bottom-width: 2px;
+}
+
+.frame-corner--bottom-right::after {
+  right: -3px;
+  bottom: -3px;
+}
+
+.frame-readout,
+.frame-caption {
+  position: absolute;
+  right: clamp(54px, 5vw, 82px);
+  padding: 5px 9px;
+  background: linear-gradient(90deg, transparent, rgba(5, 8, 11, 0.68));
+  text-align: right;
+  text-shadow: 0 1px 6px #000;
+}
+
+.frame-readout {
+  top: clamp(22px, 3vh, 38px);
+  display: grid;
+  gap: 4px;
+  border-right: 1px solid var(--frame-warning);
+}
+
+.frame-readout-label,
+.frame-caption {
+  color: rgba(225, 233, 232, 0.72);
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.frame-readout-value {
+  color: var(--frame-accent);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+}
+
+.frame-readout-source {
+  color: var(--frame-warning);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+}
+
+.frame-caption {
+  bottom: clamp(18px, 2.1vw, 30px);
+  border-right: 1px solid var(--frame-accent);
 }
 
 .brand-panel {
@@ -999,6 +1138,24 @@ body {
   .brand-panel {
     width: var(--menu-width);
     padding: 28px 22px;
+  }
+
+  .frame-readout {
+    top: clamp(54px, 8vh, 72px);
+    right: 46px;
+    gap: 3px;
+    padding: 3px 5px;
+  }
+
+  .frame-readout-label,
+  .frame-caption {
+    display: none;
+  }
+
+  .frame-readout-value,
+  .frame-readout-source {
+    font-size: 8px;
+    letter-spacing: 0.02em;
   }
 
   .game-title {

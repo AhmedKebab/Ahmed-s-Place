@@ -26,6 +26,20 @@
       />
       <div class="showcase-shade" aria-hidden="true"></div>
       <div class="cinematic-mask" aria-hidden="true"></div>
+      <div class="examination-frame">
+        <div class="frame-corners" aria-hidden="true">
+          <span class="frame-corner frame-corner--top-left"></span>
+          <span class="frame-corner frame-corner--top-right"></span>
+          <span class="frame-corner frame-corner--bottom-left"></span>
+          <span class="frame-corner frame-corner--bottom-right"></span>
+        </div>
+        <div class="frame-readout" role="status" aria-live="polite">
+          <span class="frame-readout-label">CONTAINMENT VIEW / FRAME CALIBRATION</span>
+          <output class="frame-readout-value" id="frame-scale"></output>
+          <output class="frame-readout-source" id="source-scale"></output>
+        </div>
+        <span class="frame-caption">FULL-FRAME / CENTER CROP</span>
+      </div>
       <aside class="brand-panel" id="intro-screen" aria-labelledby="game-title">
         <div class="menu-content">
           <h1 class="game-title" id="game-title">MiloINC.</h1>
