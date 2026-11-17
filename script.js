@@ -243,19 +243,34 @@ function updateSoundControls() {
   backgroundSoundSetting.checked = backgroundSoundEnabled;
 }
 
+function playBackgroundClip(filename) {
+  const playback = video.play();
+  if (!playback) return;
+
+  playback.catch((error) => {
+    if (filename !== clips[previousClipIndex]) return;
+    if (error.name === "NotAllowedError" && !video.muted) {
+      video.muted = true;
+      const mutedPlayback = video.play();
+      if (mutedPlayback) {
+        mutedPlayback.catch((retryError) => {
+          console.error(`Unable to autoplay Examination clip ${filename} muted.`, retryError);
+        });
+      }
+      return;
+    }
+    if (error.name === "NotAllowedError") {
+      console.info("Background video autoplay is blocked by browser policy.");
+    } else {
+      console.error(`Unable to play Examination clip ${filename}.`, error);
+    }
+  });
+}
+
 function startBackgroundPlayback() {
   backgroundSoundStarted = true;
   video.muted = !backgroundSoundEnabled;
-  const playback = video.play();
-  if (playback) {
-    playback.catch((error) => {
-      if (error.name === "NotAllowedError") {
-        console.info("Background playback with sound is waiting for a user interaction.");
-      } else {
-        console.error("Unable to start background Examination playback.", error);
-      }
-    });
-  }
+  playBackgroundClip(clips[previousClipIndex]);
 }
 
 function shuffledClipIndices() {
@@ -280,18 +295,7 @@ function playNextClip() {
   video.controls = false;
   video.src = mediaFileUrl(filename);
   video.load();
-
-  const playback = video.play();
-  if (playback) {
-    playback.catch((error) => {
-      if (filename !== clips[previousClipIndex]) return;
-      if (error.name === "NotAllowedError") {
-        console.info("Background video autoplay is waiting for browser permission.");
-      } else {
-        console.error(`Unable to play Examination clip ${filename}.`, error);
-      }
-    });
-  }
+  playBackgroundClip(filename);
 }
 
 function showScreen(screen) {
@@ -639,31 +643,16 @@ mediaPlayer.addEventListener("pause", () => {
   }
 });
 
-video.addEventListener("volumechange", () => {
-  if (!backgroundSoundStarted) return;
-  const enabled = !video.muted;
-  if (enabled === backgroundSoundEnabled) return;
-  backgroundSoundEnabled = enabled;
-  updateSoundControls();
-  saveSettings();
-});
-
 video.addEventListener("loadeddata", () => {
-  window.requestAnimationFrame(() => video.classList.remove("is-fading"));
+  window.requestAnimationFrame(() => {
+    video.classList.remove("is-fading");
+    if (video.paused) playBackgroundClip(clips[previousClipIndex]);
+  });
 });
 
 video.addEventListener("pause", () => {
   if (video.ended || video.readyState === 0) return;
-  const playback = video.play();
-  if (playback) {
-    playback.catch((error) => {
-      if (error.name === "NotAllowedError") {
-        console.info("Background playback is waiting for browser permission.");
-      } else {
-        console.error("Unable to resume background Examination playback.", error);
-      }
-    });
-  }
+  playBackgroundClip(clips[previousClipIndex]);
 });
 
 video.addEventListener("timeupdate", () => {
