@@ -244,7 +244,9 @@ function applyVisualSettings() {
 }
 
 function updateSoundControls() {
-  video.muted = !backgroundSoundStarted || !backgroundSoundEnabled;
+  const shouldMute = !backgroundSoundStarted || !backgroundSoundEnabled;
+  video.defaultMuted = shouldMute;
+  video.muted = shouldMute;
   backgroundSoundSetting.checked = backgroundSoundEnabled;
 }
 
@@ -255,6 +257,7 @@ function playBackgroundClip(filename) {
   playback.catch((error) => {
     if (filename !== clips[previousClipIndex]) return;
     if (error.name === "NotAllowedError" && !video.muted) {
+      video.defaultMuted = true;
       video.muted = true;
       const mutedPlayback = video.play();
       if (mutedPlayback) {
@@ -274,7 +277,7 @@ function playBackgroundClip(filename) {
 
 function startBackgroundPlayback() {
   backgroundSoundStarted = true;
-  video.muted = !backgroundSoundEnabled;
+  updateSoundControls();
   playBackgroundClip(clips[previousClipIndex]);
 }
 
