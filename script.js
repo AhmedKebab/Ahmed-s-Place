@@ -286,6 +286,15 @@ function startBackgroundPlayback() {
   playBackgroundClip(clips[previousClipIndex]);
 }
 
+function startBackgroundPlaybackFromGesture() {
+  window.removeEventListener("pointerdown", startBackgroundPlaybackFromGesture);
+  window.removeEventListener("keydown", startBackgroundPlaybackFromGesture);
+  if (backgroundSoundEnabled) startBackgroundPlayback();
+}
+
+window.addEventListener("pointerdown", startBackgroundPlaybackFromGesture);
+window.addEventListener("keydown", startBackgroundPlaybackFromGesture);
+
 function shuffledClipIndices() {
   const queue = clips.map((_, index) => index);
   for (let index = queue.length - 1; index > 0; index -= 1) {
