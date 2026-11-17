@@ -95,11 +95,11 @@ body {
 }
 
 .showcase[data-quality="low"] :is(.category-card, .enemy-card, .animation-card, .begin-button):hover {
-  transform: translateY(-1px);
+  animation: glass-hover 640ms ease-out both;
 }
 
 .showcase[data-quality="medium"] :is(.category-card, .enemy-card, .animation-card, .begin-button):hover {
-  animation: water-float 4.2s ease-in-out infinite;
+  animation: glass-hover 900ms ease-out both;
 }
 
 .showcase[data-quality="high"] :is(.category-card, .enemy-card, .animation-card, .detail-content) {
@@ -334,14 +334,19 @@ body {
   background:
     radial-gradient(
       circle at var(--pointer-x, 50%) var(--pointer-y, 50%),
-      rgba(225, 239, 255, 0.28),
-      transparent 55%
+      rgba(238, 247, 255, 0.3),
+      transparent 58%
     ),
-    repeating-linear-gradient(
-      0deg,
-      transparent 0 7px,
-      rgba(204, 228, 255, 0.08) 7px 8px
+    linear-gradient(
+      112deg,
+      transparent 0 32%,
+      rgba(238, 247, 255, 0.08) 40%,
+      rgba(238, 247, 255, 0.36) 49%,
+      rgba(238, 247, 255, 0.08) 57%,
+      transparent 68%
     );
+  border: 1px solid rgba(238, 247, 255, 0.28);
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.2);
   content: "";
   opacity: 0;
   pointer-events: none;
@@ -350,19 +355,20 @@ body {
 
 .showcase :is(.category-card, .enemy-card, .animation-card, .begin-button, .media-close, .gallery-sound-button, .settings-menu summary, .settings-field select, .sound-setting, .wiki-link):hover::after,
 .showcase :is(.category-card, .enemy-card, .animation-card, .begin-button, .media-close, .gallery-sound-button, .settings-menu summary, .settings-field select, .sound-setting, .wiki-link):focus-visible::after {
-  animation: mirror-deconstruct 720ms steps(7, end) both;
+  animation: mirror-glass-sweep 760ms ease-out both;
 }
 
 .showcase[data-quality="low"] :is(.category-card, .enemy-card, .animation-card, .begin-button, .media-close, .gallery-sound-button, .settings-menu summary, .settings-field select, .sound-setting, .wiki-link)::after {
-  display: none;
+  background:
+    linear-gradient(112deg, transparent 35%, rgba(238, 247, 255, 0.22) 50%, transparent 65%);
 }
 
 .showcase[data-quality="high"] :is(.category-card, .enemy-card, .animation-card, .begin-button, .media-close, .gallery-sound-button, .settings-menu summary, .settings-field select, .sound-setting, .wiki-link):hover,
 .showcase[data-quality="extreme"] :is(.category-card, .enemy-card, .animation-card, .begin-button, .media-close, .gallery-sound-button, .settings-menu summary, .settings-field select, .sound-setting, .wiki-link):hover {
-  animation: water-float 3.2s ease-in-out infinite;
+  animation: glass-hover 1100ms ease-out both;
 }
 
-@keyframes mirror-deconstruct {
+@keyframes mirror-glass-sweep {
   0% {
     clip-path: inset(0 100% 0 0);
     opacity: 0;
@@ -379,19 +385,29 @@ body {
   }
 
   100% {
-    clip-path: inset(0 0 0 100%);
-    opacity: 0;
+    clip-path: inset(0);
+    opacity: 0.28;
   }
 }
 
-@keyframes water-float {
-  0%,
-  100% {
-    transform: translateY(-2px) rotate(0);
+@keyframes glass-hover {
+  0% {
+    filter: brightness(1);
+    box-shadow: inset 0 1px rgba(255, 255, 255, 0.08);
   }
 
-  50% {
-    transform: translateY(-5px) rotate(0.35deg);
+  55% {
+    filter: brightness(1.16);
+    box-shadow:
+      inset 0 1px rgba(255, 255, 255, 0.38),
+      0 0 22px var(--theme-glow);
+  }
+
+  100% {
+    filter: brightness(1.06);
+    box-shadow:
+      inset 0 1px rgba(255, 255, 255, 0.24),
+      0 0 12px var(--theme-glow);
   }
 }
 
@@ -408,20 +424,26 @@ body {
 }
 
 .category-screen.is-entering {
-  animation: assemble-screen 950ms steps(9, end) both;
+  animation: glass-screen-assemble 950ms ease-out both;
 }
 
-@keyframes assemble-screen {
+@keyframes glass-screen-assemble {
   from {
-    clip-path: inset(0 0 100% 0);
-    filter: brightness(1.8);
+    filter: blur(12px) brightness(1.3);
     opacity: 0;
+    transform: translateY(14px) scale(0.985);
+  }
+
+  55% {
+    filter: blur(3px) brightness(1.08);
+    opacity: 0.78;
+    transform: translateY(2px) scale(0.995);
   }
 
   to {
-    clip-path: inset(0);
-    filter: brightness(1);
+    filter: blur(0) brightness(1);
     opacity: 1;
+    transform: translateY(0) scale(1);
   }
 }
 
@@ -450,13 +472,15 @@ body {
   transition:
     border-color 180ms ease,
     background-color 180ms ease,
-    transform 180ms ease;
+    box-shadow 180ms ease;
 }
 
 .category-card:hover {
-  transform: translateY(-3px);
   border-color: rgba(225, 230, 238, 0.58);
   background-color: rgba(35, 40, 48, 0.22);
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, 0.25),
+    0 0 20px var(--theme-glow);
 }
 
 .category-card h2 {
@@ -562,15 +586,17 @@ body {
   text-align: center;
   transition:
     border-color 180ms ease,
-    transform 180ms ease,
+    box-shadow 180ms ease,
     background-color 180ms ease;
 }
 
 .enemy-card:hover,
 .enemy-card:focus-visible {
-  transform: translateY(-2px);
   border-color: rgba(225, 230, 238, 0.7);
   background: rgba(35, 40, 48, 0.38);
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, 0.25),
+    0 0 18px var(--theme-glow);
 }
 
 .enemy-card:focus-visible {
@@ -605,21 +631,7 @@ body {
   gap: 28px;
   color: #dce2eb;
   line-height: 1.65;
-  animation: enemy-detail-assemble 520ms ease both;
-}
-
-@keyframes enemy-detail-assemble {
-  from {
-    filter: blur(3px);
-    opacity: 0;
-    transform: translateY(10px);
-  }
-
-  to {
-    filter: blur(0);
-    opacity: 1;
-    transform: translateY(0);
-  }
+  animation: glass-screen-assemble 520ms ease both;
 }
 
 .enemy-detail h2,
@@ -866,6 +878,7 @@ body {
   overflow: hidden;
   opacity: 0;
   pointer-events: none;
+  backdrop-filter: blur(0);
 }
 
 .reconstruct-effect::before,
@@ -876,78 +889,133 @@ body {
 }
 
 .reconstruct-effect::before {
+  inset: 2%;
+  border: 1px solid rgba(238, 247, 255, 0.38);
   background:
-    repeating-linear-gradient(
-      0deg,
-      transparent 0 3px,
-      rgba(176, 202, 220, 0.16) 3px 4px
+    radial-gradient(ellipse at 24% 20%, rgba(255, 255, 255, 0.24), transparent 34%),
+    linear-gradient(
+      118deg,
+      transparent 22%,
+      rgba(225, 239, 255, 0.06) 34%,
+      rgba(238, 247, 255, 0.28) 48%,
+      rgba(225, 239, 255, 0.04) 60%,
+      transparent 74%
     ),
-    linear-gradient(90deg, transparent 38%, rgba(147, 190, 211, 0.48) 50%, transparent 62%);
+    linear-gradient(145deg, rgba(213, 227, 242, 0.12), rgba(11, 16, 24, 0.16));
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, 0.38),
+    inset 0 0 60px rgba(202, 226, 249, 0.12),
+    0 0 40px rgba(202, 226, 249, 0.12);
+  backdrop-filter: blur(9px) saturate(1.25);
   mix-blend-mode: screen;
 }
 
 .reconstruct-effect::after {
-  background:
-    linear-gradient(90deg, transparent 0 13%, rgba(151, 196, 218, 0.56) 13% 14%, transparent 14% 82%, rgba(151, 196, 218, 0.4) 82% 83%, transparent 83%),
-    linear-gradient(0deg, transparent 0 24%, rgba(155, 201, 222, 0.52) 24% 25%, transparent 25% 68%, rgba(155, 201, 222, 0.34) 68% 69%, transparent 69%);
-  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  inset: -35%;
+  background: linear-gradient(
+    112deg,
+    transparent 42%,
+    rgba(238, 247, 255, 0.06) 46%,
+    rgba(255, 255, 255, 0.72) 50%,
+    rgba(238, 247, 255, 0.08) 54%,
+    transparent 59%
+  );
+  mix-blend-mode: screen;
 }
 
 .showcase.is-reconstructing .reconstruct-effect {
-  animation: digital-reconstruct 1400ms steps(11, end) both;
+  animation: glass-pane-reconstruct 1400ms ease-in-out both;
+}
+
+.showcase.is-reconstructing .reconstruct-effect::before {
+  animation: glass-surface-form 1400ms ease-in-out both;
+}
+
+.showcase.is-reconstructing .reconstruct-effect::after {
+  animation: mirror-reflection-cross 1400ms ease-in-out both;
 }
 
 .showcase.is-reconstructing .video-frame {
-  animation: video-reconstruct 1400ms steps(11, end) both;
+  animation: background-glass-refract 1400ms ease-in-out both;
 }
 
-@keyframes digital-reconstruct {
+@keyframes glass-pane-reconstruct {
   0% {
     opacity: 0;
-    clip-path: inset(48% 0);
-    transform: translateX(-2%);
+    clip-path: polygon(50% 49%, 51% 50%, 50% 51%, 49% 50%);
+    backdrop-filter: blur(0);
   }
 
-  18% {
-    opacity: 1;
-    clip-path: inset(39% 0);
-    transform: translateX(1%);
-  }
-
-  43% {
-    opacity: 0.8;
-    clip-path: inset(22% 0);
-    transform: translateX(-1%);
-  }
-
-  72% {
+  32% {
     opacity: 0.9;
-    clip-path: inset(8% 0);
-    transform: translateX(0.5%);
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    backdrop-filter: blur(8px);
+  }
+
+  68% {
+    opacity: 0.84;
+    clip-path: inset(0);
+    backdrop-filter: blur(5px);
   }
 
   100% {
     opacity: 0;
     clip-path: inset(0);
-    transform: translateX(0);
+    backdrop-filter: blur(0);
   }
 }
 
-@keyframes video-reconstruct {
+@keyframes glass-surface-form {
+  0% {
+    opacity: 0;
+    transform: scale(0.97);
+    clip-path: polygon(50% 49%, 51% 50%, 50% 51%, 49% 50%);
+  }
+
+  36% {
+    opacity: 1;
+    transform: scale(1);
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.015);
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  }
+}
+
+@keyframes mirror-reflection-cross {
+  0% {
+    opacity: 0;
+    transform: translateX(-65%) rotate(12deg);
+  }
+
+  30% {
+    opacity: 0.9;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateX(65%) rotate(12deg);
+  }
+}
+
+@keyframes background-glass-refract {
   0%,
   100% {
     filter: brightness(0.86) contrast(1.1) saturate(0.84);
     transform: scale(1);
   }
 
-  24% {
-    filter: brightness(1.4) contrast(1.8) saturate(0.3);
-    transform: scale(1.025) translateX(0.4%);
+  34% {
+    filter: brightness(0.72) contrast(1.04) saturate(0.78) blur(2px);
+    transform: scale(1.008);
   }
 
-  52% {
-    filter: brightness(0.62) contrast(1.6) saturate(0.2);
-    transform: scale(1.01) translateX(-0.4%);
+  70% {
+    filter: brightness(0.8) contrast(1.06) saturate(0.8) blur(1px);
+    transform: scale(1.004);
   }
 }
 
@@ -1027,6 +1095,7 @@ body {
   .enemy-detail,
   .showcase :is(.category-card, .enemy-card, .animation-card, .begin-button, .media-close, .gallery-sound-button, .settings-menu summary, .settings-field select, .sound-setting, .wiki-link):hover::after,
   .showcase :is(.category-card, .enemy-card, .animation-card, .begin-button, .media-close, .gallery-sound-button, .settings-menu summary, .settings-field select, .sound-setting, .wiki-link):focus-visible::after,
+  .showcase[data-quality="low"] :is(.category-card, .enemy-card, .animation-card, .begin-button):hover,
   .showcase[data-quality="medium"] :is(.category-card, .enemy-card, .animation-card, .begin-button):hover,
   .showcase[data-quality="high"] :is(.category-card, .enemy-card, .animation-card, .begin-button, .media-close, .gallery-sound-button, .settings-menu summary, .settings-field select, .sound-setting, .wiki-link):hover,
   .showcase[data-quality="extreme"] :is(.category-card, .enemy-card, .animation-card, .begin-button, .media-close, .gallery-sound-button, .settings-menu summary, .settings-field select, .sound-setting, .wiki-link):hover,
