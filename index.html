@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#050609" />
     <title>Examination</title>
     <link rel="icon" type="image/webp" href="favicon.webp" />
-    <link rel="stylesheet" href="examination.css" />
+    <link rel="stylesheet" href="examination.css?v=metallic-rough" />
     <script src="script.js" defer></script>
   </head>
   <body>
@@ -43,7 +43,7 @@
       </div>
       <aside class="brand-panel" id="intro-screen" aria-labelledby="game-title">
         <div class="menu-content">
-          <h1 class="game-title" id="game-title">MiloINC.</h1>
+          <h1 class="game-title" id="game-title" data-screen-title tabindex="-1">MiloINC.</h1>
           <button class="begin-button" id="begin-button" type="button">Begin</button>
           <details class="settings-menu">
             <summary>
@@ -85,6 +85,7 @@
         hidden
       >
         <h1 class="game-title" id="category-title" data-screen-title tabindex="-1">Examination</h1>
+        <button class="begin-button category-back" id="category-back-button" type="button">Back to Main Menu</button>
         <div class="category-grid">
           <button class="category-card" type="button" data-category="Enemies"><h2>Enemies</h2></button>
           <button class="category-card" type="button" data-category="Weapons"><h2>Weapons</h2></button>

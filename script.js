@@ -128,6 +128,7 @@ const detailScreen = document.querySelector("#detail-screen");
 const detailTitle = document.querySelector("#detail-title");
 const detailViewport = document.querySelector("#detail-viewport");
 const enemyWikiLink = document.querySelector("#enemy-wiki-link");
+const categoryBackButton = document.querySelector("#category-back-button");
 const themeSetting = document.querySelector("#theme-setting");
 const qualitySetting = document.querySelector("#quality-setting");
 const settingsStatus = document.querySelector("#settings-status");
@@ -469,6 +470,7 @@ function showScreen(screen) {
   screen.classList.add("is-entering");
   activeScreen = screen;
   isTransitioning = false;
+  if (screen === introScreen) beginButton.disabled = false;
   screen.querySelector("[data-screen-title]").focus();
 }
 
@@ -489,6 +491,10 @@ function transitionTo(screen) {
 beginButton.addEventListener("click", () => {
   beginButton.disabled = true;
   transitionTo(categoryScreen);
+});
+
+categoryBackButton.addEventListener("click", () => {
+  transitionTo(introScreen);
 });
 
 themeSetting.addEventListener("change", () => {
