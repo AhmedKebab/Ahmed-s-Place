@@ -99,6 +99,7 @@ const themeSetting = document.querySelector("#theme-setting");
 const qualitySetting = document.querySelector("#quality-setting");
 const backgroundSoundSetting = document.querySelector("#background-sound-setting");
 const gallerySoundSetting = document.querySelector("#gallery-sound-setting");
+const settingsStatus = document.querySelector("#settings-status");
 const mediaModal = document.querySelector("#media-modal");
 const mediaPlayer = document.querySelector("#media-player");
 const mediaClose = document.querySelector("#media-close");
@@ -120,6 +121,93 @@ let enemyCatalogScrollTop = 0;
 let activeMediaTrigger = null;
 let backgroundSoundEnabled = backgroundSoundSetting.checked;
 let gallerySoundEnabled = gallerySoundSetting.checked;
+const settingsStorageKey = "examination-site-settings";
+
+function setSettingsStatus(message) {
+  settingsStatus.textContent = message;
+  settingsStatus.hidden = false;
+}
+
+function isStorageError(error) {
+  return error instanceof DOMException &&
+    ["SecurityError", "QuotaExceededError"].includes(error.name);
+}
+
+function loadSavedSettings() {
+  let serializedSettings;
+  try {
+    serializedSettings = window.localStorage.getItem(settingsStorageKey);
+  } catch (error) {
+    if (!isStorageError(error)) throw error;
+    console.error("Unable to read saved Examination settings.", error);
+    setSettingsStatus("Saved settings could not be read; current choices will apply for this visit only.");
+    return;
+  }
+  if (!serializedSettings) return;
+
+  let savedSettings;
+  try {
+    savedSettings = JSON.parse(serializedSettings);
+  } catch (error) {
+    if (!(error instanceof SyntaxError)) throw error;
+    console.error("Saved Examination settings are not valid JSON.", error);
+    setSettingsStatus("Saved settings were invalid, so default choices are being used.");
+    return;
+  }
+  if (!savedSettings || typeof savedSettings !== "object" || Array.isArray(savedSettings)) {
+    console.error("Saved Examination settings have an invalid format.");
+    setSettingsStatus("Saved settings were invalid, so default choices are being used.");
+    return;
+  }
+
+  const invalidFields = [];
+  const validThemes = new Set(Array.from(themeSetting.options, (option) => option.value));
+  const validQualities = new Set(Array.from(qualitySetting.options, (option) => option.value));
+  if (validThemes.has(savedSettings.theme)) {
+    themeSetting.value = savedSettings.theme;
+  } else {
+    invalidFields.push("theme");
+  }
+  if (validQualities.has(savedSettings.quality)) {
+    qualitySetting.value = savedSettings.quality;
+  } else {
+    invalidFields.push("graphics quality");
+  }
+  if (typeof savedSettings.backgroundSound === "boolean") {
+    backgroundSoundSetting.checked = savedSettings.backgroundSound;
+  } else {
+    invalidFields.push("background sound");
+  }
+  if (typeof savedSettings.gallerySound === "boolean") {
+    gallerySoundSetting.checked = savedSettings.gallerySound;
+  } else {
+    invalidFields.push("gallery sound");
+  }
+
+  if (invalidFields.length > 0) {
+    console.error(`Saved Examination settings have invalid fields: ${invalidFields.join(", ")}.`);
+    setSettingsStatus(`Some saved settings were invalid and have been reset: ${invalidFields.join(", ")}.`);
+  } else {
+    setSettingsStatus("Your saved settings have been restored.");
+  }
+}
+
+function saveSettings() {
+  const settings = {
+    theme: themeSetting.value,
+    quality: qualitySetting.value,
+    backgroundSound: backgroundSoundEnabled,
+    gallerySound: gallerySoundEnabled,
+  };
+  try {
+    window.localStorage.setItem(settingsStorageKey, JSON.stringify(settings));
+    setSettingsStatus("Settings saved in this browser.");
+  } catch (error) {
+    if (!isStorageError(error)) throw error;
+    console.error("Unable to store Examination settings.", error);
+    setSettingsStatus("Settings could not be stored; they will reset when you leave this page.");
+  }
+}
 
 function applyVisualSettings() {
   showcase.dataset.theme = themeSetting.value;
@@ -220,16 +308,24 @@ beginButton.addEventListener("click", () => {
   transitionTo(categoryScreen);
 });
 
-themeSetting.addEventListener("change", applyVisualSettings);
-qualitySetting.addEventListener("change", applyVisualSettings);
+themeSetting.addEventListener("change", () => {
+  applyVisualSettings();
+  saveSettings();
+});
+qualitySetting.addEventListener("change", () => {
+  applyVisualSettings();
+  saveSettings();
+});
 backgroundSoundSetting.addEventListener("change", () => {
   backgroundSoundEnabled = backgroundSoundSetting.checked;
   updateSoundControls();
+  saveSettings();
   if (backgroundSoundEnabled) startBackgroundPlayback();
 });
 gallerySoundSetting.addEventListener("change", () => {
   gallerySoundEnabled = gallerySoundSetting.checked;
   updateSoundControls();
+  saveSettings();
   if (gallerySoundEnabled && !mediaModal.hidden) startGalleryPlayback();
 });
 
@@ -531,6 +627,7 @@ window.addEventListener("keydown", (event) => {
 gallerySoundButton.addEventListener("click", () => {
   gallerySoundEnabled = !gallerySoundEnabled;
   updateSoundControls();
+  saveSettings();
   if (gallerySoundEnabled) startGalleryPlayback();
 });
 
@@ -539,6 +636,7 @@ video.addEventListener("volumechange", () => {
   if (enabled === backgroundSoundEnabled) return;
   backgroundSoundEnabled = enabled;
   updateSoundControls();
+  saveSettings();
 });
 
 mediaPlayer.addEventListener("volumechange", () => {
@@ -546,6 +644,7 @@ mediaPlayer.addEventListener("volumechange", () => {
   if (enabled === gallerySoundEnabled) return;
   gallerySoundEnabled = enabled;
   updateSoundControls();
+  saveSettings();
 });
 
 video.addEventListener("loadeddata", () => {
@@ -584,6 +683,9 @@ showcase.addEventListener("pointermove", (event) => {
   interactive.style.setProperty("--pointer-y", `${event.clientY - bounds.top}px`);
 });
 
+loadSavedSettings();
+backgroundSoundEnabled = backgroundSoundSetting.checked;
+gallerySoundEnabled = gallerySoundSetting.checked;
 applyVisualSettings();
 updateSoundControls();
 playNextClip();
