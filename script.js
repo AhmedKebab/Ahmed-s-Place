@@ -72,6 +72,7 @@ const clips = [
   "Cerberus_Intro_Cutscene.mp4",
   "Sinitzyn_QTE_Success.mp4",
   "Sinitzyn_P2_Execution.mp4",
+  "Chimera_Alt_P2_Execution.mp4",
   "Official_render_of_Gilbert.png",
 ];
 const mediaFileDirectories = new Map([
