@@ -154,7 +154,7 @@ body {
 
 .background-image.is-side-render {
   inset: 0 0 0 var(--menu-width);
-  width: auto;
+  width: calc(100% - var(--menu-width));
   height: 100%;
   object-fit: cover;
   object-position: left center;
@@ -1073,13 +1073,6 @@ body {
   .cinematic-mask::before,
   .cinematic-mask::after {
     height: 8px;
-  }
-
-  .background-image.is-side-render {
-    inset: 0 0 0 var(--menu-width);
-    width: auto;
-    height: 100%;
-    object-position: left center;
   }
 }
 
