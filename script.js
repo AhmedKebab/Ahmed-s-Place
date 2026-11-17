@@ -95,9 +95,14 @@ const detailScreen = document.querySelector("#detail-screen");
 const detailTitle = document.querySelector("#detail-title");
 const detailViewport = document.querySelector("#detail-viewport");
 const enemyWikiLink = document.querySelector("#enemy-wiki-link");
+const themeSetting = document.querySelector("#theme-setting");
+const qualitySetting = document.querySelector("#quality-setting");
+const backgroundSoundSetting = document.querySelector("#background-sound-setting");
+const gallerySoundSetting = document.querySelector("#gallery-sound-setting");
 const mediaModal = document.querySelector("#media-modal");
 const mediaPlayer = document.querySelector("#media-player");
 const mediaClose = document.querySelector("#media-close");
+const gallerySoundButton = document.querySelector("#gallery-sound-button");
 const reconstructEffect = document.querySelector("#reconstruct-effect");
 const beginButton = document.querySelector("#begin-button");
 const backButton = document.querySelector("#back-button");
@@ -114,6 +119,43 @@ let isTransitioning = false;
 let currentEnemyId = null;
 let enemyCatalogScrollTop = 0;
 let activeMediaTrigger = null;
+let backgroundSoundEnabled = backgroundSoundSetting.checked;
+let gallerySoundEnabled = gallerySoundSetting.checked;
+
+function applyVisualSettings() {
+  showcase.dataset.theme = themeSetting.value;
+  showcase.dataset.quality = qualitySetting.value;
+}
+
+function updateSoundControls() {
+  video.muted = !backgroundSoundEnabled;
+  soundButton.textContent = backgroundSoundEnabled ? "Background: On" : "Background: Off";
+  soundButton.setAttribute(
+    "aria-label",
+    backgroundSoundEnabled ? "Turn background video sound off" : "Turn background video sound on",
+  );
+  soundButton.setAttribute("aria-pressed", String(backgroundSoundEnabled));
+  backgroundSoundSetting.checked = backgroundSoundEnabled;
+
+  mediaPlayer.muted = !gallerySoundEnabled;
+  gallerySoundSetting.checked = gallerySoundEnabled;
+  gallerySoundButton.textContent = gallerySoundEnabled ? "Video sound: On" : "Video sound: Off";
+  gallerySoundButton.setAttribute("aria-pressed", String(gallerySoundEnabled));
+}
+
+function startBackgroundPlayback() {
+  video.muted = !backgroundSoundEnabled;
+  const playback = video.play();
+  if (playback) {
+    playback.catch((error) => {
+      if (error.name === "NotAllowedError") {
+        console.info("Background playback with sound is waiting for a user interaction.");
+      } else {
+        console.error("Unable to start background Examination playback.", error);
+      }
+    });
+  }
+}
 
 function shuffledClipIndices() {
   const queue = clips.map((_, index) => index);
@@ -133,6 +175,7 @@ function playNextClip() {
   previousClipIndex = clipQueue.pop();
   const filename = clips[previousClipIndex];
   video.classList.add("is-fading");
+  video.muted = !backgroundSoundEnabled;
   video.autoplay = !prefersReducedMotion.matches;
   video.controls = prefersReducedMotion.matches;
   video.src = `${examinationWiki}/Special:FilePath/${encodeURIComponent(filename).replaceAll("'", "%27")}`;
@@ -146,6 +189,7 @@ function playNextClip() {
       if (filename !== clips[previousClipIndex]) return;
       if (error.name === "NotAllowedError") {
         video.controls = true;
+        console.info("Background playback with sound is waiting for a user interaction.");
       } else {
         console.error(`Unable to play Examination clip ${filename}.`, error);
       }
@@ -179,7 +223,21 @@ function transitionTo(screen) {
 
 beginButton.addEventListener("click", () => {
   beginButton.disabled = true;
+  startBackgroundPlayback();
   transitionTo(categoryScreen);
+});
+
+themeSetting.addEventListener("change", applyVisualSettings);
+qualitySetting.addEventListener("change", applyVisualSettings);
+backgroundSoundSetting.addEventListener("change", () => {
+  backgroundSoundEnabled = backgroundSoundSetting.checked;
+  updateSoundControls();
+  if (backgroundSoundEnabled) startBackgroundPlayback();
+});
+gallerySoundSetting.addEventListener("change", () => {
+  gallerySoundEnabled = gallerySoundSetting.checked;
+  updateSoundControls();
+  if (gallerySoundEnabled && !mediaModal.hidden) startGalleryPlayback();
 });
 
 reconstructEffect.addEventListener("animationend", (event) => {
@@ -413,13 +471,31 @@ function renderLurkerDetail(enemy) {
 
 function openMediaVideo(source, trigger) {
   activeMediaTrigger = trigger;
+  mediaPlayer.muted = !gallerySoundEnabled;
   mediaPlayer.src = source;
   mediaModal.hidden = false;
   mediaClose.focus();
   const playback = mediaPlayer.play();
   if (playback) {
     playback.catch((error) => {
-      console.error("Unable to play the selected enemy animation.", error);
+      if (error.name === "NotAllowedError") {
+        console.info("Gallery playback with sound is waiting for browser permission.");
+      } else {
+        console.error("Unable to play the selected enemy animation.", error);
+      }
+    });
+  }
+}
+
+function startGalleryPlayback() {
+  const playback = mediaPlayer.play();
+  if (playback) {
+    playback.catch((error) => {
+      if (error.name === "NotAllowedError") {
+        console.info("Gallery playback with sound is waiting for browser permission.");
+      } else {
+        console.error("Unable to enable sound for the selected enemy animation.", error);
+      }
     });
   }
 }
@@ -460,23 +536,29 @@ window.addEventListener("keydown", (event) => {
 });
 
 soundButton.addEventListener("click", () => {
-  video.muted = !video.muted;
-  soundButton.textContent = video.muted ? "Sound: Off" : "Sound: On";
-  soundButton.setAttribute("aria-label", video.muted ? "Turn video sound on" : "Mute video sound");
-  soundButton.setAttribute("aria-pressed", String(!video.muted));
+  backgroundSoundEnabled = !backgroundSoundEnabled;
+  updateSoundControls();
+  if (backgroundSoundEnabled) startBackgroundPlayback();
+});
 
-  if (!video.muted && video.paused) {
-    const playback = video.play();
-    if (playback) {
-      playback.catch((error) => {
-        console.error("Unable to start Examination playback with sound.", error);
-        video.muted = true;
-        soundButton.textContent = "Sound: Off";
-        soundButton.setAttribute("aria-label", "Turn video sound on");
-        soundButton.setAttribute("aria-pressed", "false");
-      });
-    }
-  }
+gallerySoundButton.addEventListener("click", () => {
+  gallerySoundEnabled = !gallerySoundEnabled;
+  updateSoundControls();
+  if (gallerySoundEnabled) startGalleryPlayback();
+});
+
+video.addEventListener("volumechange", () => {
+  const enabled = !video.muted;
+  if (enabled === backgroundSoundEnabled) return;
+  backgroundSoundEnabled = enabled;
+  updateSoundControls();
+});
+
+mediaPlayer.addEventListener("volumechange", () => {
+  const enabled = !mediaPlayer.muted;
+  if (enabled === gallerySoundEnabled) return;
+  gallerySoundEnabled = enabled;
+  updateSoundControls();
 });
 
 video.addEventListener("loadeddata", () => {
@@ -505,4 +587,16 @@ video.addEventListener("error", () => {
 });
 
 prefersReducedMotion.addEventListener("change", playNextClip);
+showcase.addEventListener("pointermove", (event) => {
+  const interactive = event.target.closest(
+    ".category-card, .enemy-card, .animation-card, .begin-button, .sound-button, .media-close, .gallery-sound-button, .settings-menu summary, .settings-field select, .sound-setting, .wiki-link",
+  );
+  if (!interactive || !showcase.contains(interactive)) return;
+  const bounds = interactive.getBoundingClientRect();
+  interactive.style.setProperty("--pointer-x", `${event.clientX - bounds.left}px`);
+  interactive.style.setProperty("--pointer-y", `${event.clientY - bounds.top}px`);
+});
+
+applyVisualSettings();
+updateSoundControls();
 playNextClip();

@@ -14,7 +14,6 @@
         class="video-frame"
         id="examination-video"
         autoplay
-        muted
         playsinline
         preload="auto"
       ></video>
@@ -24,13 +23,44 @@
         class="sound-button"
         id="sound-button"
         type="button"
-        aria-label="Turn video sound on"
-        aria-pressed="false"
-      >Sound: Off</button>
+        aria-label="Turn background video sound off"
+        aria-pressed="true"
+      >Background: On</button>
       <aside class="brand-panel" id="intro-screen" aria-labelledby="game-title">
         <div class="menu-content">
           <h1 class="game-title" id="game-title">Examination</h1>
           <button class="begin-button" id="begin-button" type="button">Begin</button>
+          <details class="settings-menu">
+            <summary>Settings</summary>
+            <div class="settings-controls">
+              <label class="settings-field">
+                <span>Theme</span>
+                <select id="theme-setting">
+                  <option value="facility">Facility / Containment</option>
+                  <option value="city">City Outbreak</option>
+                  <option value="rasonian">Rasonian Conflict</option>
+                </select>
+              </label>
+              <label class="settings-field">
+                <span>Graphics quality</span>
+                <select id="quality-setting">
+                  <option value="low">Low</option>
+                  <option value="medium" selected>Medium</option>
+                  <option value="high">High</option>
+                  <option value="extreme">Extreme (RTX-style)</option>
+                </select>
+              </label>
+              <label class="sound-setting">
+                <input id="background-sound-setting" type="checkbox" checked />
+                <span>Background video sound</span>
+              </label>
+              <label class="sound-setting">
+                <input id="gallery-sound-setting" type="checkbox" checked />
+                <span>Gallery video sound</span>
+              </label>
+              <p class="settings-note">Browsers may require a click on Begin before background sound starts.</p>
+            </div>
+          </details>
         </div>
       </aside>
       <section
@@ -75,6 +105,7 @@
         </div>
       </section>
       <div class="media-modal" id="media-modal" role="dialog" aria-modal="true" aria-label="Animation video" hidden>
+        <button class="gallery-sound-button" id="gallery-sound-button" type="button" aria-pressed="true">Video sound: On</button>
         <button class="media-close" id="media-close" type="button" aria-label="Close video">×</button>
         <video id="media-player" controls playsinline></video>
       </div>
