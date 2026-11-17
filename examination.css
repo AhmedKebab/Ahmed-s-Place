@@ -1,0 +1,162 @@
+:root {
+  color-scheme: dark;
+  --void: #050609;
+  --frame: #0a0c11;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-width: 320px;
+  min-height: 100%;
+  margin: 0;
+  background: var(--void);
+}
+
+body {
+  min-height: 100vh;
+  min-height: 100svh;
+}
+
+.app-shell {
+  display: grid;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100svh;
+  grid-template-columns: minmax(210px, 24vw) minmax(0, 1fr);
+  overflow: hidden;
+  background: var(--void);
+}
+
+.brand-panel {
+  position: relative;
+  z-index: 2;
+  padding: clamp(24px, 3.2vw, 48px) clamp(18px, 2.4vw, 38px);
+  border-right: 1px solid rgba(255, 255, 255, 0.075);
+  background:
+    radial-gradient(ellipse at 0% 8%, rgba(116, 128, 145, 0.08), transparent 55%),
+    linear-gradient(155deg, #090b10, #050609 72%);
+}
+
+.name-crop {
+  width: min(100%, 255px);
+  height: 66px;
+  overflow: hidden;
+}
+
+.name-crop img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 49%;
+  filter: brightness(0.9) contrast(1.12);
+}
+
+.showcase {
+  position: relative;
+  min-width: 0;
+  min-height: 100vh;
+  min-height: 100svh;
+  overflow: hidden;
+  isolation: isolate;
+  background:
+    radial-gradient(ellipse at 62% 44%, #171a20 0%, #0c0e13 56%, #07090d 100%);
+}
+
+.video-frame {
+  position: absolute;
+  z-index: -2;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: var(--frame);
+  filter: brightness(0.86) contrast(1.1) saturate(0.84);
+  object-fit: cover;
+  opacity: 1;
+  transition: opacity 350ms ease;
+}
+
+.video-frame.is-fading {
+  opacity: 0;
+}
+
+.showcase-shade {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 58% 45%, transparent 30%, rgba(3, 4, 7, 0.34) 100%),
+    linear-gradient(90deg, rgba(4, 5, 8, 0.17), transparent 48%, rgba(4, 5, 8, 0.12)),
+    linear-gradient(0deg, rgba(4, 5, 8, 0.17), transparent 28%, rgba(4, 5, 8, 0.2));
+  pointer-events: none;
+}
+
+.cinematic-mask {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  box-shadow: inset 0 42px 62px rgba(0, 0, 0, 0.28), inset 0 -48px 66px rgba(0, 0, 0, 0.32);
+  pointer-events: none;
+}
+
+.cinematic-mask::before,
+.cinematic-mask::after {
+  position: absolute;
+  right: 0;
+  left: 0;
+  height: 12px;
+  background: rgba(2, 3, 5, 0.55);
+  content: "";
+}
+
+.cinematic-mask::before {
+  top: 0;
+}
+
+.cinematic-mask::after {
+  bottom: 0;
+}
+
+@media (max-width: 600px) {
+  .app-shell {
+    display: block;
+    position: relative;
+  }
+
+  .brand-panel {
+    position: absolute;
+    z-index: 2;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 18px;
+    border: 0;
+    background: linear-gradient(180deg, rgba(4, 5, 8, 0.74), transparent);
+  }
+
+  .name-crop {
+    width: 166px;
+    height: 47px;
+  }
+
+  .showcase {
+    min-height: 100vh;
+    min-height: 100svh;
+  }
+
+  .cinematic-mask::before,
+  .cinematic-mask::after {
+    height: 8px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .video-frame {
+    transition-duration: 0.01ms;
+  }
+}

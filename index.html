@@ -3,119 +3,32 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="description"
-      content="Choose a Roblox world and watch its trailers, gameplay, and showcases."
-    />
-    <meta name="theme-color" content="#080b10" />
-    <title>PLAYGROUND — Game Select</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="menu.css" />
+    <meta name="theme-color" content="#050609" />
+    <title>Examination</title>
+    <link rel="stylesheet" href="examination.css" />
     <script src="script.js" defer></script>
   </head>
   <body>
     <div class="app-shell">
-      <header class="topbar">
-        <a class="wordmark" href="#main-menu" aria-label="Playground home">
-          <span class="wordmark-icon" aria-hidden="true">P</span>
-          <span>PLAYGROUND<span class="wordmark-period">.</span></span>
-        </a>
-        <div class="topbar-status"><span class="status-pulse"></span> GAME SELECT <span class="status-divider">/</span> MEDIA MODE</div>
-      </header>
-
-      <main class="game-menu" id="main-menu">
-        <aside class="menu-sidebar" aria-labelledby="menu-title">
-          <div class="sidebar-content">
-            <div class="eyebrow"><span class="eyebrow-mark"></span> MAIN MENU <span class="eyebrow-number">01 / 03</span></div>
-            <h1 id="menu-title">Choose your<br /><span>world.</span></h1>
-            <p class="menu-intro">Select an experience to preview its trailers, gameplay, and in-game moments.</p>
-
-            <div class="section-label"><span>SELECT EXPERIENCE</span><i></i></div>
-            <nav class="game-list" aria-label="Choose a game">
-              <button class="game-option is-active" type="button" data-game="examination" aria-pressed="true">
-                <span class="option-index">01</span>
-                <span class="option-copy"><strong>Examination</strong><small>Survival horror · QTEs</small></span>
-                <span class="option-arrow" aria-hidden="true">↗</span>
-              </button>
-              <button class="game-option" type="button" data-game="bees" aria-pressed="false">
-                <span class="option-index">02</span>
-                <span class="option-copy"><strong>Bee Swarm Simulator</strong><small>Explore the fields</small></span>
-                <span class="option-arrow" aria-hidden="true">↗</span>
-              </button>
-              <button class="game-option" type="button" data-game="brm5" aria-pressed="false">
-                <span class="option-index">03</span>
-                <span class="option-copy"><strong>BRM5</strong><small>Blackhawk Rescue Mission 5</small></span>
-                <span class="option-arrow" aria-hidden="true">↗</span>
-              </button>
-            </nav>
-
-            <div class="selected-game">
-              <div class="selected-label">CURRENT SELECTION</div>
-              <h2 id="selected-title">EXAMINATION</h2>
-              <p id="selected-description">Executions, saves, and quick-time events.</p>
-            </div>
-
-            <div class="menu-actions">
-              <a class="launch-button" id="launch-link" href="https://www.roblox.com/search/experiences?keyword=Examination" target="_blank" rel="noreferrer">
-                <span>PLAY ON ROBLOX</span><span aria-hidden="true">↗</span>
-              </a>
-              <a class="wiki-link" id="wiki-link" href="https://examination.miraheze.org/wiki/Main_Page" target="_blank" rel="noreferrer">
-                <span>OPEN GAME WIKI</span><span aria-hidden="true">↗</span>
-              </a>
-            </div>
-
-            <details class="source-details">
-              <summary>VIDEO SOURCES &amp; CREDITS <span aria-hidden="true">＋</span></summary>
-              <ul class="source-list" id="source-list"></ul>
-            </details>
-
-            <div class="sidebar-footer">
-              <span class="footer-led"></span>
-              <span id="playback-note">AMBIENT VIDEO · AUTOPLAY MUTED</span>
-            </div>
-          </div>
-        </aside>
-
-        <section class="showcase" aria-label="Selected game video showcase">
-          <video class="video-frame" id="mp4-player" autoplay muted playsinline preload="auto" hidden></video>
+      <aside class="brand-panel">
+        <div class="name-crop">
           <img
-            class="artwork-frame"
-            id="artwork-frame"
-            src="https://static.wikitide.net/examinationwiki/thumb/0/06/Chimera_artwork.png/240px-Chimera_artwork.png"
-            alt="Chimera artwork from the Examination Wiki"
-            hidden
+            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSu-_JDWiQWyUljZqjhPVvoWA208JpGKbco5obJhaj7Sh5QxbqPKfy8Ba94&amp;s=10"
+            alt="Examination"
           />
-          <iframe
-            class="video-frame"
-            id="video-frame"
-            title="Selected game video showcase"
-            allow="autoplay; encrypted-media; picture-in-picture; fullscreen; web-share"
-            referrerpolicy="strict-origin-when-cross-origin"
-            allowfullscreen
-            hidden
-          ></iframe>
-          <div class="showcase-shade" aria-hidden="true"></div>
-          <div class="cinematic-mask" aria-hidden="true"></div>
-          <div class="showcase-topline">
-            <div class="feed-label"><span class="feed-dot"></span><span id="feed-label">EXAMINATION · COMMUNITY GAMEPLAY</span></div>
-            <div class="media-status" id="media-status"><span class="status-pulse"></span><span id="media-status-text">AUTO-PLAYING · MUTED</span></div>
-          </div>
-          <div class="showcase-caption">
-            <div class="caption-kicker"><span class="caption-rule"></span><span id="caption-category">EXECUTIONS · QTE MOMENTS</span></div>
-            <h2 id="showcase-title">EXAMINATION</h2>
-            <p id="showcase-subtitle">A closer look at the moments that make it tense.</p>
-            <a class="featured-source" id="featured-source" href="https://examination.miraheze.org/wiki/Gilbert" target="_blank" rel="noreferrer">
-              VIEW MEDIA SOURCE <span aria-hidden="true">↗</span>
-            </a>
-          </div>
-          <div class="showcase-index" aria-hidden="true"><span id="current-index">01</span><i></i><span>03</span></div>
-          <div class="scanline" aria-hidden="true"></div>
-        </section>
+        </div>
+      </aside>
+      <main class="showcase" aria-label="Examination">
+        <video
+          class="video-frame"
+          id="examination-video"
+          autoplay
+          muted
+          playsinline
+          preload="auto"
+        ></video>
+        <div class="showcase-shade" aria-hidden="true"></div>
+        <div class="cinematic-mask" aria-hidden="true"></div>
       </main>
     </div>
   </body>
