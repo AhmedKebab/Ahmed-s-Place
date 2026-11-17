@@ -465,6 +465,7 @@ function showNextRender() {
 
 function showScreen(screen) {
   showcase.classList.remove("is-reconstructing");
+  showcase.classList.toggle("is-menu-active", screen === introScreen);
   activeScreen.hidden = true;
   screen.hidden = false;
   screen.classList.add("is-entering");

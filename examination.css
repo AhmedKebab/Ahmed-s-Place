@@ -205,6 +205,111 @@ body {
   bottom: 0;
 }
 
+.analog-horror {
+  position: absolute;
+  z-index: 2;
+  inset: var(--frame-inset);
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 260ms ease;
+}
+
+.showcase.is-menu-active .analog-horror {
+  opacity: 1;
+}
+
+.analog-horror::before,
+.analog-horror::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+}
+
+.analog-horror::before {
+  background:
+    repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.3) 0 1px, transparent 1px 3px),
+    linear-gradient(90deg, rgba(136, 8, 24, 0.16), transparent 18% 82%, rgba(42, 124, 132, 0.12)),
+    radial-gradient(ellipse at center, transparent 34%, rgba(0, 0, 0, 0.7) 100%);
+  opacity: 0.76;
+  mix-blend-mode: multiply;
+}
+
+.analog-horror::after {
+  background:
+    linear-gradient(
+      180deg,
+      transparent 46%,
+      rgba(0, 0, 0, 0.12) 48%,
+      rgba(222, 225, 214, 0.24) 49%,
+      rgba(133, 7, 24, 0.42) 50%,
+      rgba(0, 0, 0, 0.38) 52%,
+      transparent 55%
+    );
+  opacity: 0;
+  animation: analog-tape-track 8s steps(1, end) infinite;
+}
+
+.showcase.is-menu-active .background-image {
+  filter: brightness(0.62) contrast(1.24) saturate(0.62) sepia(0.12);
+}
+
+.showcase.is-menu-active #game-title {
+  color: #d5d1c5;
+  text-shadow:
+    -2px 0 rgba(145, 15, 26, 0.62),
+    2px 0 rgba(46, 114, 122, 0.46),
+    0 3px 4px rgba(0, 0, 0, 0.96);
+  animation: analog-title-jitter 8s steps(1, end) infinite;
+}
+
+@keyframes analog-tape-track {
+  0%,
+  76%,
+  100% {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+
+  77% {
+    opacity: 0.64;
+    transform: translateY(-55%);
+  }
+
+  79% {
+    opacity: 0.48;
+    transform: translateY(12%);
+  }
+
+  81% {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+}
+
+@keyframes analog-title-jitter {
+  0%,
+  83%,
+  100% {
+    clip-path: inset(0);
+    transform: translateX(0);
+  }
+
+  84% {
+    clip-path: inset(38% 0 42%);
+    text-shadow:
+      -4px 0 rgba(145, 15, 26, 0.92),
+      4px 0 rgba(46, 114, 122, 0.74),
+      0 3px 4px rgba(0, 0, 0, 0.96);
+    transform: translateX(-1px) skewX(-1deg);
+  }
+
+  85% {
+    clip-path: inset(0);
+    transform: translateX(1px);
+  }
+}
+
 .examination-frame {
   position: absolute;
   z-index: 2;
@@ -1323,7 +1428,9 @@ body {
   .showcase :is(.category-card, .enemy-card, .animation-card, .begin-button, .media-close, .settings-menu summary, .settings-field select, .wiki-link):focus-visible,
   .showcase.is-reconstructing .reconstruct-effect,
   .showcase.is-reconstructing .reconstruct-effect::before,
-  .showcase.is-reconstructing .reconstruct-effect::after {
+  .showcase.is-reconstructing .reconstruct-effect::after,
+  .showcase.is-menu-active .analog-horror::after,
+  .showcase.is-menu-active #game-title {
     animation-duration: 0.01ms;
     animation-iteration-count: 1;
   }
