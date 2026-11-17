@@ -227,15 +227,30 @@ body {
 }
 
 .analog-horror::before {
+  z-index: 0;
   background:
-    repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.3) 0 1px, transparent 1px 3px),
-    linear-gradient(90deg, rgba(136, 8, 24, 0.16), transparent 18% 82%, rgba(42, 124, 132, 0.12)),
-    radial-gradient(ellipse at center, transparent 34%, rgba(0, 0, 0, 0.7) 100%);
-  opacity: 0.76;
+    repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.46) 0 1px, transparent 1px 3px),
+    linear-gradient(90deg, rgba(136, 8, 24, 0.22), transparent 18% 82%, rgba(42, 124, 132, 0.18)),
+    radial-gradient(ellipse at center, transparent 30%, rgba(0, 0, 0, 0.78) 100%);
+  opacity: 0.88;
   mix-blend-mode: multiply;
+  animation: analog-frame-wobble 7s steps(1, end) infinite;
+}
+
+.analog-noise {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.16;
+  filter: contrast(170%) brightness(78%);
+  mix-blend-mode: screen;
+  pointer-events: none;
 }
 
 .analog-horror::after {
+  z-index: 2;
   background:
     linear-gradient(
       180deg,
@@ -245,9 +260,42 @@ body {
       rgba(133, 7, 24, 0.42) 50%,
       rgba(0, 0, 0, 0.38) 52%,
       transparent 55%
-    );
+    ),
+    repeating-linear-gradient(0deg, transparent 0 29px, rgba(235, 230, 215, 0.08) 30px, transparent 31px);
   opacity: 0;
   animation: analog-tape-track 8s steps(1, end) infinite;
+}
+
+.analog-label {
+  position: absolute;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: rgba(224, 222, 209, 0.9);
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-shadow: 1px 1px 0 #000, 2px 2px 0 rgba(132, 8, 24, 0.76);
+}
+
+.analog-rec {
+  top: clamp(100px, 17vh, 170px);
+  right: clamp(24px, 4vw, 58px);
+}
+
+.analog-rec span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #d52631;
+  box-shadow: 0 0 7px rgba(213, 38, 49, 0.8);
+  animation: analog-rec-blink 1.8s steps(1, end) infinite;
+}
+
+.analog-timestamp {
+  right: clamp(24px, 4vw, 58px);
+  bottom: clamp(62px, 9vh, 96px);
 }
 
 .showcase.is-menu-active .background-image {
@@ -261,6 +309,26 @@ body {
     2px 0 rgba(46, 114, 122, 0.46),
     0 3px 4px rgba(0, 0, 0, 0.96);
   animation: analog-title-jitter 8s steps(1, end) infinite;
+}
+
+@keyframes analog-frame-wobble {
+  0%,
+  91%,
+  100% {
+    transform: translateX(0);
+  }
+
+  92% {
+    transform: translateX(-3px) skewY(-0.08deg);
+  }
+
+  92.4% {
+    transform: translateX(2px);
+  }
+
+  93% {
+    transform: translateX(0);
+  }
 }
 
 @keyframes analog-tape-track {
@@ -284,6 +352,19 @@ body {
   81% {
     opacity: 0;
     transform: translateY(100%);
+  }
+}
+
+@keyframes analog-rec-blink {
+  0%,
+  48%,
+  100% {
+    opacity: 1;
+  }
+
+  49%,
+  80% {
+    opacity: 0.28;
   }
 }
 
@@ -1429,7 +1510,9 @@ body {
   .showcase.is-reconstructing .reconstruct-effect,
   .showcase.is-reconstructing .reconstruct-effect::before,
   .showcase.is-reconstructing .reconstruct-effect::after,
+  .showcase.is-menu-active .analog-horror::before,
   .showcase.is-menu-active .analog-horror::after,
+  .showcase.is-menu-active .analog-rec span,
   .showcase.is-menu-active #game-title {
     animation-duration: 0.01ms;
     animation-iteration-count: 1;
