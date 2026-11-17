@@ -68,12 +68,25 @@ const enemyCatalog = [
     ],
   },
 ];
-const clips = [
-  "Cerberus_Intro_Cutscene.mp4",
-  "Sinitzyn_QTE_Success.mp4",
-  "Sinitzyn_P2_Execution.mp4",
-  "Chimera_Alt_P2_Execution.mp4",
-  "Official_render_of_Gilbert.png",
+const backgroundRenders = [
+  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT13ifj3dIwYhCEH4TFvQAavkFTnR1qtFzGqR5KDQYEx9igby3FxzOo4282&s=10",
+  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ83AI-i7DANnInrVgQ0UnlekdMQDARAXdtRkYF03T7k7oHwK8R2HoEP9E&s=10",
+  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQpo3Lv0V7SStcA2feY8ih_zioGnewdMPKtcAgC-tZ6t-5cgYdzLUyeCEg&s=10",
+  "https://preview.redd.it/gilbert-render-v0-c7ilwal1987g1.png?width=640&crop=smart&auto=webp&s=5753367a13742fd65bb50621e8b8ad3b64172b11",
+  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQl1YmkNjBAdrLvvYfpckLPDLKo6A2a3e92UxP_FMRKtALnnlbQ6hypsvM&s=10",
+  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRrVb7aFuo62goXpilDb5IxI75ku2j2vhMBDDMZwL5e9NxJhmUXb_V2iGeI&s=10",
+  "https://preview.redd.it/chimera-reworked-version-of-my-old-render-v0-z6u9u4yd3lzh1.png?auto=webp&s=c673de37767c4a4769c158379a685dcd77ef67e1",
+  "https://tr.rbxcdn.com/180DAY-3f77f4bb9bb743c1f40a757c66d6ad76/768/432/Image/Webp/noFilter",
+  "https://i.redd.it/x43zzt42csmh1.png",
+  "https://i.ytimg.com/vi/DHwwzwDy4vk/sddefault.jpg",
+  "https://i.namu.wiki/i/foIBbv2917W_JkD8MeqWV-AEw1AtoWBfzld6wM6WxnL12NjB-e4dD5drnm8YnZiH1E0fdpR_EljsN10mS6JCMQ.webp",
+  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTurQVaWA2MCkI069hvtpLb4GHuw0pBMGaCuVpwvyQnUK34uwHU8fTxky4&s=10",
+  "https://images.hiwaifu.com/uploads/Api/robot_avatar/202609/f2da9b18fd378d1b7af8ff868ef54659.webp?image_process=resize,w_640",
+  "https://i.redd.it/ywu95sh5k1sg1.png",
+  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSc_jGhVRQfeWP3cgqwVIzwnybLjJFPETDHNan89CIBqycBesZY-o9kWrmv&s=10",
+  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTBE--L8q9AhHh5d8jtTms4DHzKSjVXBw8zm_R-uKH6DQ-52sUoyMHrGpU&s=10",
+  "https://i.redd.it/qgtmbsh5k1sg1.png",
+  "https://i.redd.it/dof7oth5k1sg1.png",
 ];
 const mediaFileDirectories = new Map([
   ["Gilbert's_Execution.mp4", "dc"],
@@ -109,8 +122,10 @@ function mediaFileUrl(filename) {
   return `https://static.wikitide.net/examinationwiki/${directory[0]}/${directory}/${encodedFilename}`;
 }
 
-const video = document.querySelector("#examination-video");
-const backgroundImage = document.querySelector("#background-image");
+const backgroundImages = [
+  document.querySelector("#background-image"),
+  document.querySelector("#background-image-next"),
+];
 const showcase = document.querySelector(".showcase");
 const introScreen = document.querySelector("#intro-screen");
 const categoryScreen = document.querySelector("#category-screen");
@@ -120,7 +135,6 @@ const detailViewport = document.querySelector("#detail-viewport");
 const enemyWikiLink = document.querySelector("#enemy-wiki-link");
 const themeSetting = document.querySelector("#theme-setting");
 const qualitySetting = document.querySelector("#quality-setting");
-const backgroundSoundSetting = document.querySelector("#background-sound-setting");
 const settingsStatus = document.querySelector("#settings-status");
 const mediaModal = document.querySelector("#media-modal");
 const mediaPlayer = document.querySelector("#media-player");
@@ -129,25 +143,21 @@ const reconstructEffect = document.querySelector("#reconstruct-effect");
 const beginButton = document.querySelector("#begin-button");
 const backButton = document.querySelector("#back-button");
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-const fadeDuration = 350;
-const imageSceneDuration = 12000;
+const imageSceneDuration = 22000;
 const settingsVersion = 2;
 
-let clipQueue = [];
-let previousClipIndex = -1;
-const recentClipLimit = 7;
-const recentClipIndices = [];
-let transitionTimer;
+let renderQueue = [];
+let previousRenderIndex = -1;
+const recentRenderLimit = 7;
+const recentRenderIndices = [];
+let carouselTimer;
 let activeScreen = introScreen;
 let pendingScreen = null;
 let isTransitioning = false;
 let currentEnemyId = null;
 let enemyCatalogScrollTop = 0;
 let activeMediaTrigger = null;
-let activeBackgroundImage = false;
-let backgroundSoundEnabled = backgroundSoundSetting.checked;
-let backgroundSoundStarted = false;
-let isBackgroundSuspendedForGallery = false;
+let activeBackgroundImage = null;
 const settingsStorageKey = "examination-site-settings";
 
 function setSettingsStatus(message) {
@@ -201,18 +211,11 @@ function loadSavedSettings() {
   } else if (hasCurrentSettings) {
     invalidFields.push("graphics quality");
   }
-  if (hasCurrentSettings && typeof savedSettings.backgroundSound === "boolean") {
-    backgroundSoundSetting.checked = true;
-  } else if (hasCurrentSettings) {
-    invalidFields.push("background sound");
-  }
   if (invalidFields.length > 0) {
     console.error(`Saved Examination settings have invalid fields: ${invalidFields.join(", ")}.`);
     setSettingsStatus(`Some saved settings were invalid and have been reset: ${invalidFields.join(", ")}.`);
   } else if (!hasCurrentSettings) {
-    setSettingsStatus("Settings updated with background sound on and high graphics quality.");
-  } else if (savedSettings.backgroundSound === false) {
-    setSettingsStatus("Background sound has been enabled by default. Click Begin to allow audio playback.");
+    setSettingsStatus("Settings updated with high graphics quality.");
   } else {
     setSettingsStatus("Your saved settings have been restored.");
   }
@@ -223,7 +226,6 @@ function saveSettings() {
     version: settingsVersion,
     theme: themeSetting.value,
     quality: qualitySetting.value,
-    backgroundSound: backgroundSoundEnabled,
   };
   try {
     window.localStorage.setItem(settingsStorageKey, JSON.stringify(settings));
@@ -240,55 +242,8 @@ function applyVisualSettings() {
   showcase.dataset.quality = qualitySetting.value;
 }
 
-function updateSoundControls() {
-  const shouldMute = !backgroundSoundStarted || !backgroundSoundEnabled;
-  video.defaultMuted = shouldMute;
-  video.muted = shouldMute;
-  backgroundSoundSetting.checked = backgroundSoundEnabled;
-}
-
-function playBackgroundClip(filename) {
-  const playback = video.play();
-  if (!playback) return;
-
-  playback.catch((error) => {
-    if (filename !== clips[previousClipIndex]) return;
-    if (error.name === "NotAllowedError" && !video.muted && !backgroundSoundStarted) {
-      video.defaultMuted = true;
-      video.muted = true;
-      const mutedPlayback = video.play();
-      if (mutedPlayback) {
-        mutedPlayback.catch((retryError) => {
-          console.error(`Unable to autoplay Examination clip ${filename} muted.`, retryError);
-        });
-      }
-      return;
-    }
-    if (error.name === "NotAllowedError") {
-      console.info("Background video autoplay is blocked by browser policy.");
-    } else {
-      console.error(`Unable to play Examination clip ${filename}.`, error);
-    }
-  });
-}
-
-function startBackgroundPlayback() {
-  backgroundSoundStarted = true;
-  updateSoundControls();
-  if (!activeBackgroundImage) playBackgroundClip(clips[previousClipIndex]);
-}
-
-function startBackgroundPlaybackFromGesture() {
-  window.removeEventListener("pointerdown", startBackgroundPlaybackFromGesture);
-  window.removeEventListener("keydown", startBackgroundPlaybackFromGesture);
-  if (backgroundSoundEnabled) startBackgroundPlayback();
-}
-
-window.addEventListener("pointerdown", startBackgroundPlaybackFromGesture);
-window.addEventListener("keydown", startBackgroundPlaybackFromGesture);
-
-function shuffledClipIndices() {
-  const queue = clips.map((_, index) => index);
+function shuffledRenderIndices() {
+  const queue = backgroundRenders.map((_, index) => index);
   for (let index = queue.length - 1; index > 0; index -= 1) {
     const swapIndex = Math.floor(Math.random() * (index + 1));
     [queue[index], queue[swapIndex]] = [queue[swapIndex], queue[index]];
@@ -296,71 +251,56 @@ function shuffledClipIndices() {
   return queue;
 }
 
-function takeNextClipIndex() {
-  if (clips.length <= recentClipLimit) {
-    if (clipQueue.length === 0) clipQueue = shuffledClipIndices();
-    return clipQueue.pop();
+function takeNextRenderIndex() {
+  if (backgroundRenders.length <= recentRenderLimit) {
+    if (renderQueue.length === 0) renderQueue = shuffledRenderIndices();
+    return renderQueue.pop();
   }
 
-  const recentClips = new Set(recentClipIndices);
+  const recentRenders = new Set(recentRenderIndices);
   while (true) {
-    if (clipQueue.length === 0) clipQueue = shuffledClipIndices();
+    if (renderQueue.length === 0) renderQueue = shuffledRenderIndices();
 
-    for (let index = clipQueue.length - 1; index >= 0; index -= 1) {
-      if (!recentClips.has(clipQueue[index])) {
-        return clipQueue.splice(index, 1)[0];
+    for (let index = renderQueue.length - 1; index >= 0; index -= 1) {
+      if (!recentRenders.has(renderQueue[index])) {
+        return renderQueue.splice(index, 1)[0];
       }
     }
 
-    clipQueue = [];
+    renderQueue = [];
   }
 }
 
-function playNextClip() {
-  previousClipIndex = takeNextClipIndex();
-  recentClipIndices.push(previousClipIndex);
-  if (recentClipIndices.length > recentClipLimit) recentClipIndices.shift();
-  const filename = clips[previousClipIndex];
-  window.clearTimeout(transitionTimer);
-  if (filename.endsWith(".png")) {
-    playBackgroundImage(filename);
-    return;
-  }
+function showNextRender() {
+  window.clearTimeout(carouselTimer);
+  previousRenderIndex = takeNextRenderIndex();
+  recentRenderIndices.push(previousRenderIndex);
+  if (recentRenderIndices.length > recentRenderLimit) recentRenderIndices.shift();
 
-  activeBackgroundImage = false;
-  backgroundImage.classList.add("is-fading");
-  backgroundImage.classList.remove("is-paused");
-  video.classList.add("is-fading");
-  video.autoplay = true;
-  video.controls = false;
-  video.src = mediaFileUrl(filename);
-  video.load();
-  playBackgroundClip(filename);
-}
+  const nextImage = activeBackgroundImage === backgroundImages[0]
+    ? backgroundImages[1]
+    : backgroundImages[0];
+  const source = backgroundRenders[previousRenderIndex];
+  nextImage.onload = () => {
+    const isSmallRender = nextImage.naturalWidth < 1200 || nextImage.naturalHeight < 700;
+    nextImage.classList.toggle("is-side-render", isSmallRender);
+    nextImage.classList.remove("is-visible", "is-animating");
+    void nextImage.offsetWidth;
+    nextImage.classList.add("is-visible", "is-animating");
 
-function playBackgroundImage(filename) {
-  activeBackgroundImage = true;
-  isBackgroundSuspendedForGallery = true;
-  video.pause();
-  video.removeAttribute("src");
-  video.load();
-  isBackgroundSuspendedForGallery = false;
-  video.classList.add("is-fading");
-  backgroundImage.classList.add("is-fading");
-  backgroundImage.classList.remove("is-animating", "is-paused");
-  backgroundImage.onload = () => {
-    backgroundImage.classList.remove("is-fading");
-    backgroundImage.classList.add("is-animating");
-    transitionTimer = window.setTimeout(() => {
-      backgroundImage.classList.add("is-fading");
-      transitionTimer = window.setTimeout(playNextClip, fadeDuration);
-    }, imageSceneDuration);
+    activeBackgroundImage?.classList.remove("is-visible", "is-animating");
+    activeBackgroundImage = nextImage;
+    if (mediaModal.hidden) {
+      carouselTimer = window.setTimeout(showNextRender, imageSceneDuration);
+    }
   };
-  backgroundImage.onerror = () => {
-    console.error(`Unable to load background image ${filename}.`);
-    transitionTimer = window.setTimeout(playNextClip, 2000);
+  nextImage.onerror = () => {
+    console.error(`Unable to load background render ${source}.`);
+    if (mediaModal.hidden) {
+      carouselTimer = window.setTimeout(showNextRender, 2000);
+    }
   };
-  backgroundImage.src = mediaFileUrl(filename);
+  nextImage.src = source;
 }
 
 function showScreen(screen) {
@@ -389,7 +329,6 @@ function transitionTo(screen) {
 
 beginButton.addEventListener("click", () => {
   beginButton.disabled = true;
-  startBackgroundPlayback();
   transitionTo(categoryScreen);
 });
 
@@ -400,12 +339,6 @@ themeSetting.addEventListener("change", () => {
 qualitySetting.addEventListener("change", () => {
   applyVisualSettings();
   saveSettings();
-});
-backgroundSoundSetting.addEventListener("change", () => {
-  backgroundSoundEnabled = backgroundSoundSetting.checked;
-  updateSoundControls();
-  saveSettings();
-  if (backgroundSoundEnabled) startBackgroundPlayback();
 });
 reconstructEffect.addEventListener("animationend", (event) => {
   if (event.target !== reconstructEffect || !pendingScreen) return;
@@ -636,10 +569,7 @@ function renderLurkerDetail(enemy) {
 
 function openMediaVideo(source, trigger) {
   activeMediaTrigger = trigger;
-  isBackgroundSuspendedForGallery = true;
-  window.clearTimeout(transitionTimer);
-  if (activeBackgroundImage) backgroundImage.classList.add("is-paused");
-  video.pause();
+  window.clearTimeout(carouselTimer);
   mediaPlayer.classList.remove("is-fading");
   mediaPlayer.controls = false;
   mediaPlayer.src = source;
@@ -664,18 +594,7 @@ function closeMediaVideo() {
   mediaPlayer.load();
   activeMediaTrigger?.focus();
   activeMediaTrigger = null;
-  isBackgroundSuspendedForGallery = false;
-  if (activeBackgroundImage) {
-    backgroundImage.classList.remove("is-paused");
-    transitionTimer = window.setTimeout(() => {
-      backgroundImage.classList.add("is-fading");
-      transitionTimer = window.setTimeout(playNextClip, fadeDuration);
-    }, imageSceneDuration);
-  } else if (video.ended) {
-    playNextClip();
-  } else {
-    playBackgroundClip(clips[previousClipIndex]);
-  }
+  carouselTimer = window.setTimeout(showNextRender, imageSceneDuration);
 }
 
 detailScreen.addEventListener("animationend", (event) => {
@@ -733,34 +652,9 @@ mediaPlayer.addEventListener("ended", () => {
   mediaPlayer.classList.add("is-fading");
 });
 
-video.addEventListener("loadeddata", () => {
-  window.requestAnimationFrame(() => {
-    video.classList.remove("is-fading");
-    if (video.paused) playBackgroundClip(clips[previousClipIndex]);
-  });
-});
-
-video.addEventListener("pause", () => {
-  if (isBackgroundSuspendedForGallery || video.ended || video.readyState === 0) return;
-  playBackgroundClip(clips[previousClipIndex]);
-});
-
-video.addEventListener("ended", () => {
-  video.classList.add("is-fading");
-  transitionTimer = window.setTimeout(playNextClip, fadeDuration);
-});
-
-video.addEventListener("error", () => {
-  if (isBackgroundSuspendedForGallery || activeBackgroundImage) return;
-  const filename = clips[previousClipIndex];
-  console.error(`Unable to load Examination clip ${filename}.`, video.error);
-  window.clearTimeout(transitionTimer);
-  transitionTimer = window.setTimeout(playNextClip, 2000);
-});
-
 showcase.addEventListener("pointermove", (event) => {
   const interactive = event.target.closest(
-    ".category-card, .enemy-card, .animation-card, .begin-button, .media-close, .settings-menu summary, .settings-field select, .sound-setting, .wiki-link",
+    ".category-card, .enemy-card, .animation-card, .begin-button, .media-close, .settings-menu summary, .settings-field select, .wiki-link",
   );
   if (!interactive || !showcase.contains(interactive)) return;
   const bounds = interactive.getBoundingClientRect();
@@ -769,7 +663,5 @@ showcase.addEventListener("pointermove", (event) => {
 });
 
 loadSavedSettings();
-backgroundSoundEnabled = backgroundSoundSetting.checked;
 applyVisualSettings();
-updateSoundControls();
-playNextClip();
+showNextRender();

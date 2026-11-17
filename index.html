@@ -10,21 +10,16 @@
   </head>
   <body>
     <main class="showcase" aria-label="Examination">
-      <video
-        class="video-frame"
-        id="examination-video"
-        autoplay
-        muted
-        playsinline
-        preload="auto"
-        tabindex="-1"
-        aria-hidden="true"
-        disablepictureinpicture
-        disableremoteplayback
-      ></video>
       <img
-        class="background-image is-fading"
+        class="background-image"
         id="background-image"
+        alt=""
+        aria-hidden="true"
+        inert
+      />
+      <img
+        class="background-image"
+        id="background-image-next"
         alt=""
         aria-hidden="true"
         inert
@@ -55,11 +50,6 @@
                   <option value="extreme">Extreme (RTX-style)</option>
                 </select>
               </label>
-              <label class="sound-setting">
-                <input id="background-sound-setting" type="checkbox" checked />
-                <span>Background video sound</span>
-              </label>
-              <p class="settings-note">Browsers may require a click on Begin before background sound starts.</p>
               <p class="settings-note" id="settings-status" role="status" hidden></p>
             </div>
           </details>
