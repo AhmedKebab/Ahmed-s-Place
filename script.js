@@ -19,6 +19,8 @@ const clips = [
   "Taunt_animation.mp4",
 ];
 const video = document.querySelector("#examination-video");
+const brandPanel = document.querySelector("#brand-panel");
+const beginButton = document.querySelector("#begin-button");
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 const fadeDuration = 350;
 
@@ -63,6 +65,21 @@ function playNextClip() {
     });
   }
 }
+
+beginButton.addEventListener("click", () => {
+  brandPanel.classList.add("is-dismissed");
+  if (video.paused) {
+    const playback = video.play();
+    if (playback) {
+      playback.catch((error) => {
+        video.controls = true;
+        if (error.name !== "NotAllowedError") {
+          console.error("Unable to start Examination playback.", error);
+        }
+      });
+    }
+  }
+});
 
 video.addEventListener("loadeddata", () => {
   window.requestAnimationFrame(() => video.classList.remove("is-fading"));

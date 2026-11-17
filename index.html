@@ -9,27 +9,23 @@
     <script src="script.js" defer></script>
   </head>
   <body>
-    <div class="app-shell">
-      <aside class="brand-panel">
-        <div class="name-crop">
-          <img
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSu-_JDWiQWyUljZqjhPVvoWA208JpGKbco5obJhaj7Sh5QxbqPKfy8Ba94&amp;s=10"
-            alt="Examination"
-          />
+    <main class="showcase" aria-label="Examination">
+      <video
+        class="video-frame"
+        id="examination-video"
+        autoplay
+        muted
+        playsinline
+        preload="auto"
+      ></video>
+      <div class="showcase-shade" aria-hidden="true"></div>
+      <div class="cinematic-mask" aria-hidden="true"></div>
+      <aside class="brand-panel" id="brand-panel">
+        <div class="menu-content">
+          <h1 class="game-title">Examination</h1>
+          <button class="begin-button" id="begin-button" type="button">Begin</button>
         </div>
       </aside>
-      <main class="showcase" aria-label="Examination">
-        <video
-          class="video-frame"
-          id="examination-video"
-          autoplay
-          muted
-          playsinline
-          preload="auto"
-        ></video>
-        <div class="showcase-shade" aria-hidden="true"></div>
-        <div class="cinematic-mask" aria-hidden="true"></div>
-      </main>
-    </div>
+    </main>
   </body>
 </html>
