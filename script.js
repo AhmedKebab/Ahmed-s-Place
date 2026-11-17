@@ -69,23 +69,7 @@ const enemyCatalog = [
   },
 ];
 const clips = [
-  "Gilbert's_Execution.mp4",
-  "Chimera_Execution.mp4",
-  "Chimera_P1_TP.mp4",
-  "Chimera_P2_TP.mp4",
-  "Chimera_Alt_P2_Execution.mp4",
-  "Sinitzyn_P2_Execution.mp4",
-  "Sinitzyn_QTE_Success.mp4",
-  "Sinitzyn_QTE_Fail.mp4",
   "Cerberus_Intro_Cutscene.mp4",
-  "CI_Turn_1.mp4",
-  "CI_Turn_2.mp4",
-  "CI_Execution_1.mp4",
-  "CI_Execution_2.mp4",
-  "CI_Execution_3.mp4",
-  "CI_Counter_1.mp4",
-  "CI_QTE_Death.mp4",
-  "Taunt_animation.mp4",
 ];
 const mediaFileDirectories = new Map([
   ["Gilbert's_Execution.mp4", "dc"],
@@ -305,6 +289,11 @@ function shuffledClipIndices() {
 }
 
 function takeNextClipIndex() {
+  if (clips.length <= recentClipLimit) {
+    if (clipQueue.length === 0) clipQueue = shuffledClipIndices();
+    return clipQueue.pop();
+  }
+
   const recentClips = new Set(recentClipIndices);
   while (true) {
     if (clipQueue.length === 0) clipQueue = shuffledClipIndices();
