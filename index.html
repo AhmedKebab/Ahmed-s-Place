@@ -20,12 +20,31 @@
       ></video>
       <div class="showcase-shade" aria-hidden="true"></div>
       <div class="cinematic-mask" aria-hidden="true"></div>
-      <aside class="brand-panel" id="brand-panel">
+      <aside class="brand-panel" id="intro-screen" aria-labelledby="game-title">
         <div class="menu-content">
-          <h1 class="game-title">Examination</h1>
+          <h1 class="game-title" id="game-title">Examination</h1>
           <button class="begin-button" id="begin-button" type="button">Begin</button>
         </div>
       </aside>
+      <section
+        class="category-screen"
+        id="category-screen"
+        aria-labelledby="category-title"
+        hidden
+      >
+        <h1 class="game-title" id="category-title" tabindex="-1">Examination</h1>
+        <div class="category-grid">
+          <article class="category-card"><h2>Enemies</h2></article>
+          <article class="category-card"><h2>Weapons</h2></article>
+          <article class="category-card"><h2>Items</h2></article>
+          <article class="category-card"><h2>Classes</h2></article>
+          <article class="category-card"><h2>Locations</h2></article>
+          <article class="category-card"><h2>Mechanics</h2></article>
+          <article class="category-card"><h2>Badges</h2></article>
+          <article class="category-card"><h2>Ranks</h2></article>
+        </div>
+      </section>
+      <div class="reconstruct-effect" id="reconstruct-effect" aria-hidden="true"></div>
     </main>
   </body>
 </html>

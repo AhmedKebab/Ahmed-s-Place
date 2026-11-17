@@ -19,7 +19,10 @@ const clips = [
   "Taunt_animation.mp4",
 ];
 const video = document.querySelector("#examination-video");
-const brandPanel = document.querySelector("#brand-panel");
+const showcase = document.querySelector(".showcase");
+const introScreen = document.querySelector("#intro-screen");
+const categoryScreen = document.querySelector("#category-screen");
+const reconstructEffect = document.querySelector("#reconstruct-effect");
 const beginButton = document.querySelector("#begin-button");
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 const fadeDuration = 350;
@@ -66,19 +69,31 @@ function playNextClip() {
   }
 }
 
+function showCategoryScreen() {
+  showcase.classList.remove("is-reconstructing");
+  introScreen.hidden = true;
+  categoryScreen.hidden = false;
+  categoryScreen.classList.add("is-entering");
+  categoryScreen.querySelector("#category-title").focus();
+}
+
 beginButton.addEventListener("click", () => {
-  brandPanel.classList.add("is-dismissed");
-  if (video.paused) {
-    const playback = video.play();
-    if (playback) {
-      playback.catch((error) => {
-        video.controls = true;
-        if (error.name !== "NotAllowedError") {
-          console.error("Unable to start Examination playback.", error);
-        }
-      });
-    }
+  beginButton.disabled = true;
+
+  if (prefersReducedMotion.matches) {
+    showCategoryScreen();
+    return;
   }
+
+  showcase.classList.add("is-reconstructing");
+});
+
+reconstructEffect.addEventListener("animationend", (event) => {
+  if (event.target === reconstructEffect) showCategoryScreen();
+});
+
+categoryScreen.addEventListener("animationend", (event) => {
+  if (event.target === categoryScreen) categoryScreen.classList.remove("is-entering");
 });
 
 video.addEventListener("loadeddata", () => {
