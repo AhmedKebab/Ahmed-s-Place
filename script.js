@@ -69,33 +69,16 @@ const enemyCatalog = [
   },
 ];
 const backgroundRenders = [
-  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT13ifj3dIwYhCEH4TFvQAavkFTnR1qtFzGqR5KDQYEx9igby3FxzOo4282&s=10",
-  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ83AI-i7DANnInrVgQ0UnlekdMQDARAXdtRkYF03T7k7oHwK8R2HoEP9E&s=10",
-  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQpo3Lv0V7SStcA2feY8ih_zioGnewdMPKtcAgC-tZ6t-5cgYdzLUyeCEg&s=10",
-  "https://i.redd.it/c7ilwal1987g1.png",
-  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQl1YmkNjBAdrLvvYfpckLPDLKo6A2a3e92UxP_FMRKtALnnlbQ6hypsvM&s=10",
-  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRrVb7aFuo62goXpilDb5IxI75ku2j2vhMBDDMZwL5e9NxJhmUXb_V2iGeI&s=10",
-  "https://preview.redd.it/chimera-reworked-version-of-my-old-render-v0-z6u9u4yd3lzh1.png?auto=webp&s=c673de37767c4a4769c158379a685dcd77ef67e1",
-  "https://tr.rbxcdn.com/180DAY-3f77f4bb9bb743c1f40a757c66d6ad76/768/432/Image/Webp/noFilter",
-  "https://i.redd.it/x43zzt42csmh1.png",
-  "https://i.ytimg.com/vi/DHwwzwDy4vk/maxresdefault.jpg",
-  "https://i.namu.wiki/i/foIBbv2917W_JkD8MeqWV-AEw1AtoWBfzld6wM6WxnL12NjB-e4dD5drnm8YnZiH1E0fdpR_EljsN10mS6JCMQ.webp",
-  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTurQVaWA2MCkI069hvtpLb4GHuw0pBMGaCuVpwvyQnUK34uwHU8fTxky4&s=10",
-  "https://images.hiwaifu.com/uploads/Api/robot_avatar/202609/f2da9b18fd378d1b7af8ff868ef54659.webp?image_process=resize,w_1920",
-  "https://i.redd.it/ywu95sh5k1sg1.png",
-  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSc_jGhVRQfeWP3cgqwVIzwnybLjJFPETDHNan89CIBqycBesZY-o9kWrmv&s=10",
-  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTBE--L8q9AhHh5d8jtTms4DHzKSjVXBw8zm_R-uKH6DQ-52sUoyMHrGpU&s=10",
-  "https://i.redd.it/qgtmbsh5k1sg1.png",
-  "https://i.redd.it/dof7oth5k1sg1.png",
+  "https://i.ytimg.com/vi/54jnZ_L-CQo/sddefault.jpg",
+  "https://tr.rbxcdn.com/180DAY-17c81fe0bba2dc36d0245a36701fd5ed/768/432/Image/Webp/noFilter",
   "https://tr.rbxcdn.com/180DAY-05e5b064c5b7b1e373bb6e1722e9c3e2/768/432/Image/Webp/noFilter",
-  "https://i.redd.it/zxsffrks0enh1.jpg",
-  "https://tr.rbxcdn.com/180DAY-805b9a80b6e3fe79aa5282ad010d178a/768/432/Image/Webp/noFilter",
-  "https://tr.rbxcdn.com/180DAY-92c5d5b84c0832e6ada24b5632cf8b02/768/432/Image/Webp/noFilter",
-  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT1YGGkeKCEgkPU5rl2dlRSwZZCT7xzKP5clwO2muR89mNP6EjmYorbnzXY&s=10",
-  "https://tr.rbxcdn.com/180DAY-46fb99217316a7403822ac5e3fc377d9/768/432/Image/Webp/noFilter",
-  "https://i.ytimg.com/vi/YKljjTHFP9Y/maxresdefault.jpg",
-  "https://static.deltiasgaming.com/2025/07/EXAMINATION.jpg",
-  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRbmgcXzch5n6A6kHNdEUrTLU9ClbsjyLPRQf2BOod_1Xo42JWKhpeZJTA&s=10",
+  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRG0D8IhnA9Rt8ko5NOUDk1z3PZpP4CtELSwilINkqd1uqbqCEEvfgHjRii&s=10",
+  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSc_jGhVRQfeWP3cgqwVIzwnybLjJFPETDHNan89CIBqycBesZY-o9kWrmv&s=10",
+  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQgSb3HLtQqfLAzbswzPlmYc1_Z4GHEKQMdKwWPTiD2TsvwBsZrL5Xr-rTL&s=10",
+  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTTqu9idmuKHU6rKA8MvhzJiP9K2GXuY7uuvXVZVShYZSl_641CzXllwDBh&s=10",
+  "https://i.redd.it/dof7oth5k1sg1.png",
+  "https://preview.redd.it/more-renders-v0-o99f4r2owknh1.png?auto=webp&s=26cf751064f88d82b16b84ff5ac8c17457d5cbc5",
+  "https://pbs.twimg.com/media/G884WCfWUAAgqS-?format=webp&name=large",
 ];
 const mediaFileDirectories = new Map([
   ["Gilbert's_Execution.mp4", "dc"],
@@ -156,7 +139,7 @@ const beginButton = document.querySelector("#begin-button");
 const backButton = document.querySelector("#back-button");
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 const imageSceneDuration = 12000;
-const minimumBackgroundAspectRatio = 1.6;
+const minimumBackgroundAspectRatio = 1.3;
 const settingsVersion = 2;
 
 let renderQueue = [];
@@ -295,7 +278,7 @@ function shuffledRenderIndices() {
 function takeNextRenderIndex() {
   const availableRenderCount = backgroundRenders.length - excludedRenderIndices.size;
   if (availableRenderCount === 0) {
-    console.error("No wide background images are available for the main menu.");
+    console.error("No suitable background images are available for the main menu.");
     return null;
   }
   if (availableRenderCount <= recentRenderLimit) {
