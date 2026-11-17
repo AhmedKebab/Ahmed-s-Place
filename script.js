@@ -27,6 +27,7 @@ const detailTitle = document.querySelector("#detail-title");
 const reconstructEffect = document.querySelector("#reconstruct-effect");
 const beginButton = document.querySelector("#begin-button");
 const backButton = document.querySelector("#back-button");
+const soundButton = document.querySelector("#sound-button");
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 const fadeDuration = 350;
 
@@ -128,6 +129,26 @@ detailScreen.addEventListener("animationend", (event) => {
 });
 
 backButton.addEventListener("click", () => transitionTo(categoryScreen));
+
+soundButton.addEventListener("click", () => {
+  video.muted = !video.muted;
+  soundButton.textContent = video.muted ? "Sound: Off" : "Sound: On";
+  soundButton.setAttribute("aria-label", video.muted ? "Turn video sound on" : "Mute video sound");
+  soundButton.setAttribute("aria-pressed", String(!video.muted));
+
+  if (!video.muted && video.paused) {
+    const playback = video.play();
+    if (playback) {
+      playback.catch((error) => {
+        console.error("Unable to start Examination playback with sound.", error);
+        video.muted = true;
+        soundButton.textContent = "Sound: Off";
+        soundButton.setAttribute("aria-label", "Turn video sound on");
+        soundButton.setAttribute("aria-pressed", "false");
+      });
+    }
+  }
+});
 
 video.addEventListener("loadeddata", () => {
   window.requestAnimationFrame(() => video.classList.remove("is-fading"));

@@ -87,6 +87,35 @@ body {
   bottom: 0;
 }
 
+.sound-button {
+  position: absolute;
+  z-index: 2;
+  top: clamp(18px, 3vw, 36px);
+  right: clamp(18px, 3vw, 36px);
+  padding: 11px 15px;
+  border: 1px solid rgba(192, 199, 210, 0.42);
+  background: rgba(5, 6, 9, 0.38);
+  color: #e4e6e9;
+  cursor: pointer;
+  font: inherit;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  backdrop-filter: blur(3px);
+}
+
+.sound-button:hover,
+.sound-button:focus-visible {
+  border-color: rgba(225, 230, 238, 0.85);
+  background: rgba(28, 32, 39, 0.66);
+  color: #fff;
+}
+
+.sound-button:focus-visible {
+  outline: 2px solid rgba(225, 230, 238, 0.85);
+  outline-offset: 3px;
+}
+
 .brand-panel {
   position: absolute;
   z-index: 1;
