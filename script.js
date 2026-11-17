@@ -153,6 +153,7 @@ let enemyCatalogScrollTop = 0;
 let activeMediaTrigger = null;
 let backgroundSoundEnabled = backgroundSoundSetting.checked;
 let backgroundSoundStarted = false;
+let isBackgroundSuspendedForGallery = false;
 const settingsStorageKey = "examination-site-settings";
 
 function setSettingsStatus(message) {
@@ -579,6 +580,9 @@ function renderLurkerDetail(enemy) {
 
 function openMediaVideo(source, trigger) {
   activeMediaTrigger = trigger;
+  isBackgroundSuspendedForGallery = true;
+  window.clearTimeout(transitionTimer);
+  video.pause();
   mediaPlayer.controls = false;
   mediaPlayer.src = source;
   mediaModal.hidden = false;
@@ -596,12 +600,18 @@ function openMediaVideo(source, trigger) {
 }
 
 function closeMediaVideo() {
+  mediaModal.hidden = true;
   mediaPlayer.pause();
   mediaPlayer.removeAttribute("src");
   mediaPlayer.load();
-  mediaModal.hidden = true;
   activeMediaTrigger?.focus();
   activeMediaTrigger = null;
+  isBackgroundSuspendedForGallery = false;
+  if (video.ended) {
+    playNextClip();
+  } else {
+    playBackgroundClip(clips[previousClipIndex]);
+  }
 }
 
 detailScreen.addEventListener("animationend", (event) => {
@@ -659,7 +669,7 @@ video.addEventListener("loadeddata", () => {
 });
 
 video.addEventListener("pause", () => {
-  if (video.ended || video.readyState === 0) return;
+  if (isBackgroundSuspendedForGallery || video.ended || video.readyState === 0) return;
   playBackgroundClip(clips[previousClipIndex]);
 });
 
