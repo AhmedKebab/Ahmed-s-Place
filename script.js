@@ -612,7 +612,14 @@ backButton.addEventListener("click", () => {
 
 mediaClose.addEventListener("click", closeMediaVideo);
 mediaModal.addEventListener("click", (event) => {
-  if (event.target === mediaModal) closeMediaVideo();
+  if (event.target !== mediaModal) return;
+  const bounds = mediaPlayer.getBoundingClientRect();
+  const clickedVideo =
+    event.clientX >= bounds.left &&
+    event.clientX <= bounds.right &&
+    event.clientY >= bounds.top &&
+    event.clientY <= bounds.bottom;
+  if (!clickedVideo) closeMediaVideo();
 });
 window.addEventListener("keydown", (event) => {
   if (event.key === "Escape" && !mediaModal.hidden) closeMediaVideo();

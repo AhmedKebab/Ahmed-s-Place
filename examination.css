@@ -1062,7 +1062,6 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .video-frame,
   .brand-panel,
   .category-card {
     transition-duration: 0.01ms;
