@@ -27,6 +27,7 @@ body {
   height: 100svh;
   overflow: hidden;
   isolation: isolate;
+  --menu-width: clamp(250px, 26vw, 390px);
   --theme-accent: rgba(192, 199, 210, 0.48);
   --theme-glow: rgba(151, 196, 218, 0.2);
   --theme-panel: rgba(8, 10, 14, 0.42);
@@ -58,15 +59,23 @@ body {
     radial-gradient(ellipse at 58% 45%, transparent 30%, rgba(3, 4, 7, 0.34) 100%);
 }
 
-.showcase[data-theme="city"] .brand-panel,
 .showcase[data-theme="city"] .detail-content {
   background-color: var(--theme-panel);
   border-color: rgba(213, 132, 112, 0.28);
 }
 
-.showcase[data-theme="rasonian"] .brand-panel,
 .showcase[data-theme="rasonian"] .detail-content {
   background-color: var(--theme-panel);
+  border-color: rgba(177, 190, 133, 0.28);
+}
+
+.showcase[data-theme="city"] .brand-panel {
+  background-color: #2a1213;
+  border-color: rgba(213, 132, 112, 0.28);
+}
+
+.showcase[data-theme="rasonian"] .brand-panel {
+  background-color: #141c13;
   border-color: rgba(177, 190, 133, 0.28);
 }
 
@@ -144,12 +153,17 @@ body {
 }
 
 .background-image.is-side-render {
-  inset: 4% 2% 4% auto;
-  width: min(68vw, 1050px);
+  inset: 4% 2% 4% var(--menu-width);
+  width: auto;
   height: 92%;
   object-fit: contain;
-  object-position: right center;
+  object-position: left center;
   filter: drop-shadow(0 16px 42px rgba(0, 0, 0, 0.6)) brightness(0.86) contrast(1.06) saturate(0.9);
+}
+
+.background-image.is-side-render.is-animating {
+  animation-name: gta-side-cinematic-pan;
+  transform-origin: left center;
 }
 
 @keyframes gta-cinematic-pan {
@@ -159,6 +173,16 @@ body {
 
   to {
     transform: scale(1.11) translate3d(-1%, -0.5%, 0);
+  }
+}
+
+@keyframes gta-side-cinematic-pan {
+  from {
+    transform: scale(1.015) translate3d(0, 0.2%, 0);
+  }
+
+  to {
+    transform: scale(1.065) translate3d(0, -0.2%, 0);
   }
 }
 
@@ -204,9 +228,9 @@ body {
   z-index: 1;
   inset: 0 auto 0 0;
   display: flex;
-  width: clamp(250px, 26vw, 390px);
+  width: var(--menu-width);
   padding: clamp(28px, 4vw, 64px) clamp(24px, 3.5vw, 52px);
-  background: rgba(5, 6, 9, 0.32);
+  background: #050609;
   border-right: 1px solid rgba(205, 211, 221, 0.1);
   backdrop-filter: blur(2px);
   transition:
@@ -992,8 +1016,12 @@ body {
 }
 
 @media (max-width: 600px) {
+  .showcase {
+    --menu-width: min(68vw, 280px);
+  }
+
   .brand-panel {
-    width: min(82vw, 330px);
+    width: var(--menu-width);
     padding: 28px 22px;
   }
 
@@ -1048,9 +1076,10 @@ body {
   }
 
   .background-image.is-side-render {
-    inset: 6% 1% 6% auto;
-    width: 64vw;
+    inset: 6% 1% 6% var(--menu-width);
+    width: auto;
     height: 88%;
+    object-position: left center;
   }
 }
 
