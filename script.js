@@ -256,7 +256,7 @@ function playBackgroundClip(filename) {
 
   playback.catch((error) => {
     if (filename !== clips[previousClipIndex]) return;
-    if (error.name === "NotAllowedError" && !video.muted) {
+    if (error.name === "NotAllowedError" && !video.muted && !backgroundSoundStarted) {
       video.defaultMuted = true;
       video.muted = true;
       const mutedPlayback = video.play();
