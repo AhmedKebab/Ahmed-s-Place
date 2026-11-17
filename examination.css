@@ -814,7 +814,7 @@ body {
 
 .showcase :is(.category-card, .enemy-card, .animation-card, .begin-button, .media-close, .settings-menu summary, .settings-field select, .wiki-link):hover::after,
 .showcase :is(.category-card, .enemy-card, .animation-card, .begin-button, .media-close, .settings-menu summary, .settings-field select, .wiki-link):focus-visible::after {
-  animation: metal-grind-sweep 520ms steps(7, end) both;
+  animation: metal-grind-sweep 420ms steps(6, end) both;
 }
 
 .showcase[data-quality="low"] :is(.category-card, .enemy-card, .animation-card, .begin-button, .media-close, .settings-menu summary, .settings-field select, .wiki-link)::after {
@@ -823,7 +823,15 @@ body {
 
 .showcase :is(.category-card, .enemy-card, .animation-card, .begin-button, .media-close, .settings-menu summary, .settings-field select, .wiki-link):hover,
 .showcase :is(.category-card, .enemy-card, .animation-card, .begin-button, .media-close, .settings-menu summary, .settings-field select, .wiki-link):focus-visible {
-  animation: metal-impact 520ms steps(5, end) both;
+  animation: metal-impact 420ms steps(6, end) both;
+}
+
+.showcase :is(.category-card, .enemy-card, .animation-card, .begin-button, .media-close, .settings-menu summary, .settings-field select, .wiki-link):active {
+  animation: metal-press 140ms steps(3, end) both;
+}
+
+.showcase :is(.category-card, .enemy-card, .animation-card, .begin-button, .media-close, .settings-menu summary, .settings-field select, .wiki-link):active::after {
+  animation: metal-crush 140ms steps(3, end) both;
 }
 
 @keyframes metal-grind-sweep {
@@ -832,40 +840,92 @@ body {
     opacity: 0;
   }
 
-  32% {
-    clip-path: polygon(0 0, 38% 0, 42% 42%, 100% 44%, 100% 62%, 40% 60%, 36% 100%, 0 100%);
-    opacity: 0.98;
+  20% {
+    clip-path: polygon(0 0, 62% 0, 65% 38%, 100% 40%, 100% 64%, 61% 62%, 58% 100%, 0 100%);
+    opacity: 1;
   }
 
-  64% {
-    clip-path: polygon(0 0, 100% 0, 100% 32%, 42% 36%, 38% 58%, 100% 62%, 100% 100%, 0 100%);
-    opacity: 0.72;
+  56% {
+    clip-path: polygon(0 0, 100% 0, 100% 34%, 34% 38%, 31% 62%, 100% 66%, 100% 100%, 0 100%);
+    opacity: 0.82;
   }
 
   100% {
     clip-path: polygon(0 0, 100% 0, 100% 36%, 100% 60%, 100% 100%, 0 100%, 0 64%, 0 40%);
-    opacity: 0.36;
+    opacity: 0.48;
   }
 }
 
 @keyframes metal-impact {
   0% {
     filter: contrast(1);
-    transform: translateY(0);
+    transform: translate(0, 0);
   }
 
-  34% {
-    filter: contrast(1.4) brightness(0.82) saturate(0.72);
-    transform: translateY(2px) skewX(-0.4deg);
+  22% {
+    filter: contrast(1.55) brightness(0.78) saturate(0.58);
+    transform: translate(-2px, 2px) skewX(-0.8deg);
     box-shadow:
-      inset 0 2px rgba(221, 225, 228, 0.38),
-      inset 0 -8px 14px rgba(0, 0, 0, 0.62),
-      0 0 0 2px var(--frame-warning);
+      inset 0 2px rgba(239, 241, 238, 0.5),
+      inset 0 -10px 15px rgba(0, 0, 0, 0.72),
+      0 0 0 2px var(--frame-warning),
+      0 5px 0 rgba(0, 0, 0, 0.65);
+  }
+
+  48% {
+    filter: contrast(1.6) brightness(1.22) saturate(0.62);
+    transform: translate(2px, -1px) skewX(0.6deg);
+    box-shadow:
+      inset 0 2px rgba(239, 241, 238, 0.58),
+      inset 0 -7px 12px rgba(0, 0, 0, 0.66),
+      0 0 0 2px var(--frame-warning),
+      0 3px 0 rgba(0, 0, 0, 0.6);
+  }
+
+  72% {
+    transform: translate(-1px, 1px);
   }
 
   100% {
-    filter: contrast(1.24) brightness(1.06) saturate(0.82);
+    filter: contrast(1.32) brightness(1.08) saturate(0.68);
+    transform: translate(0, -2px);
+  }
+}
+
+@keyframes metal-press {
+  from {
+    filter: brightness(1);
     transform: translateY(-2px);
+  }
+
+  45% {
+    filter: brightness(0.68) contrast(1.5);
+    transform: translateY(3px) scale(0.985);
+    box-shadow:
+      inset 0 7px 14px rgba(0, 0, 0, 0.78),
+      inset 0 1px rgba(239, 241, 238, 0.34);
+  }
+
+  to {
+    filter: brightness(0.78) contrast(1.28);
+    transform: translateY(2px) scale(0.99);
+  }
+}
+
+@keyframes metal-crush {
+  0% {
+    clip-path: polygon(50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%);
+    opacity: 0;
+  }
+
+  32% {
+    clip-path: polygon(0 46%, 42% 42%, 44% 0, 58% 0, 62% 43%, 100% 47%, 100% 59%, 0 60%);
+    opacity: 1;
+  }
+
+  to {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 0 60%, 0 59%, 0 47%, 0 46%);
+    opacity: 0;
   }
 }
 
@@ -1558,6 +1618,8 @@ body {
   .showcase :is(.category-card, .enemy-card, .animation-card, .begin-button, .media-close, .settings-menu summary, .settings-field select, .wiki-link):focus-visible::after,
   .showcase :is(.category-card, .enemy-card, .animation-card, .begin-button, .media-close, .settings-menu summary, .settings-field select, .wiki-link):hover,
   .showcase :is(.category-card, .enemy-card, .animation-card, .begin-button, .media-close, .settings-menu summary, .settings-field select, .wiki-link):focus-visible,
+  .showcase :is(.category-card, .enemy-card, .animation-card, .begin-button, .media-close, .settings-menu summary, .settings-field select, .wiki-link):active,
+  .showcase :is(.category-card, .enemy-card, .animation-card, .begin-button, .media-close, .settings-menu summary, .settings-field select, .wiki-link):active::after,
   .showcase.is-reconstructing .reconstruct-effect,
   .showcase.is-reconstructing .reconstruct-effect::before,
   .showcase.is-reconstructing .reconstruct-effect::after,
