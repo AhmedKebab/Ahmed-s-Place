@@ -178,11 +178,11 @@ body {
 
 @keyframes gta-side-cinematic-pan {
   from {
-    transform: scale(1.015) translate3d(0, 0.2%, 0);
+    transform: scale(1.08) translate3d(0, 0.2%, 0);
   }
 
   to {
-    transform: scale(1.065) translate3d(0, -0.2%, 0);
+    transform: scale(1.2) translate3d(0, -0.2%, 0);
   }
 }
 
