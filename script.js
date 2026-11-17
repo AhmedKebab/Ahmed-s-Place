@@ -152,7 +152,7 @@ const reconstructEffect = document.querySelector("#reconstruct-effect");
 const beginButton = document.querySelector("#begin-button");
 const backButton = document.querySelector("#back-button");
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-const imageSceneDuration = 10000;
+const imageSceneDuration = 12000;
 const settingsVersion = 2;
 
 let renderQueue = [];
