@@ -24,6 +24,7 @@ const introScreen = document.querySelector("#intro-screen");
 const categoryScreen = document.querySelector("#category-screen");
 const detailScreen = document.querySelector("#detail-screen");
 const detailTitle = document.querySelector("#detail-title");
+const enemyWikiLink = document.querySelector("#enemy-wiki-link");
 const reconstructEffect = document.querySelector("#reconstruct-effect");
 const beginButton = document.querySelector("#begin-button");
 const backButton = document.querySelector("#back-button");
@@ -120,7 +121,9 @@ categoryScreen.addEventListener("click", (event) => {
   const card = event.target.closest("[data-category]");
   if (!card || isTransitioning) return;
 
-  detailTitle.textContent = card.dataset.category;
+  const category = card.dataset.category;
+  detailTitle.textContent = category;
+  enemyWikiLink.hidden = category !== "Enemies";
   transitionTo(detailScreen);
 });
 

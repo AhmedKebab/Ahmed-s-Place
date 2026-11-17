@@ -283,6 +283,25 @@ body {
   margin: 0;
 }
 
+.wiki-link {
+  color: #d6dbe2;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-decoration-color: rgba(214, 219, 226, 0.55);
+  text-underline-offset: 4px;
+}
+
+.wiki-link:hover,
+.wiki-link:focus-visible {
+  color: #fff;
+  text-decoration-color: currentColor;
+}
+
+.wiki-link:focus-visible {
+  outline: 2px solid rgba(225, 230, 238, 0.85);
+  outline-offset: 4px;
+}
+
 .reconstruct-effect {
   position: absolute;
   z-index: 3;
