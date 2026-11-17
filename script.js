@@ -210,7 +210,7 @@ function loadSavedSettings() {
     invalidFields.push("graphics quality");
   }
   if (hasCurrentSettings && typeof savedSettings.backgroundSound === "boolean") {
-    backgroundSoundSetting.checked = savedSettings.backgroundSound;
+    backgroundSoundSetting.checked = true;
   } else if (hasCurrentSettings) {
     invalidFields.push("background sound");
   }
@@ -219,6 +219,8 @@ function loadSavedSettings() {
     setSettingsStatus(`Some saved settings were invalid and have been reset: ${invalidFields.join(", ")}.`);
   } else if (!hasCurrentSettings) {
     setSettingsStatus("Settings updated with background sound on and high graphics quality.");
+  } else if (savedSettings.backgroundSound === false) {
+    setSettingsStatus("Background sound has been enabled by default. Click Begin to allow audio playback.");
   } else {
     setSettingsStatus("Your saved settings have been restored.");
   }
