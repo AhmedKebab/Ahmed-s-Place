@@ -242,19 +242,16 @@ function playNextClip() {
   const filename = clips[previousClipIndex];
   video.classList.add("is-fading");
   video.muted = !backgroundSoundEnabled;
-  video.autoplay = !prefersReducedMotion.matches;
-  video.controls = prefersReducedMotion.matches;
+  video.autoplay = true;
+  video.controls = false;
   video.src = `${examinationWiki}/Special:FilePath/${encodeURIComponent(filename).replaceAll("'", "%27")}`;
   video.load();
-
-  if (prefersReducedMotion.matches) return;
 
   const playback = video.play();
   if (playback) {
     playback.catch((error) => {
       if (filename !== clips[previousClipIndex]) return;
       if (error.name === "NotAllowedError") {
-        video.controls = true;
         console.info("Background playback with sound is waiting for a user interaction.");
       } else {
         console.error(`Unable to play Examination clip ${filename}.`, error);
@@ -621,7 +618,6 @@ video.addEventListener("error", () => {
   transitionTimer = window.setTimeout(playNextClip, 2000);
 });
 
-prefersReducedMotion.addEventListener("change", playNextClip);
 showcase.addEventListener("pointermove", (event) => {
   const interactive = event.target.closest(
     ".category-card, .enemy-card, .animation-card, .begin-button, .media-close, .settings-menu summary, .settings-field select, .sound-setting, .wiki-link",
