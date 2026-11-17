@@ -133,8 +133,11 @@ body {
   filter: brightness(0.86) contrast(1.1) saturate(0.84);
   object-fit: cover;
   opacity: 1;
-  pointer-events: none;
   transition: opacity 350ms ease;
+}
+
+.showcase video {
+  pointer-events: none;
 }
 
 .video-frame.is-fading {
@@ -815,7 +818,6 @@ body {
   max-width: 90vw;
   max-height: 80vh;
   object-fit: contain;
-  pointer-events: none;
 }
 
 .media-close {
