@@ -140,6 +140,7 @@ const beginButton = document.querySelector("#begin-button");
 const backButton = document.querySelector("#back-button");
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 const fadeDuration = 350;
+const settingsVersion = 2;
 
 let clipQueue = [];
 let previousClipIndex = -1;
@@ -194,24 +195,27 @@ function loadSavedSettings() {
   const invalidFields = [];
   const validThemes = new Set(Array.from(themeSetting.options, (option) => option.value));
   const validQualities = new Set(Array.from(qualitySetting.options, (option) => option.value));
+  const hasCurrentSettings = savedSettings.version === settingsVersion;
   if (validThemes.has(savedSettings.theme)) {
     themeSetting.value = savedSettings.theme;
   } else {
     invalidFields.push("theme");
   }
-  if (validQualities.has(savedSettings.quality)) {
+  if (hasCurrentSettings && validQualities.has(savedSettings.quality)) {
     qualitySetting.value = savedSettings.quality;
-  } else {
+  } else if (hasCurrentSettings) {
     invalidFields.push("graphics quality");
   }
-  if (typeof savedSettings.backgroundSound === "boolean") {
+  if (hasCurrentSettings && typeof savedSettings.backgroundSound === "boolean") {
     backgroundSoundSetting.checked = savedSettings.backgroundSound;
-  } else {
+  } else if (hasCurrentSettings) {
     invalidFields.push("background sound");
   }
   if (invalidFields.length > 0) {
     console.error(`Saved Examination settings have invalid fields: ${invalidFields.join(", ")}.`);
     setSettingsStatus(`Some saved settings were invalid and have been reset: ${invalidFields.join(", ")}.`);
+  } else if (!hasCurrentSettings) {
+    setSettingsStatus("Settings updated with background sound on and high graphics quality.");
   } else {
     setSettingsStatus("Your saved settings have been restored.");
   }
@@ -219,6 +223,7 @@ function loadSavedSettings() {
 
 function saveSettings() {
   const settings = {
+    version: settingsVersion,
     theme: themeSetting.value,
     quality: qualitySetting.value,
     backgroundSound: backgroundSoundEnabled,
