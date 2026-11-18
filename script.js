@@ -812,6 +812,8 @@ function renderEnemyCatalog() {
       backButton.textContent = "Back to Enemies";
       if (currentEnemyId === "regulars-lurker") {
         renderLurkerDetail(enemy);
+      } else if (currentEnemyId === "regulars-crawler") {
+        renderCrawlerDetail(enemy);
       } else if (currentEnemyId === "regulars-mutant") {
         renderMutantDetail(enemy);
       } else {
@@ -918,7 +920,7 @@ function renderLurkerDetail(enemy) {
       </section>
 
       <section class="enemy-info-section">
-        <h3>Attacks</h3>
+        <h3>Abilities</h3>
         <p>Lurkers punch their target, dealing 15 damage per hit with a 1-second cooldown and short attack range.</p>
         <p>If a Lurker hits a player below 30 HP, it attempts an execution. There is a 50% chance that a save animation plays instead: the player fights back and kicks the Lurker away, becomes infected, and is healed to 15 HP. The Lurker cannot attack for 3 seconds afterward.</p>
       </section>
@@ -960,6 +962,90 @@ function renderLurkerDetail(enemy) {
         <h3>Trivia</h3>
         <p>Early in Examination's development, Lurkers could grab both of a player's arms and hold them in place for other infected to attack. The code was considered too complicated, so the feature was scrapped; Virals were given the Maul ability instead.</p>
         <p>This may have been inspired by the grab ability of Shamblers from Guts &amp; Blackpowder.</p>
+      </section>
+    </article>
+  `;
+
+  bindEnemyMedia();
+}
+
+function renderCrawlerDetail(enemy) {
+  const galleryImage = "https://examination.miraheze.org/wiki/Special:FilePath/Mutant_Crawler.png";
+  const galleryPage = "https://examination.miraheze.org/wiki/File:Mutant_Crawler.png";
+  detailViewport.innerHTML = `
+    <article class="enemy-detail">
+      <header class="enemy-detail-hero">
+        <img class="enemy-detail-portrait" src="${enemy.image}" alt="${enemy.name}" />
+        <div>
+          <p class="enemy-category-label">Regulars · Combat Archive</p>
+          <h2>Crawler</h2>
+          <p>“Poor things and poor people who broke their legs trying to escape fate. They're always a breath away from their lungs collapsing. I'd say so when my flesh is constantly gliding through cement.”</p>
+          <p><strong>Crawlers</strong> are a rare type of <a href="https://examination.miraheze.org/wiki/Enemies" target="_blank" rel="noopener noreferrer">Enemy</a> in Examination. They have fast movement speed and attack rate, however their damage and health are very low.</p>
+        </div>
+      </header>
+
+      <section class="enemy-info-section">
+        <h3>Health and stats</h3>
+        <div class="enemy-table-wrap">
+          <table class="enemy-stats">
+            <tbody>
+              <tr><th scope="row">Spawn Location</th><td><a href="https://examination.miraheze.org/wiki/Reactor_4" target="_blank" rel="noopener noreferrer">Reactor 4</a></td></tr>
+              <tr><th scope="row">Health points</th><td>50</td></tr>
+              <tr><th scope="row">Regeneration</th><td>0.5 HP/s</td></tr>
+              <tr><th scope="row">Default speed</th><td>5</td></tr>
+              <tr><th scope="row">Pursuit speed</th><td>23</td></tr>
+              <tr><th scope="row">Primary equipment</th><td>Jaws</td></tr>
+              <tr><th scope="row">Damage</th><td>8</td></tr>
+              <tr><th scope="row">Respawn time</th><td>40 seconds</td></tr>
+              <tr><th scope="row">Drop</th><td>None</td></tr>
+              <tr><th scope="row">Gender</th><td>Male</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Behavior and spawns</h3>
+        <h4>Spawn</h4>
+        <p>A total of 2 Crawlers spawn inside Reactor 4, closer to the ladder to the basement. After death, a Crawler takes 40 seconds to respawn.</p>
+        <h4>Behavior</h4>
+        <p>A Crawler wanders around the map at 5 studs/s until it spots a target. Once a target is in sight, it chases at 23 studs/s. If the target stays out of sight for more than 10 seconds, the Crawler starts wandering around the map again.</p>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Abilities</h3>
+        <p>A Crawler bites its target, dealing 8 damage per hit with a 0.6-second cooldown and short attack range.</p>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Attributes</h3>
+        <ul>
+          <li><strong>Stagger Immunity:</strong> Crawlers are not stunned by gunshots.</li>
+          <li><strong>Taser Resistance:</strong> Stun from the <a href="https://examination.miraheze.org/wiki/TASC-10" target="_blank" rel="noopener noreferrer">TASC-10</a> lasts only 3.5 seconds.</li>
+        </ul>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Gallery</h3>
+        <figure class="enemy-variant">
+          <button class="enemy-variant-image" type="button" data-image-src="${galleryImage}" aria-label="View Crawler image">
+            <img src="${galleryImage}" alt="Crawler" loading="lazy" />
+          </button>
+          <figcaption><a href="${galleryPage}" target="_blank" rel="noopener noreferrer">Mutant Crawler</a></figcaption>
+        </figure>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Lore</h3>
+        <p>Crawlers are workers of the power plant who broke or lost their legs while attempting to escape the infected, in the end also becoming infected with the <a href="https://examination.miraheze.org/wiki/WE-30?action=edit&amp;redlink=1" target="_blank" rel="noopener noreferrer">WE-30 Pathogen</a>. Due to being near the reactor, they have been heavily malformed by the radiation.</p>
+        <p>Due to the loss of their legs, they are extremely fragile and easy to kill.</p>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Trivia</h3>
+        <ul>
+          <li>Crawler has the lowest respawn time out of all enemies in the game.</li>
+        </ul>
       </section>
     </article>
   `;
@@ -1042,7 +1128,7 @@ function renderMutantDetail(enemy) {
       </section>
 
       <section class="enemy-info-section">
-        <h3>Attacks</h3>
+        <h3>Abilities</h3>
         <p>Mutants slash their target with their claws, dealing 13 damage per hit with a 0.9-second cooldown and medium attack range.</p>
         <p>A Mutant performs an execution if it hits a player with less than 28 HP.</p>
       </section>
