@@ -137,6 +137,7 @@ const settingsMenuSummary = settingsMenu.querySelector("summary");
 const settingsControls = settingsMenu.querySelector(".settings-controls");
 const mediaModal = document.querySelector("#media-modal");
 const mediaPlayer = document.querySelector("#media-player");
+const mediaImage = document.querySelector("#media-image");
 const mediaClose = document.querySelector("#media-close");
 const reconstructEffect = document.querySelector("#reconstruct-effect");
 const analogGhostImage = document.querySelector("#analog-ghost");
@@ -862,7 +863,9 @@ function renderLurkerDetail(enemy) {
         <div class="lurker-variant-grid">
           ${variantImages.map((variant) => `
             <figure class="lurker-variant">
-              <img src="${variant.image}" alt="${variant.name} Lurker" loading="lazy" />
+              <button class="lurker-variant-image" type="button" data-image-src="${variant.image}" aria-label="View ${variant.name} Lurker image">
+                <img src="${variant.image}" alt="${variant.name} Lurker" loading="lazy" />
+              </button>
               <figcaption>${variant.name}</figcaption>
             </figure>
           `).join("")}
@@ -958,12 +961,21 @@ function renderLurkerDetail(enemy) {
   detailViewport.querySelectorAll("[data-video-src]").forEach((button) => {
     button.addEventListener("click", () => openMediaVideo(button.dataset.videoSrc, button));
   });
+  detailViewport.querySelectorAll("[data-image-src]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const image = button.querySelector("img");
+      openMediaImage(button.dataset.imageSrc, image.alt, button);
+    });
+  });
 }
 
 function openMediaVideo(source, trigger) {
   activeMediaTrigger = trigger;
   window.clearTimeout(carouselTimer);
+  mediaImage.hidden = true;
+  mediaImage.removeAttribute("src");
   mediaPlayer.classList.remove("is-fading");
+  mediaPlayer.hidden = false;
   mediaPlayer.controls = false;
   mediaPlayer.muted = false;
   mediaPlayer.volume = 1;
@@ -982,11 +994,29 @@ function openMediaVideo(source, trigger) {
   }
 }
 
-function closeMediaVideo() {
+function openMediaImage(source, alt, trigger) {
+  activeMediaTrigger = trigger;
+  window.clearTimeout(carouselTimer);
+  mediaPlayer.pause();
+  mediaPlayer.removeAttribute("src");
+  mediaPlayer.load();
+  mediaPlayer.hidden = true;
+  mediaImage.alt = alt;
+  mediaImage.src = source;
+  mediaImage.hidden = false;
+  mediaModal.hidden = false;
+  mediaClose.focus();
+}
+
+function closeMediaViewer() {
   mediaModal.hidden = true;
   mediaPlayer.pause();
   mediaPlayer.removeAttribute("src");
   mediaPlayer.load();
+  mediaPlayer.hidden = true;
+  mediaImage.hidden = true;
+  mediaImage.removeAttribute("src");
+  mediaImage.alt = "";
   activeMediaTrigger?.focus();
   activeMediaTrigger = null;
   scheduleNextRender();
@@ -1010,19 +1040,12 @@ backButton.addEventListener("click", () => {
   transitionTo(categoryScreen);
 });
 
-mediaClose.addEventListener("click", closeMediaVideo);
+mediaClose.addEventListener("click", closeMediaViewer);
 mediaModal.addEventListener("click", (event) => {
-  if (event.target !== mediaModal) return;
-  const bounds = mediaPlayer.getBoundingClientRect();
-  const clickedVideo =
-    event.clientX >= bounds.left &&
-    event.clientX <= bounds.right &&
-    event.clientY >= bounds.top &&
-    event.clientY <= bounds.bottom;
-  if (!clickedVideo) closeMediaVideo();
+  if (event.target === mediaModal) closeMediaViewer();
 });
 window.addEventListener("keydown", (event) => {
-  if (event.key === "Escape" && !mediaModal.hidden) closeMediaVideo();
+  if (event.key === "Escape" && !mediaModal.hidden) closeMediaViewer();
 });
 
 document.addEventListener("pointerover", (event) => {
