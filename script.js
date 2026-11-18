@@ -965,6 +965,8 @@ function openMediaVideo(source, trigger) {
   window.clearTimeout(carouselTimer);
   mediaPlayer.classList.remove("is-fading");
   mediaPlayer.controls = false;
+  mediaPlayer.muted = false;
+  mediaPlayer.volume = 1;
   mediaPlayer.src = source;
   mediaModal.hidden = false;
   mediaClose.focus();
