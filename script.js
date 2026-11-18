@@ -982,6 +982,11 @@ function openMediaVideo(source, trigger) {
   mediaPlayer.src = source;
   mediaModal.hidden = false;
   mediaClose.focus();
+  if (typeof mediaModal.requestFullscreen === "function") {
+    mediaModal.requestFullscreen().catch((error) => {
+      console.info("Browser fullscreen is unavailable; using the full-page media viewer.", error);
+    });
+  }
   const playback = mediaPlayer.play();
   if (playback) {
     playback.catch((error) => {
@@ -1009,6 +1014,11 @@ function openMediaImage(source, alt, trigger) {
 }
 
 function closeMediaViewer() {
+  if (document.fullscreenElement === mediaModal) {
+    document.exitFullscreen().catch((error) => {
+      console.error("Unable to exit the media viewer's fullscreen mode.", error);
+    });
+  }
   mediaModal.hidden = true;
   mediaPlayer.pause();
   mediaPlayer.removeAttribute("src");
@@ -1046,6 +1056,10 @@ mediaModal.addEventListener("click", (event) => {
 });
 window.addEventListener("keydown", (event) => {
   if (event.key === "Escape" && !mediaModal.hidden) closeMediaViewer();
+});
+document.addEventListener("fullscreenchange", () => {
+  if (mediaModal.hidden || document.fullscreenElement === mediaModal) return;
+  closeMediaViewer();
 });
 
 document.addEventListener("pointerover", (event) => {
