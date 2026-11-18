@@ -982,10 +982,13 @@ function openMediaVideo(source, trigger) {
   mediaPlayer.src = source;
   mediaModal.hidden = false;
   mediaClose.focus();
+  window.requestAnimationFrame(positionMediaClose);
   if (typeof mediaModal.requestFullscreen === "function") {
-    mediaModal.requestFullscreen().catch((error) => {
-      console.info("Browser fullscreen is unavailable; using the full-page media viewer.", error);
-    });
+    mediaModal.requestFullscreen()
+      .then(positionMediaClose)
+      .catch((error) => {
+        console.info("Browser fullscreen is unavailable; using the full-page media viewer.", error);
+      });
   }
   const playback = mediaPlayer.play();
   if (playback) {
@@ -1011,6 +1014,27 @@ function openMediaImage(source, alt, trigger) {
   mediaImage.hidden = false;
   mediaModal.hidden = false;
   mediaClose.focus();
+  window.requestAnimationFrame(positionMediaClose);
+}
+
+function positionMediaClose() {
+  if (mediaModal.hidden) return;
+  const media = mediaPlayer.hidden ? mediaImage : mediaPlayer;
+  const mediaWidth = mediaPlayer.hidden ? mediaImage.naturalWidth : mediaPlayer.videoWidth;
+  const mediaHeight = mediaPlayer.hidden ? mediaImage.naturalHeight : mediaPlayer.videoHeight;
+  if (!mediaWidth || !mediaHeight) return;
+
+  const bounds = media.getBoundingClientRect();
+  const scale = Math.min(bounds.width / mediaWidth, bounds.height / mediaHeight);
+  const renderedWidth = mediaWidth * scale;
+  const renderedHeight = mediaHeight * scale;
+  const inset = 12;
+  const top = bounds.top + (bounds.height - renderedHeight) / 2 + inset;
+  const left = bounds.left + (bounds.width + renderedWidth) / 2 - mediaClose.offsetWidth - inset;
+
+  mediaClose.style.top = `${Math.max(0, Math.min(window.innerHeight - mediaClose.offsetHeight, top))}px`;
+  mediaClose.style.left = `${Math.max(0, Math.min(window.innerWidth - mediaClose.offsetWidth, left))}px`;
+  mediaClose.style.right = "auto";
 }
 
 function closeMediaViewer() {
@@ -1027,6 +1051,9 @@ function closeMediaViewer() {
   mediaImage.hidden = true;
   mediaImage.removeAttribute("src");
   mediaImage.alt = "";
+  mediaClose.style.removeProperty("top");
+  mediaClose.style.removeProperty("left");
+  mediaClose.style.removeProperty("right");
   activeMediaTrigger?.focus();
   activeMediaTrigger = null;
   scheduleNextRender();
@@ -1058,9 +1085,14 @@ window.addEventListener("keydown", (event) => {
   if (event.key === "Escape" && !mediaModal.hidden) closeMediaViewer();
 });
 document.addEventListener("fullscreenchange", () => {
-  if (mediaModal.hidden || document.fullscreenElement === mediaModal) return;
-  closeMediaViewer();
+  if (mediaModal.hidden) return;
+  if (document.fullscreenElement !== mediaModal) {
+    closeMediaViewer();
+    return;
+  }
+  positionMediaClose();
 });
+window.addEventListener("resize", positionMediaClose);
 
 document.addEventListener("pointerover", (event) => {
   if (event.pointerType !== "mouse" || !(event.target instanceof Element)) return;
@@ -1151,6 +1183,8 @@ mediaPlayer.addEventListener("pause", () => {
 mediaPlayer.addEventListener("loadeddata", () => {
   window.requestAnimationFrame(() => mediaPlayer.classList.remove("is-fading"));
 });
+mediaPlayer.addEventListener("loadedmetadata", positionMediaClose);
+mediaImage.addEventListener("load", positionMediaClose);
 
 mediaPlayer.addEventListener("ended", () => {
   mediaPlayer.classList.add("is-fading");

@@ -1402,7 +1402,7 @@ body {
 }
 
 .showcase .media-close {
-  position: absolute;
+  position: fixed;
   top: 16px;
   right: 16px;
 }
