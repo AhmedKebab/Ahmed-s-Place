@@ -814,6 +814,8 @@ function renderEnemyCatalog() {
         renderLurkerDetail(enemy);
       } else if (currentEnemyId === "regulars-crawler") {
         renderCrawlerDetail(enemy);
+      } else if (currentEnemyId === "regulars-grabby") {
+        renderGrabbyDetail(enemy);
       } else if (currentEnemyId === "regulars-mutant") {
         renderMutantDetail(enemy);
       } else {
@@ -1046,6 +1048,93 @@ function renderCrawlerDetail(enemy) {
         <ul>
           <li>Crawler has the lowest respawn time out of all enemies in the game.</li>
         </ul>
+      </section>
+    </article>
+  `;
+
+  bindEnemyMedia();
+}
+
+function renderGrabbyDetail(enemy) {
+  const galleryImages = [
+    { name: "Idle Grabby", file: "Grabby_Placeholder.png" },
+    { name: "Idle Grabby 2", file: "Grabby_Idle.png" },
+  ];
+  detailViewport.innerHTML = `
+    <article class="enemy-detail">
+      <header class="enemy-detail-hero">
+        <img class="enemy-detail-portrait" src="${enemy.image}" alt="${enemy.name}" />
+        <div>
+          <p class="enemy-category-label">Regulars · Combat Archive</p>
+          <h2>Grabby</h2>
+          <p><strong>Grabby</strong> is a unique <a href="https://examination.miraheze.org/wiki/Enemies" target="_blank" rel="noopener noreferrer">Enemy</a> type in Examination. They are stationary and rely on catching the player off-guard to instantly kill them.</p>
+        </div>
+      </header>
+
+      <section class="enemy-info-section">
+        <h3>Health and stats</h3>
+        <div class="enemy-table-wrap">
+          <table class="enemy-stats">
+            <tbody>
+              <tr><th scope="row">Spawn Location</th><td><a href="https://examination.miraheze.org/wiki/Reactor_4" target="_blank" rel="noopener noreferrer">Reactor 4</a></td></tr>
+              <tr><th scope="row">Health points</th><td>2000</td></tr>
+              <tr><th scope="row">Regeneration</th><td>None</td></tr>
+              <tr><th scope="row">Walk speed</th><td>0</td></tr>
+              <tr><th scope="row">Run speed</th><td>0</td></tr>
+              <tr><th scope="row">Primary equipment</th><td>Claws</td></tr>
+              <tr><th scope="row">Execution</th><td>QTE Failure</td></tr>
+              <tr><th scope="row">Respawn time</th><td>30 seconds</td></tr>
+              <tr><th scope="row">Drop</th><td>None</td></tr>
+              <tr><th scope="row">Gender</th><td>Male</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Behavior and spawns</h3>
+        <h4>Spawn</h4>
+        <p>A total of 4 Grabby Mutants spawn throughout Reactor 4. They take about 30 seconds to respawn after death.</p>
+        <h4>Behavior</h4>
+        <p>Grabby is completely stationary and waits until a player passes by.</p>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Abilities</h3>
+        <h4>Grab</h4>
+        <p>When a player is about 3 studs in front of Grabby, it grabs and locks the player in place.</p>
+        <p>The player must pass a quick-time event consisting of one random key, with about a 2-second margin. If the player succeeds, they escape the grab and Grabby dies. If the player fails, Grabby instantly kills them.</p>
+        <p>The player can be saved without passing the QTE if Grabby is killed during the 2-second margin.</p>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Attributes</h3>
+        <ul>
+          <li><strong>Stagger Immunity:</strong> Grabbies are not stunned by gunshots.</li>
+        </ul>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Gallery</h3>
+        <div class="enemy-variant-grid">
+          ${galleryImages.map((image) => {
+            const source = `https://examination.miraheze.org/wiki/Special:FilePath/${image.file}`;
+            const page = `https://examination.miraheze.org/wiki/File:${image.file}`;
+            return `
+              <figure class="enemy-variant">
+                <button class="enemy-variant-image" type="button" data-image-src="${source}" aria-label="View ${image.name}">
+                  <img src="${source}" alt="${image.name}" loading="lazy" />
+                </button>
+                <figcaption><a href="${page}" target="_blank" rel="noopener noreferrer">${image.name}</a></figcaption>
+              </figure>
+            `;
+          }).join("")}
+        </div>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Lore</h3>
+        <p>Similar to normal <a href="https://examination.miraheze.org/wiki/Mutant" target="_blank" rel="noopener noreferrer">Mutants</a>, Grabby Mutants are workers and engineers of the power plant who were trapped and infected with the <a href="https://examination.miraheze.org/wiki/WE-30?action=edit&amp;redlink=1" target="_blank" rel="noopener noreferrer">WE-30 Pathogen</a> in the area of <a href="https://examination.miraheze.org/wiki/Reactor_4" target="_blank" rel="noopener noreferrer">Reactor 4</a>. However, they were caught in debris and subsequently merged with the flesh walls of the area.</p>
       </section>
     </article>
   `;
