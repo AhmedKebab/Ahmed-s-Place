@@ -601,20 +601,20 @@ body {
   text-shadow: 0 2px 18px rgba(0, 0, 0, 0.85);
 }
 
-.game-title-m {
-  position: relative;
+.game-title-o {
   display: inline-block;
+  width: 0.5em;
+  height: 0.72em;
+  overflow: hidden;
+  vertical-align: -0.04em;
 }
 
-.milo-easter-egg {
-  position: absolute;
-  top: -0.15em;
-  left: 50%;
-  width: 20px;
-  height: 20px;
-  object-fit: contain;
-  transform: translateX(-50%);
-  pointer-events: none;
+.game-title-o img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
 }
 
 .begin-button {
