@@ -102,6 +102,11 @@ const mediaFileDirectories = new Map([
   ["Lurker_Execution_1.mp4", "0f"],
   ["Lurker_Execution_2.mp4", "5a"],
   ["Lurker_Execution_3.mp4", "e8"],
+  ["Mutant_Execution_1.mp4", "f0"],
+  ["Mutant_Execution_2.mp4", "3a"],
+  ["Mutant_Execution_3.mp4", "a4"],
+  ["Mutant.png", "58"],
+  ["Mutant_Blocking.png", "b4"],
   ["Lurker_Save.mp4", "6e"],
   ["Lurker_Maul.mp4", "3d"],
   ["Enraged_Lurker.mp3", "cb"],
@@ -807,6 +812,8 @@ function renderEnemyCatalog() {
       backButton.textContent = "Back to Enemies";
       if (currentEnemyId === "regulars-lurker") {
         renderLurkerDetail(enemy);
+      } else if (currentEnemyId === "regulars-mutant") {
+        renderMutantDetail(enemy);
       } else {
         renderEnemyPlaceholder(enemy);
       }
@@ -859,10 +866,10 @@ function renderLurkerDetail(enemy) {
 
       <section class="enemy-info-section">
         <h3>Variants</h3>
-        <div class="lurker-variant-grid">
+        <div class="enemy-variant-grid">
           ${variantImages.map((variant) => `
-            <figure class="lurker-variant">
-              <button class="lurker-variant-image" type="button" data-image-src="${variant.image}" aria-label="View ${variant.name} Lurker image">
+            <figure class="enemy-variant">
+              <button class="enemy-variant-image" type="button" data-image-src="${variant.image}" aria-label="View ${variant.name} Lurker image">
                 <img src="${variant.image}" alt="${variant.name} Lurker" loading="lazy" />
               </button>
               <figcaption>${variant.name}</figcaption>
@@ -957,6 +964,126 @@ function renderLurkerDetail(enemy) {
     </article>
   `;
 
+  bindEnemyMedia();
+}
+
+function renderMutantDetail(enemy) {
+  const variantImages = [
+    { name: "Engineer", image: "https://static.wikitide.net/examinationwiki/a/aa/Engineer_Mutant.png" },
+    { name: "HPCA", image: "https://static.wikitide.net/examinationwiki/0/08/HPCA_Mutant.png" },
+    { name: "HPCA 2", image: "https://static.wikitide.net/examinationwiki/8/85/HPCA_2_Mutant.png" },
+    { name: "HPCA 3", image: "https://static.wikitide.net/examinationwiki/c/cf/HPCA_3_Mutant.png" },
+    { name: "RSU", image: "https://static.wikitide.net/examinationwiki/c/cf/RSU_Mutant.png" },
+    { name: "RSU 2", image: "https://static.wikitide.net/examinationwiki/6/6a/RSU_2_Mutant.png" },
+    { name: "MFD", image: "https://static.wikitide.net/examinationwiki/d/d9/MFD_Mutant.png" },
+    { name: "MNPA", image: "https://static.wikitide.net/examinationwiki/4/44/MNPA_Mutant.png" },
+  ];
+  const animations = [
+    { name: "Execution animation 1", file: "Mutant_Execution_1.mp4" },
+    { name: "Execution animation 2", file: "Mutant_Execution_2.mp4" },
+    { name: "Execution animation 3", file: "Mutant_Execution_3.mp4" },
+  ];
+  const archiveImages = [
+    { name: "Old model", file: "Mutant.png" },
+    { name: "Removed block ability", file: "Mutant_Blocking.png" },
+  ];
+  detailViewport.innerHTML = `
+    <article class="enemy-detail">
+      <header class="enemy-detail-hero">
+        <img class="enemy-detail-portrait" src="${enemy.image}" alt="${enemy.name}" />
+        <div>
+          <p class="enemy-category-label">Regulars · Combat Archive</p>
+          <h2>Mutant</h2>
+          <p>“Grotesque, aren't they? Get used to it, as long as you're alive down there, it won't matter much. This virus likes to actively participate with radioactive rays.”</p>
+          <p><strong>Mutant</strong> is a common type of <a href="https://examination.miraheze.org/wiki/Enemies" target="_blank" rel="noopener noreferrer">Enemy</a> in Examination. They have average speed and low damage, but a fast attack rate. They are dangerous in groups.</p>
+        </div>
+      </header>
+
+      <section class="enemy-info-section">
+        <h3>Variations</h3>
+        <div class="enemy-variant-grid">
+          ${variantImages.map((variant) => `
+            <figure class="enemy-variant">
+              <button class="enemy-variant-image" type="button" data-image-src="${variant.image}" aria-label="View ${variant.name} Mutant image">
+                <img src="${variant.image}" alt="${variant.name} Mutant" loading="lazy" />
+              </button>
+              <figcaption>${variant.name}</figcaption>
+            </figure>
+          `).join("")}
+        </div>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Behavior and spawns</h3>
+        <h4>Spawn</h4>
+        <p>Eight Mutants spawn in multiple areas throughout Reactor 4. Mutants take 5 minutes to respawn after death.</p>
+        <h4>Movement</h4>
+        <p>Mutants wander around the map at 8 studs/s until they spot a target. Once a target is in sight, they chase at 18 studs/s. If the target stays out of sight for more than 10 seconds, the Mutant returns to wandering.</p>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Attacks</h3>
+        <p>Mutants slash their target with their claws, dealing 13 damage per hit with a 0.9-second cooldown and medium attack range.</p>
+        <p>A Mutant performs an execution if it hits a player with less than 28 HP.</p>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Attributes</h3>
+        <ul>
+          <li><strong>Stagger Immunity:</strong> Mutants are not stunned by gunshots.</li>
+          <li><strong>Taser Resistance:</strong> Stun from the <a href="https://examination.miraheze.org/wiki/TASC-10" target="_blank" rel="noopener noreferrer">TASC-10</a> lasts only 3.5 seconds, and the Mutant remains standing instead of falling.</li>
+        </ul>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Animation gallery</h3>
+        <div class="animation-grid">
+          ${animations.map((animation) => `
+            <button class="animation-card" type="button" data-video-src="${mediaFileUrl(animation.file)}" aria-label="Play ${animation.name}">
+              <span class="animation-play-icon" aria-hidden="true">▶</span>
+              <span>${animation.name}</span>
+            </button>
+          `).join("")}
+        </div>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Archived gallery</h3>
+        <div class="enemy-variant-grid">
+          ${archiveImages.map((image) => {
+            const source = mediaFileUrl(image.file);
+            return `
+              <figure class="enemy-variant">
+                <button class="enemy-variant-image" type="button" data-image-src="${source}" aria-label="View ${image.name}">
+                  <img src="${source}" alt="${image.name}" loading="lazy" />
+                </button>
+                <figcaption>${image.name}</figcaption>
+              </figure>
+            `;
+          }).join("")}
+        </div>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Lore</h3>
+        <p>Mutants are workers and engineers of the power plant who were trapped and infected with the <a href="https://examination.miraheze.org/wiki/WE-30?action=edit&amp;redlink=1" target="_blank" rel="noopener noreferrer">WE-30 Pathogen</a> in <a href="https://examination.miraheze.org/wiki/Reactor_4" target="_blank" rel="noopener noreferrer">Reactor 4</a>. Radiation enhanced the effects of the pathogen, making them decently stronger than the normal strain.</p>
+        <p>The radiation also significantly malformed them and stripped away their skin, leaving them as a fleshy mass with bones and claws.</p>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Trivia</h3>
+        <ul>
+          <li>Mutants currently have more appearance variations than any other enemy in the game.</li>
+          <li>In <a href="https://examination.miraheze.org/wiki/1.3.699" target="_blank" rel="noopener noreferrer">Patch 1.3699</a>, Mutants could block their head when shot. This ability was removed shortly afterward.</li>
+        </ul>
+      </section>
+    </article>
+  `;
+
+  bindEnemyMedia();
+}
+
+function bindEnemyMedia() {
   detailViewport.querySelectorAll("[data-video-src]").forEach((button) => {
     button.addEventListener("click", () => openMediaVideo(button.dataset.videoSrc, button));
   });
