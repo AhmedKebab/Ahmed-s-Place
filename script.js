@@ -1014,6 +1014,27 @@ function renderMutantDetail(enemy) {
       </section>
 
       <section class="enemy-info-section">
+        <h3>Health and stats</h3>
+        <div class="enemy-table-wrap">
+          <table class="enemy-stats">
+            <tbody>
+              <tr><th scope="row">Spawn location</th><td><a href="https://examination.miraheze.org/wiki/Reactor_4" target="_blank" rel="noopener noreferrer">Reactor 4</a></td></tr>
+              <tr><th scope="row">Health</th><td>330 HP</td></tr>
+              <tr><th scope="row">Regeneration</th><td>3.3 HP/s</td></tr>
+              <tr><th scope="row">Walk speed</th><td>8</td></tr>
+              <tr><th scope="row">Run speed</th><td>18</td></tr>
+              <tr><th scope="row">Primary equipment</th><td>Claws</td></tr>
+              <tr><th scope="row">Damage</th><td>13</td></tr>
+              <tr><th scope="row">Execution threshold</th><td>Below 28 HP</td></tr>
+              <tr><th scope="row">Respawn time</th><td>5 minutes</td></tr>
+              <tr><th scope="row">Drop</th><td>None</td></tr>
+              <tr><th scope="row">Gender</th><td>Male</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="enemy-info-section">
         <h3>Behavior and spawns</h3>
         <h4>Spawn</h4>
         <p>Eight Mutants spawn in multiple areas throughout Reactor 4. Mutants take 5 minutes to respawn after death.</p>
