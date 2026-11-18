@@ -816,6 +816,8 @@ function renderEnemyCatalog() {
         renderCrawlerDetail(enemy);
       } else if (currentEnemyId === "regulars-grabby") {
         renderGrabbyDetail(enemy);
+      } else if (currentEnemyId === "regulars-barnacles") {
+        renderBarnaclesDetail(enemy);
       } else if (currentEnemyId === "regulars-mutant") {
         renderMutantDetail(enemy);
       } else {
@@ -1135,6 +1137,101 @@ function renderGrabbyDetail(enemy) {
       <section class="enemy-info-section">
         <h3>Lore</h3>
         <p>Similar to normal <a href="https://examination.miraheze.org/wiki/Mutant" target="_blank" rel="noopener noreferrer">Mutants</a>, Grabby Mutants are workers and engineers of the power plant who were trapped and infected with the <a href="https://examination.miraheze.org/wiki/WE-30?action=edit&amp;redlink=1" target="_blank" rel="noopener noreferrer">WE-30 Pathogen</a> in the area of <a href="https://examination.miraheze.org/wiki/Reactor_4" target="_blank" rel="noopener noreferrer">Reactor 4</a>. However, they were caught in debris and subsequently merged with the flesh walls of the area.</p>
+      </section>
+    </article>
+  `;
+
+  bindEnemyMedia();
+}
+
+function renderBarnaclesDetail(enemy) {
+  const animations = [
+    { name: "Alerted Barnacles", file: "Barnacles_Alerted.mp4" },
+    { name: "Barnacles death animation", file: "Barnacles_Death.mp4" },
+    { name: "Barnacles execution animation", file: "Barnacles_Execution.mp4" },
+  ];
+  const alertedSound = "https://static.wikitide.net/examinationwiki/b/bf/Barnacles_Alerted.mp3";
+  detailViewport.innerHTML = `
+    <article class="enemy-detail">
+      <header class="enemy-detail-hero">
+        <img class="enemy-detail-portrait" src="${enemy.image}" alt="${enemy.name}" />
+        <div>
+          <p class="enemy-category-label">Regulars · Combat Archive</p>
+          <h2>Barnacles</h2>
+          <p><strong>Barnacles</strong> are a unique <a href="https://examination.miraheze.org/wiki/Enemies" target="_blank" rel="noopener noreferrer">Enemy</a> type in Examination. Similarly to the <a href="https://examination.miraheze.org/wiki/Grabby" target="_blank" rel="noopener noreferrer">Grabby</a>, they are stationary, however they pose a much bigger threat.</p>
+        </div>
+      </header>
+
+      <section class="enemy-info-section">
+        <h3>Health and stats</h3>
+        <div class="enemy-table-wrap">
+          <table class="enemy-stats">
+            <tbody>
+              <tr><th scope="row">Spawn Location</th><td><a href="https://examination.miraheze.org/wiki/Reactor_4#Infested_Basement" target="_blank" rel="noopener noreferrer">Reactor 4 Infested Basement</a></td></tr>
+              <tr><th scope="row">Health points</th><td>2</td></tr>
+              <tr><th scope="row">Regeneration</th><td>None</td></tr>
+              <tr><th scope="row">Walk speed</th><td>None</td></tr>
+              <tr><th scope="row">Run speed</th><td>None</td></tr>
+              <tr><th scope="row">Primary equipment</th><td>Claws</td></tr>
+              <tr><th scope="row">Execution</th><td>On contact</td></tr>
+              <tr><th scope="row">Respawn time</th><td>8 minutes 30 seconds</td></tr>
+              <tr><th scope="row">Drop</th><td>None</td></tr>
+              <tr><th scope="row">Gender</th><td>Male</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Behavior and spawns</h3>
+        <h4>Spawn</h4>
+        <p>A total of 4 Barnacles spawn in Reactor 4's <a href="https://examination.miraheze.org/wiki/Reactor_4#Infested_Basement" target="_blank" rel="noopener noreferrer">Infested Basement</a>. They take 8 minutes and 30 seconds to respawn after death.</p>
+        <h4>Behavior</h4>
+        <p>Barnacles are completely stationary. When a player is nearby, they become alerted: their eyes glow and they stretch their arms toward the player. They return to idle after the player moves away.</p>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Abilities</h3>
+        <h4>Execution</h4>
+        <p>Upon making physical contact with a player, Barnacles perform an execution on them.</p>
+        <h4>Flammability</h4>
+        <p>Barnacles are immune to all damage sources except the <a href="https://examination.miraheze.org/wiki/SHC-23" target="_blank" rel="noopener noreferrer">SHC-23</a>. They always die after two SHC-23 hits: the first visually burns the Barnacle, while the second kills it with a special animation.</p>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Attributes</h3>
+        <ul>
+          <li><strong>Stagger Immunity:</strong> Barnacles are not stunned by gunshots.</li>
+          <li>Barnacles can only be damaged by the <a href="https://examination.miraheze.org/wiki/SHC-23" target="_blank" rel="noopener noreferrer">SHC-23</a>.</li>
+        </ul>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Sounds</h3>
+        <p>Alerted Barnacles — plays on loop when Barnacles are alerted.</p>
+        <audio class="enemy-audio" controls loop preload="none" src="${alertedSound}">
+          Your browser does not support audio playback.
+        </audio>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Animation gallery</h3>
+        <div class="animation-grid">
+          ${animations.map((animation) => {
+            const source = `https://examination.miraheze.org/wiki/Special:FilePath/${animation.file}`;
+            return `
+              <button class="animation-card" type="button" data-video-src="${source}" aria-label="Play ${animation.name}">
+                <span class="animation-play-icon" aria-hidden="true">▶</span>
+                <span>${animation.name}</span>
+              </button>
+            `;
+          }).join("")}
+        </div>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Lore</h3>
+        <p>TBA</p>
       </section>
     </article>
   `;
