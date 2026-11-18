@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#050609" />
     <title>Examination</title>
     <link rel="icon" type="image/webp" href="favicon.webp" />
-    <link rel="stylesheet" href="examination.css?v=analog-tape-v8" />
+    <link rel="stylesheet" href="examination.css?v=analog-tape-v9" />
     <script src="script.js?v=gallery-media-v3" defer></script>
   </head>
   <body>
@@ -43,7 +43,7 @@
       </div>
       <aside class="brand-panel" id="intro-screen" aria-labelledby="game-title">
         <div class="menu-content">
-          <h1 class="game-title" id="game-title" data-screen-title tabindex="-1">MiloINC.</h1>
+          <h1 class="game-title" id="game-title" data-screen-title tabindex="-1"><span class="game-title-m">M<img class="milo-easter-egg" src="https://static.wikia.nocookie.net/samme/images/f/fe/Milo_Slides.png/revision/latest/scale-to-width/360?cb=20260907010126" alt="" aria-hidden="true" /></span>iloINC.</h1>
           <button class="begin-button" id="begin-button" type="button">Begin</button>
           <details class="settings-menu">
             <summary>
@@ -121,16 +121,18 @@
         </div>
       </section>
       <div class="media-modal" id="media-modal" role="dialog" aria-modal="true" aria-label="Media viewer" hidden>
-        <button class="media-close" id="media-close" type="button" aria-label="Close media viewer">×</button>
-        <img id="media-image" class="media-image" alt="" hidden />
-        <video
-          id="media-player"
-          playsinline
-          tabindex="-1"
-          inert
-          disablepictureinpicture
-          disableremoteplayback
-        ></video>
+        <div class="media-frame">
+          <button class="media-close" id="media-close" type="button" aria-label="Close media viewer">×</button>
+          <img id="media-image" class="media-image" alt="" hidden />
+          <video
+            id="media-player"
+            playsinline
+            tabindex="-1"
+            inert
+            disablepictureinpicture
+            disableremoteplayback
+          ></video>
+        </div>
       </div>
       <div class="reconstruct-effect" id="reconstruct-effect" aria-hidden="true"></div>
       <div class="analog-horror" aria-hidden="true">
