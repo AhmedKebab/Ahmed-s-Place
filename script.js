@@ -641,6 +641,8 @@ function renderEnemyDetail(enemy) {
   backButton.textContent = "Back to Enemies";
   if (currentEnemyId === "regulars-lurker") {
     renderLurkerDetail(enemy);
+  } else if (currentEnemyId === "regulars-engineer") {
+    renderEngineerDetail(enemy);
   } else if (currentEnemyId === "regulars-crawler") {
     renderCrawlerDetail(enemy);
   } else if (currentEnemyId === "regulars-grabby") {
@@ -685,6 +687,112 @@ function renderEnemyPlaceholder(enemy) {
       </div>
     </article>
   `;
+}
+
+function renderEngineerDetail(enemy) {
+  const sector3 = `${examinationWiki}/Sector_3`;
+  const dreadnought = `${examinationWiki}/Dreadnought`;
+  const animations = [
+    { name: "Execution animation 1", file: "Engineer_Execution_1.mp4" },
+    { name: "Execution animation 2", file: "Engineer_Execution_2.mp4" },
+    { name: "Execution animation 3", file: "Engineer_Execution_3.mp4" },
+    { name: "Save animation", file: "Engineer_Save.mp4" },
+    { name: "Landmine trigger", file: "Engineer_Landmine_Trigger.mp4" },
+  ];
+  const landmineImage = "https://static.wikitide.net/examinationwiki/a/a5/Landmine.png";
+  detailViewport.innerHTML = `
+    <article class="enemy-detail">
+      <header class="enemy-detail-hero">
+        <img class="enemy-detail-portrait" src="${enemy.image}" alt="${enemy.name}" />
+        <div>
+          <p class="enemy-category-label">Regulars · Combat Archive</p>
+          <h2>Engineer</h2>
+          <p><strong>Vladimir Bzochvenyich</strong> is a Dreadnought-mutated combat engineer who retains his intelligence and skill with landmines.</p>
+          <p>He wanders through Sector 3, laying mines, and pursues targets he spots. His landmines and execution make him more dangerous than a regular Lurker.</p>
+        </div>
+      </header>
+
+      <section class="enemy-info-section">
+        <h3>Health and stats</h3>
+        <div class="enemy-table-wrap">
+          <table class="enemy-stats">
+            <tbody>
+              <tr><th scope="row">Spawn location</th><td><a href="${sector3}" target="_blank" rel="noopener noreferrer">Sector 3, Subsector-1</a></td></tr>
+              <tr><th scope="row">Health</th><td>700 HP</td></tr>
+              <tr><th scope="row">Regeneration</th><td>None</td></tr>
+              <tr><th scope="row">Walk speed</th><td>9 studs/s</td></tr>
+              <tr><th scope="row">Run speed</th><td>17 studs/s</td></tr>
+              <tr><th scope="row">Primary equipment</th><td>Fists</td></tr>
+              <tr><th scope="row">Secondary equipment</th><td>Landmine</td></tr>
+              <tr><th scope="row">Punch damage</th><td>25</td></tr>
+              <tr><th scope="row">Landmine damage</th><td>Instant kill</td></tr>
+              <tr><th scope="row">Execution threshold</th><td>Below 35 HP</td></tr>
+              <tr><th scope="row">Respawn time</th><td>8 minutes 20 seconds</td></tr>
+              <tr><th scope="row">Drop</th><td>None</td></tr>
+              <tr><th scope="row">Nationality</th><td>Rasonian</td></tr>
+              <tr><th scope="row">Gender</th><td>Male</td></tr>
+              <tr><th scope="row">Affiliation</th><td>Rasonian Infantry Forces (formerly)</td></tr>
+              <tr><th scope="row">Occupation</th><td>Combat Engineer (formerly)</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Behavior and spawns</h3>
+        <p>Vladimir spawns near a room with an ammo box and a keycard in <a href="${sector3}" target="_blank" rel="noopener noreferrer">Sector 3</a>'s Subsector-1. He wanders at 9 studs/s and can plant landmines while wandering. Once he spots a target, he chases at 17 studs/s and stops planting mines. If the target stays out of sight for more than 10 seconds, he returns to wandering.</p>
+        <p>He takes 8 minutes and 20 seconds to respawn after death.</p>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Abilities</h3>
+        <p>Vladimir punches at low range, dealing 25 damage per hit with a 1-second cooldown. If he hits a player below 35 HP, he performs an execution.</p>
+        <p>There is a 50% chance that the execution is replaced by a save animation: the player fights back and kicks Vladimir away, becomes <a href="${examinationWiki}/Mechanics#Infection" target="_blank" rel="noopener noreferrer">infected</a>, and is healed to 15 HP. Vladimir cannot attack for 3 seconds afterward.</p>
+        <h4>Landmines</h4>
+        <p>While wandering, Vladimir places a landmine at his position every 45 seconds. Stepping on a mine instantly kills a player regardless of their HP. AI cannot trigger mines, but players can shoot them to detonate them; the resulting small blast deals around 40 damage, decreasing with distance.</p>
+        <figure class="enemy-variant">
+          <button class="enemy-variant-image" type="button" data-image-src="${landmineImage}" aria-label="View landmine appearance">
+            <img src="${landmineImage}" alt="Landmine" loading="lazy" />
+          </button>
+          <figcaption>Landmine appearance</figcaption>
+        </figure>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Attributes</h3>
+        <ul>
+          <li><strong>Dreadnought:</strong> Vladimir opens doors when he walks up to them.</li>
+        </ul>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Animation gallery</h3>
+        <div class="animation-grid">
+          ${animations.map((animation) => `
+            <button class="animation-card" type="button" data-video-src="${examinationWiki}/Special:FilePath/${animation.file}" aria-label="Play ${animation.name}">
+              <span class="animation-play-icon" aria-hidden="true">▶</span>
+              <span>${animation.name}</span>
+            </button>
+          `).join("")}
+        </div>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Lore</h3>
+        <p>Vladimir was a combat engineer in the <a href="${examinationWiki}/Rasonian_Infantry_Forces" target="_blank" rel="noopener noreferrer">Rasonian Infantry Forces</a>. He and his squad were stationed in a <a href="${sector3}" target="_blank" rel="noopener noreferrer">Sector 3</a> subsector and were running low on supplies.</p>
+        <p>He hoped to convince <a href="${examinationWiki}/Sinitzyn" target="_blank" rel="noopener noreferrer">Sinitzyn Komarek</a> to help de-escalate the tensions and bring in a third party to discuss an antidote for <a href="${examinationWiki}/WE-30?action=edit&amp;redlink=1" target="_blank" rel="noopener noreferrer">WE-30</a>. When Vladimir's squad tried to leave the subsector and regroup with Sinitzyn, they got lost and were eventually taken over by the pathogen. Vladimir underwent the <a href="${dreadnought}" target="_blank" rel="noopener noreferrer">Dreadnought</a> mutation, preserving his intelligence and landmine-planting skill.</p>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Trivia</h3>
+        <ul>
+          <li>Vladimir's eyes used to glow white instead of orange.</li>
+        </ul>
+      </section>
+    </article>
+  `;
+
+  bindEnemyMedia();
 }
 
 function renderGunnerDetail(enemy) {
