@@ -1037,7 +1037,7 @@ function renderCityFuryDetail(enemy) {
           </figure>
         </div>
         <div class="animation-grid">
-          <button class="animation-card" type="button" data-video-src="${examinationWiki}/Special:FilePath/City_Fury_Execution.mp4" aria-label="Play City Fury execution animation">
+          <button class="animation-card" type="button" data-video-src="${examinationWiki}/Special:FilePath/City_Fury_Execution.mp4" data-video-fullscreen aria-label="Play City Fury execution animation">
             <span class="animation-play-icon" aria-hidden="true">▶</span>
             <span>Execution animation</span>
           </button>
@@ -2409,7 +2409,9 @@ function bindEnemyMedia() {
     });
   });
   detailViewport.querySelectorAll("[data-video-src]").forEach((button) => {
-    button.addEventListener("click", () => openMediaVideo(button.dataset.videoSrc, button));
+    button.addEventListener("click", () => {
+      openMediaVideo(button.dataset.videoSrc, button, button.hasAttribute("data-video-fullscreen"));
+    });
   });
   detailViewport.querySelectorAll("[data-image-src]").forEach((button) => {
     button.addEventListener("click", () => {
@@ -2419,7 +2421,7 @@ function bindEnemyMedia() {
   });
 }
 
-function openMediaVideo(source, trigger) {
+function openMediaVideo(source, trigger, fullscreenVideo = false) {
   activeMediaTrigger = trigger;
   window.clearTimeout(carouselTimer);
   mediaImage.hidden = true;
@@ -2432,8 +2434,11 @@ function openMediaVideo(source, trigger) {
   mediaPlayer.src = source;
   mediaModal.hidden = false;
   mediaModal.focus();
-  if (typeof mediaModal.requestFullscreen === "function") {
-    mediaModal.requestFullscreen().catch((error) => {
+  const fullscreenTarget = fullscreenVideo && typeof mediaPlayer.requestFullscreen === "function"
+    ? mediaPlayer
+    : mediaModal;
+  if (typeof fullscreenTarget.requestFullscreen === "function") {
+    fullscreenTarget.requestFullscreen().catch((error) => {
       console.info("Browser fullscreen is unavailable; using the full-page media viewer.", error);
     });
   }
@@ -2464,7 +2469,7 @@ function openMediaImage(source, alt, trigger) {
 }
 
 function closeMediaViewer() {
-  if (document.fullscreenElement === mediaModal) {
+  if (document.fullscreenElement === mediaModal || document.fullscreenElement === mediaPlayer) {
     document.exitFullscreen().catch((error) => {
       console.error("Unable to exit the media viewer's fullscreen mode.", error);
     });
@@ -2508,7 +2513,7 @@ window.addEventListener("keydown", (event) => {
 });
 document.addEventListener("fullscreenchange", () => {
   if (mediaModal.hidden) return;
-  if (document.fullscreenElement !== mediaModal) {
+  if (document.fullscreenElement !== mediaModal && document.fullscreenElement !== mediaPlayer) {
     closeMediaViewer();
   }
 });
