@@ -109,6 +109,9 @@ const mediaFileDirectories = new Map([
   ["Mutant_Blocking.png", "b4"],
   ["Lurker_Save.mp4", "6e"],
   ["Lurker_Maul.mp4", "3d"],
+  ["Barnacles_Alerted.mp4", "cb"],
+  ["Barnacles_Death.mp4", "e9"],
+  ["Barnacles_Execution.mp4", "ab"],
   ["Enraged_Lurker.mp3", "cb"],
 ]);
 
@@ -977,15 +980,12 @@ function renderBarnaclesDetail(enemy) {
       <section class="enemy-info-section">
         <h3>Animation gallery</h3>
         <div class="animation-grid">
-          ${animations.map((animation) => {
-            const source = `https://examination.miraheze.org/wiki/Special:FilePath/${animation.file}`;
-            return `
-              <button class="animation-card" type="button" data-video-src="${source}" aria-label="Play ${animation.name}">
-                <span class="animation-play-icon" aria-hidden="true">▶</span>
-                <span>${animation.name}</span>
-              </button>
-            `;
-          }).join("")}
+          ${animations.map((animation) => `
+            <button class="animation-card" type="button" data-video-src="${mediaFileUrl(animation.file)}" aria-label="Play ${animation.name}">
+              <span class="animation-play-icon" aria-hidden="true">▶</span>
+              <span>${animation.name}</span>
+            </button>
+          `).join("")}
         </div>
       </section>
 
