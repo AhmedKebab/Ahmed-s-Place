@@ -178,6 +178,10 @@ const backgroundMusicVideoId = "2z5rMNH_yTI";
 let backgroundMusicPlayer = null;
 let backgroundMusicPlayerReady = false;
 
+function hasActiveForegroundMedia() {
+  return [...document.querySelectorAll("audio, video")].some((media) => !media.paused && !media.ended);
+}
+
 function createBackgroundMusicPlayer() {
   if (!backgroundMusicSetting.checked || backgroundMusicPlayer || typeof YT === "undefined") return;
 
@@ -205,11 +209,11 @@ function createBackgroundMusicPlayer() {
       onReady: (event) => {
         backgroundMusicPlayerReady = true;
         event.target.setVolume(35);
-        if (backgroundMusicSetting.checked) event.target.playVideo();
+        enableBackgroundMusic();
       },
       onStateChange: (event) => {
         if (!backgroundMusicSetting.checked) return;
-        if (event.data === YT.PlayerState.ENDED) event.target.playVideo();
+        if (event.data === YT.PlayerState.ENDED && !hasActiveForegroundMedia()) event.target.playVideo();
       },
     },
   });
@@ -220,7 +224,7 @@ window.onYouTubeIframeAPIReady = () => {
 };
 
 function enableBackgroundMusic() {
-  if (!backgroundMusicSetting.checked) return;
+  if (!backgroundMusicSetting.checked || hasActiveForegroundMedia()) return;
   if (!backgroundMusicPlayer) {
     createBackgroundMusicPlayer();
   }
@@ -1460,6 +1464,23 @@ mediaPlayer.addEventListener("loadeddata", () => {
 mediaPlayer.addEventListener("ended", () => {
   mediaPlayer.classList.add("is-fading");
 });
+
+function syncBackgroundMusicWithForegroundMedia() {
+  if (hasActiveForegroundMedia()) {
+    if (backgroundMusicPlayerReady) backgroundMusicPlayer.pauseVideo();
+  } else {
+    enableBackgroundMusic();
+  }
+}
+
+document.addEventListener("play", syncBackgroundMusicWithForegroundMedia, true);
+for (const eventName of ["pause", "ended", "emptied", "error"]) {
+  document.addEventListener(
+    eventName,
+    () => queueMicrotask(syncBackgroundMusicWithForegroundMedia),
+    true,
+  );
+}
 
 showcase.addEventListener("pointermove", (event) => {
   const interactive = event.target.closest(
