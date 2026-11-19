@@ -62,7 +62,7 @@ const enemyCatalog = [
     label: "City Infected",
     enemies: [
       { name: "RUNNER", image: "https://static.wikitide.net/examinationwiki/thumb/3/3c/Civilian_City_Runner.png/340px-Civilian_City_Runner.png" },
-      { name: "SHIELDER", image: "https://static.wikitide.net/examinationwiki/thumb/c/cd/MNPA_City_Shielder.png/315px-MNPA_City_Shielder.png" },
+      { name: "CITY SHIELDER", image: "https://static.wikitide.net/examinationwiki/thumb/c/cd/MNPA_City_Shielder.png/315px-MNPA_City_Shielder.png" },
       { name: "FURY", image: "https://static.wikitide.net/examinationwiki/thumb/1/10/City_Fury.png/299px-City_Fury.png" },
       { name: "DREADNOUGHT", image: "https://static.wikitide.net/examinationwiki/thumb/6/68/City_Dreadnought.png/326px-City_Dreadnought.png" },
     ],
@@ -596,6 +596,10 @@ function renderEnemyCatalog() {
         renderMutantDetail(enemy);
       } else if (currentEnemyId === "regulars-kamikaze") {
         renderKamikazeDetail(enemy);
+      } else if (currentEnemyId === "regulars-shielder") {
+        renderShielderDetail(enemy);
+      } else if (currentEnemyId === "city-infected-city-shielder") {
+        renderCityShielderDetail(enemy);
       } else {
         renderEnemyPlaceholder(enemy);
       }
@@ -616,6 +620,275 @@ function renderEnemyPlaceholder(enemy) {
       </div>
     </article>
   `;
+}
+
+function renderShielderDetail(enemy) {
+  const variantImages = [
+    { name: "MNPA", image: "https://static.wikitide.net/examinationwiki/e/e5/MNPA_Shielder_2.png" },
+    { name: "MNPA 2", image: "https://static.wikitide.net/examinationwiki/8/8a/MNPA_Shielder.png" },
+    { name: "MGF MP", image: "https://static.wikitide.net/examinationwiki/5/5e/MGF_MP_Shielder.png" },
+  ];
+  const galleryImages = [
+    { name: "Alternative MNPA render", file: "MPD_Shielder.png" },
+    { name: "Removed RSU variant", file: "RSU_Shielder.png" },
+  ];
+  const sector1 = `${examinationWiki}/Sector_1`;
+  const viralLeader = `${examinationWiki}/Viral_Leader`;
+  const shieldPenetrators = ["AEN-50", "SHC-23", "Arcturus .50"];
+  detailViewport.innerHTML = `
+    <article class="enemy-detail">
+      <header class="enemy-detail-hero">
+        <img class="enemy-detail-portrait" src="${enemy.image}" alt="${enemy.name}" />
+        <div>
+          <p class="enemy-category-label">Regulars · Combat Archive</p>
+          <h2>Shielder</h2>
+          <p>“Those were issued to the military for the refugees that camped here, before everything went off. They're full of hate and spite.”</p>
+          <p><strong>Shielders</strong> are a relatively common type of <a href="${examinationWiki}/Enemies" target="_blank" rel="noopener noreferrer">Enemy</a> in Examination. They carry a shield and baton, advancing on their targets while their shield blocks most incoming damage.</p>
+        </div>
+      </header>
+
+      <section class="enemy-info-section">
+        <h3>Variants</h3>
+        <div class="enemy-variant-grid">
+          ${variantImages.map((variant) => `
+            <figure class="enemy-variant">
+              <button class="enemy-variant-image" type="button" data-image-src="${variant.image}" aria-label="View ${variant.name} Shielder image">
+                <img src="${variant.image}" alt="${variant.name} Shielder" loading="lazy" />
+              </button>
+              <figcaption>${variant.name}</figcaption>
+            </figure>
+          `).join("")}
+        </div>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Health and stats</h3>
+        <div class="enemy-table-wrap">
+          <table class="enemy-stats">
+            <tbody>
+              <tr><th scope="row">Spawn location</th><td><a href="${sector1}" target="_blank" rel="noopener noreferrer">Sector 1</a></td></tr>
+              <tr><th scope="row">Health</th><td>350 HP</td></tr>
+              <tr><th scope="row">Regeneration</th><td>3.5 HP/s</td></tr>
+              <tr><th scope="row">Walk speed</th><td>7 studs/s</td></tr>
+              <tr><th scope="row">Pursuit speed</th><td>7.5 studs/s; 11 when enraged</td></tr>
+              <tr><th scope="row">Rush speed</th><td>13 studs/s</td></tr>
+              <tr><th scope="row">Primary equipment</th><td>Baton</td></tr>
+              <tr><th scope="row">Damage</th><td>25; 30 when enraged</td></tr>
+              <tr><th scope="row">Execution threshold</th><td>Below 35 HP; below 40 HP when enraged</td></tr>
+              <tr><th scope="row">Respawn time</th><td>1 minute 55 seconds</td></tr>
+              <tr><th scope="row">Drop</th><td>None</td></tr>
+              <tr><th scope="row">Gender</th><td>Male</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Behavior and spawns</h3>
+        <p>Three Shielders spawn by default, with more appearing as the server's player count increases. A Shielder takes 1 minute and 55 seconds to respawn after death.</p>
+        <div class="enemy-table-wrap">
+          <table class="enemy-stats spawn-table">
+            <thead><tr><th scope="col">Variant</th><th scope="col">Prioritized spawn location</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">MNPA</th><td>Center of Sector 1, near a forklift</td></tr>
+              <tr><th scope="row">MNPA 2</th><td>Sector 1, near the entrance gate</td></tr>
+              <tr><th scope="row">MGF MP</th><td>Sector 1, near <a href="${examinationWiki}/Generator_2?action=edit&amp;redlink=1" target="_blank" rel="noopener noreferrer">Generator 2</a></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Shielders wander at 7 studs/s until they spot a target, then bang their shields and chase at 7.5 studs/s. At close range, they rush at 13 studs/s. If a target stays out of sight for more than 10 seconds, a Shielder returns to wandering.</p>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Attacks and attributes</h3>
+        <p>A Shielder strikes with its baton for 25 damage every 2 seconds at medium range. When enraged, its attacks deal 30 damage with a 0.8-second cooldown. It executes players below 35 HP, or below 40 HP while enraged.</p>
+        <ul>
+          <li><strong>Stagger Immunity:</strong> Shielders are not stunned by gunshots.</li>
+          <li><strong>Dreadnought:</strong> They open doors when walking up to them.</li>
+          <li><strong>Shield:</strong> Blocks most incoming damage and can only be penetrated by ${shieldPenetrators.map((weapon) => `<a href="${examinationWiki}/${encodeURIComponent(weapon).replaceAll("%2E", ".")}" target="_blank" rel="noopener noreferrer">${weapon}</a>`).join(", ")}. The head and right arm remain partially exposed.</li>
+          <li>When sprinting, a Shielder moves its arm-mounted shield aside, leaving itself exposed.</li>
+        </ul>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Rage</h3>
+        <p>Near a <a href="${viralLeader}" target="_blank" rel="noopener noreferrer">Viral Leader</a>, a Shielder becomes enraged: its eyes turn red, pursuit speed increases to 11 studs/s, damage increases to 30, and attack cooldown drops to 0.8 seconds.</p>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Sounds</h3>
+        <p>Shielder idle — plays on loop.</p>
+        <audio class="enemy-audio" controls loop preload="none" src="https://static.wikitide.net/examinationwiki/3/38/Shielder_Idle.mp3">Your browser does not support audio playback.</audio>
+        <p>Shield bang — plays when spotting a player.</p>
+        <audio class="enemy-audio" controls preload="none" src="https://static.wikitide.net/examinationwiki/6/6f/Shielder_Bang.mp3">Your browser does not support audio playback.</audio>
+        <p>Dreadnought scream — plays when stunned from a bash.</p>
+        <audio class="enemy-audio" controls preload="none" src="https://static.wikitide.net/examinationwiki/1/1a/Dreadnought_Scream.mp3">Your browser does not support audio playback.</audio>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Gallery</h3>
+        <div class="enemy-variant-grid">
+          ${galleryImages.map((image) => {
+            const source = `${examinationWiki}/Special:FilePath/${encodeURIComponent(image.file)}`;
+            const page = `${examinationWiki}/File:${encodeURIComponent(image.file)}`;
+            return `
+              <figure class="enemy-variant">
+                <button class="enemy-variant-image" type="button" data-image-src="${source}" aria-label="View ${image.name}">
+                  <img src="${source}" alt="${image.name}" loading="lazy" />
+                </button>
+                <figcaption><a href="${page}" target="_blank" rel="noopener noreferrer">${image.name}</a></figcaption>
+              </figure>
+            `;
+          }).join("")}
+        </div>
+        <div class="animation-grid">
+          <button class="animation-card" type="button" data-video-src="${examinationWiki}/Special:FilePath/Shielder_Execution.mp4" aria-label="Play Shielder execution animation">
+            <span class="animation-play-icon" aria-hidden="true">▶</span>
+            <span>Execution animation</span>
+          </button>
+        </div>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Lore</h3>
+        <p>Shielders were members of the <a href="${examinationWiki}/Menlo%E2%80%99s_National_Police_Authority?action=edit&amp;redlink=1" target="_blank" rel="noopener noreferrer">MNPA</a> or the <a href="${examinationWiki}/Menlonian_Ground_Forces" target="_blank" rel="noopener noreferrer">MGF</a> military police. They were issued shields and batons to control riots among refugees near the <a href="${examinationWiki}/Itagura_Nuclear_Power_Plant" target="_blank" rel="noopener noreferrer">Itagura Nuclear Power Plant</a>.</p>
+        <p>After infection with the <a href="${examinationWiki}/WE-30?action=edit&amp;redlink=1" target="_blank" rel="noopener noreferrer">WE-30 Pathogen</a>, they underwent the Dreadnought mutation. They retain enough intelligence to use their equipment and interact with objects, but are more spiteful and violent than usual.</p>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Trivia</h3>
+        <ul>
+          <li>The shield-banging sound effect comes from the Shield enemy in <a href="https://payday.fandom.com/wiki/Shield_(Payday_2)" target="_blank" rel="noopener noreferrer">PAYDAY 2</a>.</li>
+          <li>An RSU Shielder variant was replaced by the second MNPA variant in the normal game, but can still be seen in Blood Handed Retriever.</li>
+        </ul>
+      </section>
+    </article>
+  `;
+
+  bindEnemyMedia();
+}
+
+function renderCityShielderDetail(enemy) {
+  const variantImages = [
+    { name: "MNPA 1", image: "https://static.wikitide.net/examinationwiki/c/cd/MNPA_City_Shielder.png" },
+    { name: "MNPA 2", image: "https://static.wikitide.net/examinationwiki/9/9f/MNPA_City_Shielder_2.png" },
+  ];
+  const galleryImages = [
+    { name: "Old appearance", file: "RCU_Shielder_1.png" },
+    { name: "Old appearance alternate render", file: "RCU_Shielder_2.png" },
+  ];
+  const streets = `${examinationWiki}/Locations#Streets`;
+  const serverRestart = `${examinationWiki}/Mechanics#Relay_Station`;
+  detailViewport.innerHTML = `
+    <article class="enemy-detail">
+      <header class="enemy-detail-hero">
+        <img class="enemy-detail-portrait" src="${enemy.image}" alt="${enemy.name}" />
+        <div>
+          <p class="enemy-category-label">City Infected · Combat Archive</p>
+          <h2>City Shielder</h2>
+          <p>“We held our ground until there was nothing left to hold.” — Sergeant Hermann Lutz</p>
+          <p><strong>City Shielder</strong> is a unique variant of the <a href="${examinationWiki}/Shielder" target="_blank" rel="noopener noreferrer">Shielder</a>, with stronger defenses. Its shield blocks most incoming damage as it advances on the player.</p>
+        </div>
+      </header>
+
+      <section class="enemy-info-section">
+        <h3>Variants</h3>
+        <p>Both City Shielder variants are exclusive to the Server Restart event.</p>
+        <div class="enemy-variant-grid">
+          ${variantImages.map((variant) => `
+            <figure class="enemy-variant">
+              <button class="enemy-variant-image" type="button" data-image-src="${variant.image}" aria-label="View ${variant.name} City Shielder image">
+                <img src="${variant.image}" alt="${variant.name} City Shielder" loading="lazy" />
+              </button>
+              <figcaption>${variant.name}</figcaption>
+            </figure>
+          `).join("")}
+        </div>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Health and stats</h3>
+        <div class="enemy-table-wrap">
+          <table class="enemy-stats">
+            <tbody>
+              <tr><th scope="row">Spawn location</th><td><a href="${streets}" target="_blank" rel="noopener noreferrer">Streets</a></td></tr>
+              <tr><th scope="row">Health</th><td>700 HP</td></tr>
+              <tr><th scope="row">Regeneration</th><td>None</td></tr>
+              <tr><th scope="row">Walk speed</th><td>10 studs/s</td></tr>
+              <tr><th scope="row">Run speed</th><td>None</td></tr>
+              <tr><th scope="row">Primary equipment</th><td>Baton</td></tr>
+              <tr><th scope="row">Secondary equipment</th><td>Counterattack</td></tr>
+              <tr><th scope="row">Baton damage</th><td>25</td></tr>
+              <tr><th scope="row">Counterattack damage</th><td>20</td></tr>
+              <tr><th scope="row">Execution threshold</th><td>Below 35 HP</td></tr>
+              <tr><th scope="row">Respawn time</th><td>None</td></tr>
+              <tr><th scope="row">Drop</th><td>None</td></tr>
+              <tr><th scope="row">Gender</th><td>Male</td></tr>
+              <tr><th scope="row">Affiliation</th><td>Menlo's National Police Authority</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Behavior and spawns</h3>
+        <p>Two City Shielders spawn in the <a href="${streets}" target="_blank" rel="noopener noreferrer">Streets</a> during the <a href="${serverRestart}" target="_blank" rel="noopener noreferrer">Server Restart event</a>. They wander at 10 studs/s, bang their shields when spotting a target, then pursue it at the same speed. If a target stays out of sight for more than 10 seconds, they return to wandering.</p>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Attacks and protection</h3>
+        <p>A City Shielder strikes with its baton for 25 damage every 2 seconds at medium range. It executes players below 35 HP.</p>
+        <p>Every 5 seconds, it stops and braces its shield for 2.5 seconds. If a player bashes it during this protective stance, the Shielder counterattacks for 20 damage instead. The player is not stunned, and the City Shielder is not staggered.</p>
+        <ul>
+          <li><strong>Stagger Immunity:</strong> City Shielders are not stunned by gunshots.</li>
+          <li><strong>Dreadnought:</strong> They open doors when walking up to them.</li>
+          <li><strong>Shield:</strong> Blocks most incoming damage and can only be penetrated by <a href="${examinationWiki}/AEN-50" target="_blank" rel="noopener noreferrer">AEN-50</a>, <a href="${examinationWiki}/SHC-23" target="_blank" rel="noopener noreferrer">SHC-23</a>, and <a href="${examinationWiki}/Arcturus_.50" target="_blank" rel="noopener noreferrer">Arcturus .50</a>. The head and right arm remain partially exposed.</li>
+        </ul>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Sounds</h3>
+        <p>Shielder idle — plays on loop.</p>
+        <audio class="enemy-audio" controls loop preload="none" src="https://static.wikitide.net/examinationwiki/3/38/Shielder_Idle.mp3">Your browser does not support audio playback.</audio>
+        <p>Shield bang — plays when spotting a player.</p>
+        <audio class="enemy-audio" controls preload="none" src="https://static.wikitide.net/examinationwiki/6/6f/Shielder_Bang.mp3">Your browser does not support audio playback.</audio>
+        <p>Dreadnought scream — plays when stunned from a bash.</p>
+        <audio class="enemy-audio" controls preload="none" src="https://static.wikitide.net/examinationwiki/1/1a/Dreadnought_Scream.mp3">Your browser does not support audio playback.</audio>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Gallery</h3>
+        <div class="enemy-variant-grid">
+          ${galleryImages.map((image) => {
+            const source = `${examinationWiki}/Special:FilePath/${encodeURIComponent(image.file)}`;
+            const page = `${examinationWiki}/File:${encodeURIComponent(image.file)}`;
+            return `
+              <figure class="enemy-variant">
+                <button class="enemy-variant-image" type="button" data-image-src="${source}" aria-label="View ${image.name}">
+                  <img src="${source}" alt="${image.name}" loading="lazy" />
+                </button>
+                <figcaption><a href="${page}" target="_blank" rel="noopener noreferrer">${image.name}</a></figcaption>
+              </figure>
+            `;
+          }).join("")}
+        </div>
+        <div class="animation-grid">
+          <button class="animation-card" type="button" data-video-src="${examinationWiki}/Special:FilePath/RCU_Shielder_Execution.mp4" aria-label="Play City Shielder execution animation">
+            <span class="animation-play-icon" aria-hidden="true">▶</span>
+            <span>Execution animation</span>
+          </button>
+        </div>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Lore</h3>
+        <p>City Shielders were riot-control personnel with the <a href="${examinationWiki}/Menlo%27s_National_Police_Authority?action=edit&amp;redlink=1" target="_blank" rel="noopener noreferrer">Menlo's National Police Authority</a>, infected with the <a href="${examinationWiki}/WE-30?action=edit&amp;redlink=1" target="_blank" rel="noopener noreferrer">WE-30 Pathogen</a> and mutated into <a href="${examinationWiki}/Dreadnought" target="_blank" rel="noopener noreferrer">Dreadnoughts</a>.</p>
+        <p>Their appearance in the game is not canon, as the Server Restart event is not canon to the lore.</p>
+      </section>
+    </article>
+  `;
+
+  bindEnemyMedia();
 }
 
 function renderLurkerDetail(enemy) {
