@@ -604,6 +604,8 @@ function renderEnemyDetail(enemy) {
     renderKamikazeDetail(enemy);
   } else if (currentEnemyId === "regulars-slasher") {
     renderSlasherDetail(enemy);
+  } else if (currentEnemyId === "regulars-radaway") {
+    renderRadawayDetail(enemy);
   } else if (currentEnemyId === "regulars-shielder") {
     renderShielderDetail(enemy);
   } else if (currentEnemyId === "city-infected-city-shielder") {
@@ -624,6 +626,86 @@ function renderEnemyPlaceholder(enemy) {
         <h2>${enemy.name}</h2>
         <p>Information for this enemy will be added when it is ready.</p>
       </div>
+    </article>
+  `;
+}
+
+function renderRadawayDetail(enemy) {
+  const sector2 = `${examinationWiki}/Sector_2`;
+  const enemies = `${examinationWiki}/Enemies`;
+  const attackSound = "https://static.wikitide.net/examinationwiki/7/7b/Radaway_Attack.mp3";
+  detailViewport.innerHTML = `
+    <article class="enemy-detail">
+      <header class="enemy-detail-hero">
+        <img class="enemy-detail-portrait" src="${enemy.image}" alt="${enemy.name}" />
+        <div>
+          <p class="enemy-category-label">Regulars · Combat Archive</p>
+          <h2>Radaway</h2>
+          <p>“Very rare bunch, only coming from a toxic bunch. Bit useless for us, just kill them to keep the peace. These things make our work insufferable with their radioactivity.”</p>
+          <p><strong>Radaway</strong> is a rare type of <a href="${enemies}" target="_blank" rel="noopener noreferrer">Enemy</a> in Examination. Slow but extremely radioactive, it steadily damages players who get too close.</p>
+        </div>
+      </header>
+
+      <section class="enemy-info-section">
+        <h3>Health and stats</h3>
+        <div class="enemy-table-wrap">
+          <table class="enemy-stats">
+            <tbody>
+              <tr><th scope="row">Spawn Location</th><td><a href="${sector2}" target="_blank" rel="noopener noreferrer">Sector 2</a></td></tr>
+              <tr><th scope="row">Health points</th><td>200</td></tr>
+              <tr><th scope="row">Regeneration</th><td>2 HP/s</td></tr>
+              <tr><th scope="row">Default speed</th><td>7</td></tr>
+              <tr><th scope="row">Pursuit speed</th><td>8.5</td></tr>
+              <tr><th scope="row">Primary equipment</th><td>Radiation</td></tr>
+              <tr><th scope="row">Damage</th><td>7 every 0.4 seconds</td></tr>
+              <tr><th scope="row">Respawn time</th><td>6 minutes</td></tr>
+              <tr><th scope="row">Drop</th><td>None</td></tr>
+              <tr><th scope="row">Gender</th><td>Male</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Behavior and spawns</h3>
+        <h4>Spawn</h4>
+        <p>Two Radaways spawn in <a href="${sector2}" target="_blank" rel="noopener noreferrer">Sector 2</a>: one near the Accounting room and another in the Logistics area behind Gate 1. Each Radaway takes 6 minutes to respawn after death.</p>
+        <h4>Behavior</h4>
+        <p>Radaway wanders at 7 studs/s until it spots a target, then chases at 8.5 studs/s. If the target stays out of sight for more than 10 seconds, it returns to wandering.</p>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Abilities</h3>
+        <p>Radaway deals 7 damage every 0.4 seconds to a target within roughly 5 studs. It can only damage one target at a time.</p>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Attributes</h3>
+        <ul>
+          <li><strong>Taser Resistance:</strong> Stun from the <a href="${examinationWiki}/TASC-10" target="_blank" rel="noopener noreferrer">TASC-10</a> lasts only 3.5 seconds, and Radaway remains standing instead of falling to the ground.</li>
+        </ul>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Sounds</h3>
+        <p>Radaway attack sound effect.</p>
+        <audio class="enemy-audio" controls preload="none" src="${attackSound}">
+          Your browser does not support audio playback.
+        </audio>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Lore</h3>
+        <p>Radaways were researchers and engineers of the Hazardous Pathogen Control Agency who worked near the reactors or in the basement of the Itagura Nuclear Power Plant. After a reactor melted down and exploded, they took lethal doses of radiation and became infected with the <a href="${examinationWiki}/WE-30?action=edit&amp;redlink=1" target="_blank" rel="noopener noreferrer">WE-30 Pathogen</a>.</p>
+        <p>The radiation has melted their skin and flesh. They approach their prey to expose them to a lethal dose, but lack special mutations, leaving them slow, fragile, and predictable.</p>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Trivia</h3>
+        <ul>
+          <li>Radaways used to resemble an <a href="${examinationWiki}/Hazardous_Pathogen_Control_Agency" target="_blank" rel="noopener noreferrer">HPCA</a> <a href="${examinationWiki}/Lurker" target="_blank" rel="noopener noreferrer">Lurker</a>, with radiation particles as the only visual difference.</li>
+        </ul>
+      </section>
     </article>
   `;
 }
