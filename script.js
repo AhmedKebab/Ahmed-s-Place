@@ -657,6 +657,8 @@ function renderEnemyDetail(enemy) {
     renderSlasherDetail(enemy);
   } else if (currentEnemyId === "regulars-radaway") {
     renderRadawayDetail(enemy);
+  } else if (currentEnemyId === "regulars-gunner") {
+    renderGunnerDetail(enemy);
   } else if (currentEnemyId === "regulars-shielder") {
     renderShielderDetail(enemy);
   } else if (currentEnemyId === "city-infected-city-shielder") {
@@ -679,6 +681,165 @@ function renderEnemyPlaceholder(enemy) {
       </div>
     </article>
   `;
+}
+
+function renderGunnerDetail(enemy) {
+  const variantImages = [
+    { name: "RSU 1", image: "https://static.wikitide.net/examinationwiki/b/bc/RSU_Gunner_1.png" },
+    { name: "RSU 2", image: "https://static.wikitide.net/examinationwiki/5/54/RSU_Gunner_2.png" },
+    { name: "HPCA 1", image: "https://static.wikitide.net/examinationwiki/b/be/HPCA_Gunner_1.png" },
+    { name: "HPCA 2", image: "https://static.wikitide.net/examinationwiki/e/ec/HPCA_Gunner_2.png" },
+  ];
+  const sector2 = `${examinationWiki}/Sector_2`;
+  const enemies = `${examinationWiki}/Enemies`;
+  const weapons = [
+    { name: "Lock-17", href: `${examinationWiki}/Lock-17`, damage: 7, magazine: 17, fireRate: 400 },
+    { name: "SMX-9", href: `${examinationWiki}/SMX-9`, damage: 10, magazine: 30, fireRate: 600 },
+    { name: "H762", href: `${examinationWiki}/Tentec_Arms_H762?action=edit&amp;redlink=1`, damage: 14, magazine: 20, fireRate: 350 },
+  ];
+  const galleryImages = [
+    { name: "Removed MNPA Gunner", source: `${examinationWiki}/Special:FilePath/MPD_Gunner.webp` },
+  ];
+  const bashAnimations = [
+    { name: "Bash animation 1", file: "Gunner_Bash_1.mp4" },
+    { name: "Bash animation 2", file: "Gunner_Bash_2.mp4" },
+  ];
+  detailViewport.innerHTML = `
+    <article class="enemy-detail">
+      <header class="enemy-detail-hero">
+        <img class="enemy-detail-portrait" src="${enemy.image}" alt="${enemy.name}" />
+        <div>
+          <p class="enemy-category-label">Regulars · Combat Archive</p>
+          <h2>Gunner</h2>
+          <p>“That's one less situation in the facility. Unfortunately it'd be better if more of those guys with guns got killed, but hey, we're grateful, they kill a lot of troops.”</p>
+          <p><strong>Gunners</strong> are a rare type of <a href="${enemies}" target="_blank" rel="noopener noreferrer">Enemy</a> in Examination. They are slow and fragile, but use firearms to attack from afar, making them inconvenient to fight.</p>
+        </div>
+      </header>
+
+      <section class="enemy-info-section">
+        <h3>Variants</h3>
+        <div class="enemy-variant-grid">
+          ${variantImages.map((variant) => `
+            <figure class="enemy-variant">
+              <button class="enemy-variant-image" type="button" data-image-src="${variant.image}" aria-label="View ${variant.name} Gunner image">
+                <img src="${variant.image}" alt="${variant.name} Gunner" loading="lazy" />
+              </button>
+              <figcaption>${variant.name}</figcaption>
+            </figure>
+          `).join("")}
+        </div>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Health and stats</h3>
+        <div class="enemy-table-wrap">
+          <table class="enemy-stats">
+            <tbody>
+              <tr><th scope="row">Spawn location</th><td><a href="${sector2}" target="_blank" rel="noopener noreferrer">Sector 2</a></td></tr>
+              <tr><th scope="row">Health</th><td>150 HP; 100 HP (HPCA 2)</td></tr>
+              <tr><th scope="row">Regeneration</th><td>1.5 HP/s; 1 HP/s (HPCA 2)</td></tr>
+              <tr><th scope="row">Walk speed</th><td>8 studs/s; 6 studs/s while reloading</td></tr>
+              <tr><th scope="row">Run speed</th><td>30 studs/s</td></tr>
+              <tr><th scope="row">Primary equipment</th><td><a href="${weapons[0].href}" target="_blank" rel="noopener noreferrer">Lock-17</a> (HPCA); <a href="${weapons[1].href}" target="_blank" rel="noopener noreferrer">SMX-9</a> (RSU 1); <a href="${weapons[2].href}" target="_blank" rel="noopener noreferrer">H762</a> (RSU 2)</td></tr>
+              <tr><th scope="row">Secondary equipment</th><td>Bash</td></tr>
+              <tr><th scope="row">Bash damage</th><td>35</td></tr>
+              <tr><th scope="row">Respawn time</th><td>6 minutes</td></tr>
+              <tr><th scope="row">Drop</th><td>None</td></tr>
+              <tr><th scope="row">Gender</th><td>Male</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Behavior and spawns</h3>
+        <p>Four Gunners spawn on the map in <a href="${sector2}" target="_blank" rel="noopener noreferrer">Sector 2</a>. Each Gunner takes 6 minutes to respawn after death.</p>
+        <div class="enemy-table-wrap">
+          <table class="enemy-stats spawn-table">
+            <thead><tr><th scope="col">Variant</th><th scope="col">Spawn location</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">HPCA 1</th><td>Near the Utility room</td></tr>
+              <tr><th scope="row">HPCA 2</th><td>Near the Accounting room</td></tr>
+              <tr><th scope="row">RSU 1</th><td>Behind barriers at a chokepoint</td></tr>
+              <tr><th scope="row">RSU 2</th><td>Sector 2; a specific spawn point is not listed</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>HPCA Gunners wander around at 11 studs/s until they spot a target, then fire while strafing from side to side. If the target is out of sight but has not been lost, the Gunner runs at 30 studs/s toward its last seen location. After more than 10 seconds without seeing the target, it resumes wandering. When not engaging a target or after spending its magazine, it reloads and moves at 6 studs/s.</p>
+        <p>RSU Gunners remain stationary at their spawn points and fire at any target in sight. They cannot traverse. They reload when their magazine is empty or they are not engaging a target.</p>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Weaponry and attacks</h3>
+        <p>Gunners have infinite reserve ammunition. Firearm damage is doubled on a headshot.</p>
+        <div class="enemy-table-wrap">
+          <table class="enemy-stats">
+            <thead><tr><th scope="col">Firearm</th><th scope="col">Variant</th><th scope="col">Damage</th><th scope="col">Magazine</th><th scope="col">Fire rate</th></tr></thead>
+            <tbody>
+              ${weapons.map((weapon) => `
+                <tr>
+                  <th scope="row"><a href="${weapon.href}" target="_blank" rel="noopener noreferrer">${weapon.name}</a></th>
+                  <td>${weapon.name === "Lock-17" ? "HPCA" : weapon.name === "SMX-9" ? "RSU 1" : "RSU 2"}</td>
+                  <td>${weapon.damage}</td>
+                  <td>${weapon.magazine}</td>
+                  <td>${weapon.fireRate} RPM</td>
+                </tr>
+              `).join("")}
+            </tbody>
+          </table>
+        </div>
+        <p>At close range, a Gunner bashes its target for 35 damage, with a 3-second cooldown.</p>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Attributes</h3>
+        <ul>
+          <li><strong>Dreadnought:</strong> Gunners open doors when walking up to them.</li>
+          <li><strong>Reaction Time:</strong> They typically take 1–2 seconds to start firing at a target; this is reduced when the target moves predictably.</li>
+        </ul>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Animation gallery</h3>
+        <div class="animation-grid">
+          ${bashAnimations.map((animation) => `
+            <button class="animation-card" type="button" data-video-src="${examinationWiki}/Special:FilePath/${animation.file}" aria-label="Play ${animation.name}">
+              <span class="animation-play-icon" aria-hidden="true">▶</span>
+              <span>${animation.name}</span>
+            </button>
+          `).join("")}
+        </div>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Gallery</h3>
+        <div class="enemy-variant-grid">
+          ${galleryImages.map((image) => `
+            <figure class="enemy-variant">
+              <button class="enemy-variant-image" type="button" data-image-src="${image.source}" aria-label="View ${image.name}">
+                <img src="${image.source}" alt="${image.name}" loading="lazy" />
+              </button>
+              <figcaption>${image.name}</figcaption>
+            </figure>
+          `).join("")}
+        </div>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Lore</h3>
+        <p>Gunners are combatants infected with the <a href="${examinationWiki}/WE-30?action=edit&amp;redlink=1" target="_blank" rel="noopener noreferrer">WE-30 Pathogen</a> who underwent the Dreadnought mutation. The mutation preserved enough intelligence for rudimentary firearm use and complex interactions with objects, though Gunners are notably weaker than most other Dreadnoughts.</p>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Trivia</h3>
+        <ul>
+          <li>An MNPA Gunner variant used to spawn in Sector 2, but was later removed from the game.</li>
+        </ul>
+      </section>
+    </article>
+  `;
+
+  bindEnemyMedia();
 }
 
 function renderRadawayDetail(enemy) {
