@@ -111,7 +111,6 @@ const mediaFileDirectories = new Map([
   ["Lurker_Maul.mp4", "3d"],
   ["Barnacles_Alerted.mp4", "cb"],
   ["Barnacles_Death.mp4", "e9"],
-  ["Barnacles_Execution.mp4", "ab"],
   ["Enraged_Lurker.mp3", "cb"],
 ]);
 
@@ -909,9 +908,9 @@ function renderGrabbyDetail(enemy) {
 
 function renderBarnaclesDetail(enemy) {
   const animations = [
-    { name: "Alerted Barnacles", file: "Barnacles_Alerted.mp4" },
-    { name: "Barnacles death animation", file: "Barnacles_Death.mp4" },
-    { name: "Barnacles execution animation", file: "Barnacles_Execution.mp4" },
+    { name: "Alerted Barnacles", source: mediaFileUrl("Barnacles_Alerted.mp4") },
+    { name: "Barnacles death animation", source: mediaFileUrl("Barnacles_Death.mp4") },
+    { name: "Barnacles execution animation", source: "assets/Barnacles_Execution.mp4" },
   ];
   const alertedSound = "https://static.wikitide.net/examinationwiki/b/bf/Barnacles_Alerted.mp3";
   detailViewport.innerHTML = `
@@ -981,7 +980,7 @@ function renderBarnaclesDetail(enemy) {
         <h3>Animation gallery</h3>
         <div class="animation-grid">
           ${animations.map((animation) => `
-            <button class="animation-card" type="button" data-video-src="${mediaFileUrl(animation.file)}" aria-label="Play ${animation.name}">
+            <button class="animation-card" type="button" data-video-src="${animation.source}" aria-label="Play ${animation.name}">
               <span class="animation-play-icon" aria-hidden="true">▶</span>
               <span>${animation.name}</span>
             </button>
