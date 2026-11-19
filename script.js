@@ -143,7 +143,6 @@ const detailViewport = document.querySelector("#detail-viewport");
 const enemyWikiLink = document.querySelector("#enemy-wiki-link");
 const categoryBackButton = document.querySelector("#category-back-button");
 const themeSetting = document.querySelector("#theme-setting");
-const qualitySetting = document.querySelector("#quality-setting");
 const backgroundMusicSetting = document.querySelector("#background-music-setting");
 const settingsStatus = document.querySelector("#settings-status");
 const settingsMenu = document.querySelector(".settings-menu");
@@ -160,6 +159,7 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
 const imageSceneDuration = 12000;
 const minimumBackgroundAspectRatio = 1.6;
 const settingsVersion = 3;
+const graphicsQualities = ["low", "medium", "high", "extreme"];
 
 let renderQueue = [];
 let previousRenderIndex = -1;
@@ -178,6 +178,7 @@ let activeBackgroundRender = null;
 let settingsMenuIsAnimating = false;
 let settingsPanelHasFinished = false;
 let settingsGearHasFinished = true;
+let graphicsQualityIndex = getInitialGraphicsQualityIndex();
 let settingsMenuTransitionTimer;
 const settingsStorageKey = "examination-site-settings";
 const backgroundMusicVideoId = "2z5rMNH_yTI";
@@ -260,6 +261,18 @@ function setSettingsStatus(message) {
   settingsStatus.hidden = false;
 }
 
+function getInitialGraphicsQualityIndex() {
+  const memory = navigator.deviceMemory;
+  const cores = navigator.hardwareConcurrency || 4;
+  const pixelRatio = window.devicePixelRatio || 1;
+  const hasMemoryEstimate = Number.isFinite(memory);
+
+  if (cores <= 2 || (hasMemoryEstimate && memory <= 2)) return 0;
+  if (cores <= 4 || (hasMemoryEstimate && memory <= 4) || pixelRatio >= 2.5) return 1;
+  if (cores >= 8 && hasMemoryEstimate && memory >= 8 && pixelRatio <= 2) return 3;
+  return 2;
+}
+
 function isStorageError(error) {
   return error instanceof DOMException &&
     ["SecurityError", "QuotaExceededError"].includes(error.name);
@@ -294,17 +307,11 @@ function loadSavedSettings() {
 
   const invalidFields = [];
   const validThemes = new Set(Array.from(themeSetting.options, (option) => option.value));
-  const validQualities = new Set(Array.from(qualitySetting.options, (option) => option.value));
   const hasCurrentSettings = savedSettings.version === settingsVersion;
   if (validThemes.has(savedSettings.theme)) {
     themeSetting.value = savedSettings.theme;
   } else {
     invalidFields.push("theme");
-  }
-  if (hasCurrentSettings && validQualities.has(savedSettings.quality)) {
-    qualitySetting.value = savedSettings.quality;
-  } else if (hasCurrentSettings) {
-    invalidFields.push("graphics quality");
   }
   if (hasCurrentSettings && typeof savedSettings.backgroundMusic === "boolean") {
     backgroundMusicSetting.checked = savedSettings.backgroundMusic;
@@ -315,7 +322,7 @@ function loadSavedSettings() {
     console.error(`Saved Examination settings have invalid fields: ${invalidFields.join(", ")}.`);
     setSettingsStatus(`Some saved settings were invalid and have been reset: ${invalidFields.join(", ")}.`);
   } else if (!hasCurrentSettings) {
-    setSettingsStatus("Settings updated with high graphics quality.");
+    setSettingsStatus("Settings updated with automatic graphics quality.");
   } else {
     setSettingsStatus("Your saved settings have been restored.");
   }
@@ -325,7 +332,6 @@ function saveSettings() {
   const settings = {
     version: settingsVersion,
     theme: themeSetting.value,
-    quality: qualitySetting.value,
     backgroundMusic: backgroundMusicSetting.checked,
   };
   try {
@@ -340,7 +346,56 @@ function saveSettings() {
 
 function applyVisualSettings() {
   showcase.dataset.theme = themeSetting.value;
-  showcase.dataset.quality = qualitySetting.value;
+  showcase.dataset.quality = graphicsQualities[graphicsQualityIndex];
+}
+
+function monitorGraphicsPerformance() {
+  let sampleStartedAt = null;
+  let frameCount = 0;
+  let slowSamples = 0;
+  let fastSamples = 0;
+
+  function sampleFrame(timestamp) {
+    if (document.visibilityState !== "visible") {
+      sampleStartedAt = null;
+      frameCount = 0;
+      window.requestAnimationFrame(sampleFrame);
+      return;
+    }
+
+    if (sampleStartedAt === null) sampleStartedAt = timestamp;
+    frameCount += 1;
+    const elapsed = timestamp - sampleStartedAt;
+    if (elapsed >= 2000) {
+      const framesPerSecond = (frameCount * 1000) / elapsed;
+      if (framesPerSecond < 48) {
+        slowSamples += 1;
+        fastSamples = 0;
+        if (slowSamples >= 2) {
+          graphicsQualityIndex = Math.max(0, graphicsQualityIndex - 1);
+          showcase.dataset.quality = graphicsQualities[graphicsQualityIndex];
+          slowSamples = 0;
+        }
+      } else if (framesPerSecond > 57) {
+        fastSamples += 1;
+        slowSamples = 0;
+        if (fastSamples >= 4) {
+          graphicsQualityIndex = Math.min(graphicsQualities.length - 1, graphicsQualityIndex + 1);
+          showcase.dataset.quality = graphicsQualities[graphicsQualityIndex];
+          fastSamples = 0;
+        }
+      } else {
+        slowSamples = 0;
+        fastSamples = 0;
+      }
+
+      sampleStartedAt = timestamp;
+      frameCount = 0;
+    }
+    window.requestAnimationFrame(sampleFrame);
+  }
+
+  window.requestAnimationFrame(sampleFrame);
 }
 
 function applyBackgroundMusicSetting() {
@@ -499,10 +554,6 @@ categoryBackButton.addEventListener("click", () => {
 });
 
 themeSetting.addEventListener("change", () => {
-  applyVisualSettings();
-  saveSettings();
-});
-qualitySetting.addEventListener("change", () => {
   applyVisualSettings();
   saveSettings();
 });
@@ -2192,6 +2243,7 @@ showcase.addEventListener("pointermove", (event) => {
 
 loadSavedSettings();
 applyVisualSettings();
+monitorGraphicsPerformance();
 updateFrameScale();
 createBackgroundMusicPlayer();
 showNextRender();
