@@ -594,6 +594,8 @@ function renderEnemyCatalog() {
         renderRiserDetail(enemy);
       } else if (currentEnemyId === "regulars-mutant") {
         renderMutantDetail(enemy);
+      } else if (currentEnemyId === "regulars-kamikaze") {
+        renderKamikazeDetail(enemy);
       } else {
         renderEnemyPlaceholder(enemy);
       }
@@ -1276,6 +1278,155 @@ function renderMutantDetail(enemy) {
         <ul>
           <li>Mutants currently have more appearance variations than any other enemy in the game.</li>
           <li>In <a href="https://examination.miraheze.org/wiki/1.3.699" target="_blank" rel="noopener noreferrer">Patch 1.3699</a>, Mutants could block their head when shot. This ability was removed shortly afterward.</li>
+        </ul>
+      </section>
+    </article>
+  `;
+
+  bindEnemyMedia();
+}
+
+function renderKamikazeDetail(enemy) {
+  const variantImages = [
+    { name: "HPCA", image: "https://static.wikitide.net/examinationwiki/f/fd/HPCA_Kamikaze.png" },
+    { name: "RSU", image: "https://static.wikitide.net/examinationwiki/6/64/RSU_Kamikaze.png" },
+    { name: "RSU 2", image: "https://static.wikitide.net/examinationwiki/c/c3/RSU_Kamikaze_2.png" },
+    { name: "OZK", image: "https://static.wikitide.net/examinationwiki/a/a9/OZK_Kamikaze.png" },
+  ];
+  const galleryImages = [
+    { name: "Idle OZK Kamikaze", file: "OZK_Kamikaze_Idle.png" },
+    { name: "Idle MGF MP Kamikaze", file: "MP_Kamikaze_Idle.png" },
+    { name: "Removed variant render", file: "MGF_Kamikaze.png" },
+  ];
+  detailViewport.innerHTML = `
+    <article class="enemy-detail">
+      <header class="enemy-detail-hero">
+        <img class="enemy-detail-portrait" src="${enemy.image}" alt="${enemy.name}" />
+        <div>
+          <p class="enemy-category-label">Regulars · Combat Archive</p>
+          <h2>Kamikaze</h2>
+          <p>“That's only the tip of the iceberg, there's more than one. The minute that pin gets pulled... outcome? Guy go boom.”</p>
+          <p><strong>Kamikazes</strong> are an uncommon but dangerous type of <a href="${examinationWiki}/Enemies" target="_blank" rel="noopener noreferrer">Enemy</a> in Examination. Although relatively easy to kill, they can sprint quickly and deal high damage with their grenade.</p>
+          <p>The facility's close quarters make them a serious threat: they can catch an inattentive player off guard and rush in to detonate.</p>
+        </div>
+      </header>
+
+      <section class="enemy-info-section">
+        <h3>Variants</h3>
+        <div class="enemy-variant-grid">
+          ${variantImages.map((variant) => `
+            <figure class="enemy-variant">
+              <button class="enemy-variant-image" type="button" data-image-src="${variant.image}" aria-label="View ${variant.name} Kamikaze image">
+                <img src="${variant.image}" alt="${variant.name} Kamikaze" loading="lazy" />
+              </button>
+              <figcaption>${variant.name}</figcaption>
+            </figure>
+          `).join("")}
+        </div>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Health and stats</h3>
+        <div class="enemy-table-wrap">
+          <table class="enemy-stats">
+            <tbody>
+              <tr><th scope="row">Spawn locations</th><td><a href="${examinationWiki}/Sector_1" target="_blank" rel="noopener noreferrer">Sector 1</a>, <a href="${examinationWiki}/Sector_2" target="_blank" rel="noopener noreferrer">Sector 2</a>, and <a href="${examinationWiki}/Sector_3" target="_blank" rel="noopener noreferrer">Sector 3</a></td></tr>
+              <tr><th scope="row">Health</th><td>50 HP</td></tr>
+              <tr><th scope="row">Regeneration</th><td>0.5 HP/s</td></tr>
+              <tr><th scope="row">Walk speed</th><td>9</td></tr>
+              <tr><th scope="row">Run speed</th><td>28 (36 when enraged)</td></tr>
+              <tr><th scope="row">Primary equipment</th><td>Grenade</td></tr>
+              <tr><th scope="row">Damage</th><td>75 (99 when enraged)</td></tr>
+              <tr><th scope="row">Respawn time</th><td>2 minutes 15 seconds</td></tr>
+              <tr><th scope="row">Drop</th><td>None</td></tr>
+              <tr><th scope="row">Gender</th><td>Male</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Behavior and spawns</h3>
+        <h4>Spawn</h4>
+        <p>A total of 4 Kamikazes spawn on the map. Each variant has a specific spawn location, and a Kamikaze takes 2 minutes and 15 seconds to respawn after death.</p>
+        <div class="enemy-table-wrap">
+          <table class="enemy-stats spawn-table">
+            <thead><tr><th scope="col">Variant</th><th scope="col">Spawn location</th></tr></thead>
+            <tbody>
+              <tr><td>HPCA</td><td><a href="${examinationWiki}/Sector_1" target="_blank" rel="noopener noreferrer">Sector 1</a>, near <a href="${examinationWiki}/Sector_2" target="_blank" rel="noopener noreferrer">Sector 2</a>'s emergency exit</td></tr>
+              <tr><td>RSU</td><td><a href="${examinationWiki}/Sector_1" target="_blank" rel="noopener noreferrer">Sector 1</a>, near <a href="${examinationWiki}/Sector_2" target="_blank" rel="noopener noreferrer">Sector 2</a>'s emergency exit</td></tr>
+              <tr><td>RSU 2</td><td><a href="${examinationWiki}/Sector_2" target="_blank" rel="noopener noreferrer">Sector 2</a> Logistics</td></tr>
+              <tr><td>OZK</td><td><a href="${examinationWiki}/Sector_3" target="_blank" rel="noopener noreferrer">Sector 3</a>, in Subsector-1</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <h4>Behavior</h4>
+        <p>A Kamikaze wanders at 9 studs/s until it spots a target, then chases at 28 studs/s. If the target stays out of sight for more than 10 seconds, it returns to wandering.</p>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Abilities</h3>
+        <h4>Attack</h4>
+        <p>When alerted and near a living entity, a Kamikaze primes its grenade and charges the closest entity. It explodes near its target, dealing 75 damage within a radius of about 5 studs. Once primed, the grenade still explodes even if the Kamikaze is killed.</p>
+        <p>The attack can target enemies or allies, though it will usually damage only one target.</p>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Attributes</h3>
+        <ul>
+          <li><strong>Stagger Immunity:</strong> Kamikazes are not stunned by gunshots.</li>
+          <li><strong>Execution Immunity:</strong> They cannot be executed, except with <a href="${examinationWiki}/Controllable_Infection#Viral_fists" target="_blank" rel="noopener noreferrer">Viral Fists</a>.</li>
+          <li><strong>Taser Resistance:</strong> Stun from the <a href="${examinationWiki}/TASC-10" target="_blank" rel="noopener noreferrer">TASC-10</a> lasts only 3.5 seconds, and the Kamikaze remains standing.</li>
+          <li><strong>Dreadnought:</strong> Kamikazes open doors as they walk up to them.</li>
+        </ul>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Rage</h3>
+        <p>Near a <a href="${examinationWiki}/Viral_Leader" target="_blank" rel="noopener noreferrer">Viral Leader</a>, a Kamikaze becomes enraged: its eyes turn red, its chase speed rises to 36 studs/s, and its grenade damage increases to 99.</p>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Sounds</h3>
+        <p>Kamikaze idle — plays while idle.</p>
+        <audio class="enemy-audio" controls loop preload="none" src="https://static.wikitide.net/examinationwiki/2/25/Kamikaze_Idle_V2.mp3">
+          Your browser does not support audio playback.
+        </audio>
+        <p>Kamikaze scream — plays while charging.</p>
+        <audio class="enemy-audio" controls preload="none" src="https://static.wikitide.net/examinationwiki/a/a5/Kamikaze_Scream.mp3">
+          Your browser does not support audio playback.
+        </audio>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Gallery</h3>
+        <div class="enemy-variant-grid">
+          ${galleryImages.map((image) => {
+            const source = `${examinationWiki}/Special:FilePath/${encodeURIComponent(image.file)}`;
+            const page = `${examinationWiki}/File:${encodeURIComponent(image.file).replaceAll("%20", "_")}`;
+            return `
+              <figure class="enemy-variant">
+                <button class="enemy-variant-image" type="button" data-image-src="${source}" aria-label="View ${image.name}">
+                  <img src="${source}" alt="${image.name}" loading="lazy" />
+                </button>
+                <figcaption><a href="${page}" target="_blank" rel="noopener noreferrer">${image.name}</a></figcaption>
+              </figure>
+            `;
+          }).join("")}
+        </div>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Lore</h3>
+        <p>Kamikazes are individuals infected with the <a href="${examinationWiki}/WE-30?action=edit&amp;redlink=1" target="_blank" rel="noopener noreferrer">WE-30 Pathogen</a>, likely alongside heavy radiation exposure. Their faces have been melted away, leaving exposed flesh. Their ability to use grenades and interact with objects indicates that they have undergone the Dreadnought mutation.</p>
+        <p>Under the pathogen's agonizing influence, they disregard self-preservation and may try to kill their targets with a suicide bombing. Unlike normal Dreadnoughts, they are notably fragile and have no survival instinct.</p>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Trivia</h3>
+        <ul>
+          <li>A Kamikaze variant resembling the <a href="${examinationWiki}/Menlonian_Ground_Forces" target="_blank" rel="noopener noreferrer">Menlonian Ground Forces</a> military police was removed, likely because it did not fit the lore.</li>
+          <li>Kamikazes had an execution animation in early development, but it was removed.</li>
         </ul>
       </section>
     </article>
