@@ -580,6 +580,8 @@ function renderEnemyCatalog() {
         renderGrabbyDetail(enemy);
       } else if (currentEnemyId === "regulars-barnacles") {
         renderBarnaclesDetail(enemy);
+      } else if (currentEnemyId === "regulars-riser") {
+        renderRiserDetail(enemy);
       } else if (currentEnemyId === "regulars-mutant") {
         renderMutantDetail(enemy);
       } else {
@@ -991,6 +993,144 @@ function renderBarnaclesDetail(enemy) {
       <section class="enemy-info-section">
         <h3>Lore</h3>
         <p>TBA</p>
+      </section>
+    </article>
+  `;
+
+  bindEnemyMedia();
+}
+
+function renderRiserDetail(enemy) {
+  const variantImages = [
+    { name: "HPCA 1", image: "https://static.wikitide.net/examinationwiki/8/8b/HPCA_Riser.png" },
+    { name: "HPCA 2", image: "https://static.wikitide.net/examinationwiki/e/e6/HPCA_Riser_2.png" },
+    { name: "MFD", image: "https://static.wikitide.net/examinationwiki/d/dc/MFD_Riser.png" },
+    { name: "RIF", image: "https://static.wikitide.net/examinationwiki/2/2f/RIF_Riser.png" },
+    { name: "RIF OZK", image: "https://static.wikitide.net/examinationwiki/8/86/OZK_Riser.png" },
+  ];
+  const animations = [
+    { name: "Execution animation", file: "Riser_execution.mp4" },
+    { name: "Save animation", file: "Riser_save.mp4" },
+    { name: "Stomp execution", file: "Riser_stomp.mp4" },
+    { name: "Dodge animation", file: "Riser_dodge_2.mp4" },
+    { name: "Roll animation", file: "Riser_Roll.mp4" },
+    { name: "Fake death animation", file: "Riser_Fake_death.mp4" },
+  ];
+  const sector1 = `${examinationWiki}/Sector_1`;
+  const sector2 = `${examinationWiki}/Sector_2`;
+  const sector3 = `${examinationWiki}/Sector_3`;
+  detailViewport.innerHTML = `
+    <article class="enemy-detail">
+      <header class="enemy-detail-hero">
+        <img class="enemy-detail-portrait" src="${enemy.image}" alt="${enemy.name}" />
+        <div>
+          <p class="enemy-category-label">Regulars · Combat Archive</p>
+          <h2>Riser</h2>
+          <p>“Well they're always the usually stubborn people you'd know. Now reduced to stubborn things. They have some good sense of self preservation, probably cause the virus didn't hit their brain well, or not done yet.”</p>
+          <p><strong>Riser</strong> is one of the most common types of <a href="${examinationWiki}/Enemies" target="_blank" rel="noopener noreferrer">Enemies</a> in Examination. They are fast, have decent damage and health, and can dodge incoming attacks or trick new players with a fake death.</p>
+        </div>
+      </header>
+
+      <section class="enemy-info-section">
+        <h3>Variants</h3>
+        <div class="enemy-variant-grid">
+          ${variantImages.map((variant) => `
+            <figure class="enemy-variant">
+              <button class="enemy-variant-image" type="button" data-image-src="${variant.image}" aria-label="View ${variant.name} Riser image">
+                <img src="${variant.image}" alt="${variant.name} Riser" loading="lazy" />
+              </button>
+              <figcaption>${variant.name}</figcaption>
+            </figure>
+          `).join("")}
+        </div>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Health and stats</h3>
+        <div class="enemy-table-wrap">
+          <table class="enemy-stats">
+            <tbody>
+              <tr><th scope="row">Spawn locations</th><td><a href="${sector1}" target="_blank" rel="noopener noreferrer">Sector 1</a>, <a href="${sector2}" target="_blank" rel="noopener noreferrer">Sector 2</a>, and <a href="${sector3}" target="_blank" rel="noopener noreferrer">Sector 3</a></td></tr>
+              <tr><th scope="row">Health points</th><td>400</td></tr>
+              <tr><th scope="row">Regeneration</th><td>4 HP/s (MFD, RIF); none (HPCA, OZK)</td></tr>
+              <tr><th scope="row">Walk speed</th><td>9 studs/s</td></tr>
+              <tr><th scope="row">Run speed</th><td>20 studs/s</td></tr>
+              <tr><th scope="row">Primary equipment</th><td>Fists</td></tr>
+              <tr><th scope="row">Damage</th><td>17</td></tr>
+              <tr><th scope="row">Execution</th><td>Against players below 34 HP</td></tr>
+              <tr><th scope="row">Respawn time</th><td>5 minutes 10 seconds</td></tr>
+              <tr><th scope="row">Drop</th><td>None</td></tr>
+              <tr><th scope="row">Gender</th><td>Male</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Behavior and spawns</h3>
+        <h4>Spawn</h4>
+        <p>Five Risers spawn on the map by default, with more appearing as the server's player count increases. Their prioritized locations are:</p>
+        <div class="enemy-table-wrap">
+          <table class="enemy-stats spawn-table">
+            <thead><tr><th scope="col">Variant</th><th scope="col">Spawn location</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">HPCA 1</th><td><a href="${sector1}" target="_blank" rel="noopener noreferrer">Sector 1</a>, near Generator 2</td></tr>
+              <tr><th scope="row">HPCA 2</th><td><a href="${sector1}" target="_blank" rel="noopener noreferrer">Sector 1</a>, near <a href="${sector2}" target="_blank" rel="noopener noreferrer">Sector 2</a>'s emergency exit</td></tr>
+              <tr><th scope="row">MFD</th><td><a href="${sector1}" target="_blank" rel="noopener noreferrer">Sector 1</a>, near Sector 2's emergency exit</td></tr>
+              <tr><th scope="row">RIF</th><td><a href="${sector3}" target="_blank" rel="noopener noreferrer">Sector 3</a>, in Subsector-3</td></tr>
+              <tr><th scope="row">RIF OZK</th><td><a href="${sector3}" target="_blank" rel="noopener noreferrer">Sector 3</a>, in Subsector-1</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>A Riser takes 5 minutes and 10 seconds to respawn after death.</p>
+        <h4>Behavior</h4>
+        <p>Risers wander at 9 studs/s until they spot a target, then chase at 20 studs/s. If the target stays out of sight for more than 10 seconds, a Riser returns to wandering.</p>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Attacks and abilities</h3>
+        <h4>Attacks</h4>
+        <p>A Riser punches its target for 17 damage per hit, with a 0.7-second cooldown and short range. It executes players below 34 HP. There is a 50% chance that a save animation plays instead: the player fights back and kicks the Riser away, is left with 15 HP, and the Riser cannot attack for 3 seconds.</p>
+        <h4>Protection</h4>
+        <p>When hit, a Riser has a chance to dodge. The 0.5-second dodge animation immobilizes it and makes it immune to damage. After dodging, it can roll to the side when hit; rolling immobilizes it but does not grant damage immunity.</p>
+        <h4>Fake death</h4>
+        <p>The first time its health reaches 150 or below, a Riser falls to the floor with a high-pitched scream and becomes immune to damage. After about 2 seconds, it gets up with a roar and resumes normal behavior; it can be damaged during the rising animation. While it is down, a player can interact with the prompt on its head to execute it.</p>
+        <p>High single-hit damage that would kill it outright, or enough damage dealt during a roll, can bypass fake death. It can activate only once per life.</p>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Attributes</h3>
+        <ul>
+          <li><strong>Stagger Immunity:</strong> Risers are not stunned by gunshots.</li>
+          <li><strong>Fire Resistance:</strong> The MFD variant takes one fewer tick of burn damage from the <a href="${examinationWiki}/SHC-23" target="_blank" rel="noopener noreferrer">SHC-23</a>.</li>
+        </ul>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Sounds</h3>
+        <p>Riser idle — plays on loop, except for HPCA 2.</p>
+        <audio class="enemy-audio" controls loop preload="none" src="https://static.wikitide.net/examinationwiki/6/63/Riser_Idle.mp3">
+          Your browser does not support audio playback.
+        </audio>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Animation gallery</h3>
+        <div class="animation-grid">
+          ${animations.map((animation) => `
+            <button class="animation-card" type="button" data-video-src="${examinationWiki}/Special:FilePath/${encodeURIComponent(animation.file)}" aria-label="Play ${animation.name}">
+              <span class="animation-play-icon" aria-hidden="true">▶</span>
+              <span>${animation.name}</span>
+            </button>
+          `).join("")}
+        </div>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Lore</h3>
+        <p>Risers are a variant of the <a href="${examinationWiki}/WE-30?action=edit&amp;redlink=1" target="_blank" rel="noopener noreferrer">WE-30 Pathogen</a>'s <a href="${examinationWiki}/Fury" target="_blank" rel="noopener noreferrer">Fury</a> emotional mutation. The pathogen has not fully affected their bodies, allowing them to retain a sense of self-preservation and react to gunfire by dodging. They can take boxing stances, but lack the intelligence for complex interactions with objects.</p>
+        <p>Like Furies, they are full of hatred and rush down their prey to beat them to a pulp. When suffering major organ failure and nearing death, their bodies rapidly dump adrenaline, keeping them alive for a few more seconds.</p>
+        <p>Given enough time, some Risers may mutate further into variants such as Dreadnoughts.</p>
       </section>
     </article>
   `;
