@@ -63,7 +63,7 @@ const enemyCatalog = [
     enemies: [
       { name: "RUNNER", image: "https://static.wikitide.net/examinationwiki/thumb/3/3c/Civilian_City_Runner.png/340px-Civilian_City_Runner.png" },
       { name: "CITY SHIELDER", image: "https://static.wikitide.net/examinationwiki/thumb/c/cd/MNPA_City_Shielder.png/315px-MNPA_City_Shielder.png" },
-      { name: "FURY", image: "https://static.wikitide.net/examinationwiki/thumb/1/10/City_Fury.png/299px-City_Fury.png" },
+      { name: "CITY FURY", image: "https://static.wikitide.net/examinationwiki/thumb/1/10/City_Fury.png/299px-City_Fury.png" },
       { name: "DREADNOUGHT", image: "https://static.wikitide.net/examinationwiki/thumb/6/68/City_Dreadnought.png/326px-City_Dreadnought.png" },
     ],
   },
@@ -659,8 +659,12 @@ function renderEnemyDetail(enemy) {
     renderRadawayDetail(enemy);
   } else if (currentEnemyId === "regulars-gunner") {
     renderGunnerDetail(enemy);
+  } else if (currentEnemyId === "regulars-fury") {
+    renderFuryDetail(enemy);
   } else if (currentEnemyId === "regulars-shielder") {
     renderShielderDetail(enemy);
+  } else if (currentEnemyId === "city-infected-city-fury") {
+    renderCityFuryDetail(enemy);
   } else if (currentEnemyId === "city-infected-city-shielder") {
     renderCityShielderDetail(enemy);
   } else {
@@ -834,6 +838,221 @@ function renderGunnerDetail(enemy) {
         <h3>Trivia</h3>
         <ul>
           <li>An MNPA Gunner variant used to spawn in Sector 2, but was later removed from the game.</li>
+        </ul>
+      </section>
+    </article>
+  `;
+
+  bindEnemyMedia();
+}
+
+function renderFuryDetail(enemy) {
+  const variantImages = [
+    { name: "RSU 1", image: "https://static.wikitide.net/examinationwiki/6/68/RSU_Fury_2.png" },
+    { name: "RSU 2", image: "https://static.wikitide.net/examinationwiki/b/b5/RSU_Fury.png" },
+    { name: "HPCA Chemical", image: "https://static.wikitide.net/examinationwiki/6/66/HPCA_Fury.png" },
+  ];
+  const sector1 = `${examinationWiki}/Sector_1`;
+  const sector2 = `${examinationWiki}/Sector_2`;
+  const lurker = `${examinationWiki}/Lurker`;
+  const cityFuryPage = `${examinationWiki}/City_Fury`;
+  const cityRestart = `${examinationWiki}/Mechanics#Relay_Station`;
+  const animations = [
+    { name: "Execution animation", file: "Fury_Execution.mp4" },
+    { name: "HPCA Chemical execution animation", file: "Chem_Fury_Execution.mp4" },
+  ];
+  detailViewport.innerHTML = `
+    <article class="enemy-detail">
+      <header class="enemy-detail-hero">
+        <img class="enemy-detail-portrait" src="${enemy.image}" alt="${enemy.name}" />
+        <div>
+          <p class="enemy-category-label">Regulars · Combat Archive</p>
+          <h2>Fury</h2>
+          <p>“These people had a hot temper when they were truly alive. These guys are way more aggressive than basic fodder.”</p>
+          <p><strong>Fury</strong> is a rare type of <a href="${examinationWiki}/Enemies" target="_blank" rel="noopener noreferrer">Enemy</a> in Examination. It behaves similarly to the <a href="${lurker}" target="_blank" rel="noopener noreferrer">Lurker</a>, but is tougher and attacks much faster.</p>
+          <button class="begin-button" type="button" data-related-enemy-id="city-infected-city-fury">View City Fury archive</button>
+        </div>
+      </header>
+
+      <section class="enemy-info-section">
+        <h3>Variants</h3>
+        <div class="enemy-variant-grid">
+          ${variantImages.map((variant) => `
+            <figure class="enemy-variant">
+              <button class="enemy-variant-image" type="button" data-image-src="${variant.image}" aria-label="View ${variant.name} Fury image">
+                <img src="${variant.image}" alt="${variant.name} Fury" loading="lazy" />
+              </button>
+              <figcaption>${variant.name}</figcaption>
+            </figure>
+          `).join("")}
+        </div>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Health and stats</h3>
+        <div class="enemy-table-wrap">
+          <table class="enemy-stats">
+            <tbody>
+              <tr><th scope="row">Spawn locations</th><td><a href="${sector1}" target="_blank" rel="noopener noreferrer">Sector 1</a> and <a href="${sector2}" target="_blank" rel="noopener noreferrer">Sector 2</a></td></tr>
+              <tr><th scope="row">Health</th><td>300 HP</td></tr>
+              <tr><th scope="row">Regeneration</th><td>3 HP/s</td></tr>
+              <tr><th scope="row">Walk speed</th><td>9 studs/s</td></tr>
+              <tr><th scope="row">Run speed</th><td>24 studs/s</td></tr>
+              <tr><th scope="row">Primary equipment</th><td>Claws</td></tr>
+              <tr><th scope="row">Damage</th><td>10</td></tr>
+              <tr><th scope="row">Execution threshold</th><td>Below 22 HP</td></tr>
+              <tr><th scope="row">Respawn time</th><td>2 minutes 30 seconds</td></tr>
+              <tr><th scope="row">Drop</th><td>None</td></tr>
+              <tr><th scope="row">Gender</th><td>Male</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Behavior and spawns</h3>
+        <p>Three Furies spawn by default. Each variant has a prioritized spawn location, and a Fury takes 2 minutes and 30 seconds to respawn after death.</p>
+        <div class="enemy-table-wrap">
+          <table class="enemy-stats spawn-table">
+            <thead><tr><th scope="col">Variant</th><th scope="col">Spawn location</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">RSU 1</th><td><a href="${sector1}" target="_blank" rel="noopener noreferrer">Sector 1</a>, storage room near the <a href="${sector2}" target="_blank" rel="noopener noreferrer">Sector 2</a> entrance</td></tr>
+              <tr><th scope="row">RSU 2</th><td><a href="${sector1}" target="_blank" rel="noopener noreferrer">Sector 1</a></td></tr>
+              <tr><th scope="row">HPCA Chemical</th><td><a href="${sector2}" target="_blank" rel="noopener noreferrer">Sector 2</a>, Executive Offices</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Fury wanders around at 9 studs/s until it spots a target. It then halts and roars before chasing the target at 24 studs/s. If the target stays out of sight for more than 10 seconds, Fury resumes wandering.</p>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Attacks and attributes</h3>
+        <p>Fury attacks with its claws at medium range, dealing 10 damage per hit with a 0.4-second cooldown. It performs an execution if it hits a player below 22 HP.</p>
+        <ul>
+          <li><strong>Stagger Immunity:</strong> Fury is not stunned by gunshots.</li>
+        </ul>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Sounds</h3>
+        <p>Fury idle — plays on loop for regular Furies, excluding HPCA Chemical.</p>
+        <audio class="enemy-audio" controls loop preload="none" src="https://static.wikitide.net/examinationwiki/f/f9/Fury_Idle.mp3">Your browser does not support audio playback.</audio>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Animation gallery</h3>
+        <div class="animation-grid">
+          ${animations.map((animation) => `
+            <button class="animation-card" type="button" data-video-src="${examinationWiki}/Special:FilePath/${animation.file}" aria-label="Play ${animation.name}">
+              <span class="animation-play-icon" aria-hidden="true">▶</span>
+              <span>${animation.name}</span>
+            </button>
+          `).join("")}
+        </div>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Lore</h3>
+        <p>Furies are a much stronger, neurotic version of the <a href="${lurker}" target="_blank" rel="noopener noreferrer">Lurker</a>, categorized under the “Emotional Mutation” subset. They remain in a state of heightened, animalistic rage and display extreme violence toward living beings, objects, and sometimes other infected.</p>
+        <p>The <a href="${examinationWiki}/WE-30?action=edit&amp;redlink=1" target="_blank" rel="noopener noreferrer">WE-30 Pathogen</a> has stripped away their self-preservation; even gunfire does not faze them as they rush their victims.</p>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Trivia</h3>
+        <ul>
+          <li>HPCA Chemical Fury has a different execution animation from RSU Furies.</li>
+          <li>Furies could block their heads when shot in <a href="${examinationWiki}/1.3.699" target="_blank" rel="noopener noreferrer">Patch 1.3699</a>. The ability was removed shortly afterward and later readded in <a href="${examinationWiki}/1.3.8" target="_blank" rel="noopener noreferrer">Patch 1.3.8</a>.</li>
+          <li>The HPCA Chemical Fury execution may be inspired by Perfection's Head Splitter move in Jujutsu Shenanigans, which has a similar animation and nearly identical sounds.</li>
+          <li>The <a href="${cityFuryPage}" target="_blank" rel="noopener noreferrer">City Fury</a> is a unique variant that appears during the <a href="${cityRestart}" target="_blank" rel="noopener noreferrer">Server Restart event</a>.</li>
+        </ul>
+      </section>
+    </article>
+  `;
+
+  bindEnemyMedia();
+}
+
+function renderCityFuryDetail(enemy) {
+  const streets = `${examinationWiki}/Locations#Streets`;
+  const serverRestart = `${examinationWiki}/Mechanics#Relay_Station`;
+  const regularFury = `${examinationWiki}/Fury`;
+  const oldAppearance = "RCU_Fury.png";
+  const oldAppearanceSource = `${examinationWiki}/Special:FilePath/${oldAppearance}`;
+  const oldAppearancePage = `${examinationWiki}/File:${oldAppearance}`;
+  detailViewport.innerHTML = `
+    <article class="enemy-detail">
+      <header class="enemy-detail-hero">
+        <img class="enemy-detail-portrait" src="${enemy.image}" alt="${enemy.name}" />
+        <div>
+          <p class="enemy-category-label">City Infected · Combat Archive</p>
+          <h2>City Fury</h2>
+          <p>“His hands clawed at the mask. It was already too late.” — Private Cason Holcomb</p>
+          <p><strong>City Fury</strong> is a variant of the regular <a href="${regularFury}" target="_blank" rel="noopener noreferrer">Fury</a>. It behaves identically but can absorb more damage.</p>
+          <button class="begin-button" type="button" data-related-enemy-id="regulars-fury">View regular Fury archive</button>
+        </div>
+      </header>
+
+      <section class="enemy-info-section">
+        <h3>Health and stats</h3>
+        <div class="enemy-table-wrap">
+          <table class="enemy-stats">
+            <tbody>
+              <tr><th scope="row">Spawn location</th><td><a href="${streets}" target="_blank" rel="noopener noreferrer">Streets</a></td></tr>
+              <tr><th scope="row">Health</th><td>500 HP</td></tr>
+              <tr><th scope="row">Regeneration</th><td>None</td></tr>
+              <tr><th scope="row">Walk speed</th><td>9 studs/s</td></tr>
+              <tr><th scope="row">Run speed</th><td>24 studs/s</td></tr>
+              <tr><th scope="row">Primary equipment</th><td>Claws</td></tr>
+              <tr><th scope="row">Damage</th><td>10</td></tr>
+              <tr><th scope="row">Execution threshold</th><td>Below 22 HP</td></tr>
+              <tr><th scope="row">Respawn time</th><td>2 minutes 30 seconds</td></tr>
+              <tr><th scope="row">Drop</th><td>None</td></tr>
+              <tr><th scope="row">Gender</th><td>Male</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Behavior and spawns</h3>
+        <p>One City Fury spawns in the <a href="${streets}" target="_blank" rel="noopener noreferrer">Streets</a> during the <a href="${serverRestart}" target="_blank" rel="noopener noreferrer">Server Restart event</a>. It wanders at 9 studs/s until it spots a target, then halts and roars before chasing at 24 studs/s. If the target stays out of sight for more than 10 seconds, City Fury resumes wandering.</p>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Attacks and attributes</h3>
+        <p>City Fury attacks with its claws at medium range, dealing 10 damage per hit with a 0.4-second cooldown. It performs an execution if it hits a player below 22 HP.</p>
+        <ul>
+          <li><strong>Stagger Immunity:</strong> City Fury is not stunned by gunshots.</li>
+        </ul>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Gallery</h3>
+        <div class="enemy-variant-grid">
+          <figure class="enemy-variant">
+            <button class="enemy-variant-image" type="button" data-image-src="${oldAppearanceSource}" aria-label="View old City Fury appearance">
+              <img src="${oldAppearanceSource}" alt="Old City Fury appearance" loading="lazy" />
+            </button>
+            <figcaption><a href="${oldAppearancePage}" target="_blank" rel="noopener noreferrer">Old appearance</a></figcaption>
+          </figure>
+        </div>
+        <div class="animation-grid">
+          <button class="animation-card" type="button" data-video-src="${examinationWiki}/Special:FilePath/City_Fury_Execution.mp4" aria-label="Play City Fury execution animation">
+            <span class="animation-play-icon" aria-hidden="true">▶</span>
+            <span>Execution animation</span>
+          </button>
+        </div>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Lore</h3>
+        <p>City Fury shares the regular Fury's emotional mutation and aggressive behavior. Its appearance during the Server Restart event is not canon to the lore, as the event itself is non-canon.</p>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Trivia</h3>
+        <ul>
+          <li>Before update <a href="${examinationWiki}/1.3.95" target="_blank" rel="noopener noreferrer">1.3.95</a>, City Fury had the same parameters as regular Fury, except it lacked the block ability.</li>
         </ul>
       </section>
     </article>
