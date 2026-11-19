@@ -602,6 +602,8 @@ function renderEnemyDetail(enemy) {
     renderMutantDetail(enemy);
   } else if (currentEnemyId === "regulars-kamikaze") {
     renderKamikazeDetail(enemy);
+  } else if (currentEnemyId === "regulars-slasher") {
+    renderSlasherDetail(enemy);
   } else if (currentEnemyId === "regulars-shielder") {
     renderShielderDetail(enemy);
   } else if (currentEnemyId === "city-infected-city-shielder") {
@@ -624,6 +626,167 @@ function renderEnemyPlaceholder(enemy) {
       </div>
     </article>
   `;
+}
+
+function renderSlasherDetail(enemy) {
+  const variantImages = [
+    { name: "HPCA", image: "https://static.wikitide.net/examinationwiki/4/4f/HPCA_Slasher.png" },
+    { name: "RSU", image: "https://static.wikitide.net/examinationwiki/f/fd/RSU_Slasher.png" },
+    { name: "MFD", image: "https://static.wikitide.net/examinationwiki/9/9b/MFD_Slasher.png" },
+    { name: "RIF", image: "https://static.wikitide.net/examinationwiki/0/0d/RIF_Slasher.png" },
+    { name: "OZK", image: "https://static.wikitide.net/examinationwiki/f/fc/OZK_Slasher.png" },
+  ];
+  const galleryImages = [
+    { name: "Green WhatsApp Slasher (NS Branch)", file: "Whatsapp_slasher.png" },
+    { name: "Green WhatsApp Slasher render", file: "Whatsapp_slasher_render.jpg" },
+  ];
+  const axe = `${examinationWiki}/Axe`;
+  const axeReskins = `${axe}#Reskins`;
+  const viralLeader = `${examinationWiki}/Viral_Leader`;
+  const sector1 = `${examinationWiki}/Sector_1`;
+  const sector2 = `${examinationWiki}/Sector_2`;
+  const sector3 = `${examinationWiki}/Sector_3`;
+  detailViewport.innerHTML = `
+    <article class="enemy-detail">
+      <header class="enemy-detail-hero">
+        <img class="enemy-detail-portrait" src="${enemy.image}" alt="${enemy.name}" />
+        <div>
+          <p class="enemy-category-label">Regulars · Combat Archive</p>
+          <h2>Slasher</h2>
+          <p>“Dreadnoughts, we call 'em. Able to wield weapons and even use them. They're quite a smart bunch. They're always in pain, but those things have some pain tolerance, I'll tell you.”</p>
+          <p><strong>Slashers</strong> are a type of <a href="${examinationWiki}/Enemies" target="_blank" rel="noopener noreferrer">Enemy</a> in Examination, wielding either an <a href="${axe}" target="_blank" rel="noopener noreferrer">Axe</a> or a Sledgehammer to attack their prey. Their high health and damage make them dangerous, though their movement and attack speeds are low.</p>
+        </div>
+      </header>
+
+      <section class="enemy-info-section">
+        <h3>Variants</h3>
+        <div class="enemy-variant-grid">
+          ${variantImages.map((variant) => `
+            <figure class="enemy-variant">
+              <button class="enemy-variant-image" type="button" data-image-src="${variant.image}" aria-label="View ${variant.name} Slasher image">
+                <img src="${variant.image}" alt="${variant.name} Slasher" loading="lazy" />
+              </button>
+              <figcaption>${variant.name}</figcaption>
+            </figure>
+          `).join("")}
+        </div>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Health and stats</h3>
+        <div class="enemy-table-wrap">
+          <table class="enemy-stats">
+            <tbody>
+              <tr><th scope="row">Spawn locations</th><td><a href="${sector1}" target="_blank" rel="noopener noreferrer">Sector 1</a>, <a href="${sector2}" target="_blank" rel="noopener noreferrer">Sector 2</a>, and <a href="${sector3}" target="_blank" rel="noopener noreferrer">Sector 3</a></td></tr>
+              <tr><th scope="row">Health</th><td>650 HP; 700 HP (RIF); 750 HP (RSU)</td></tr>
+              <tr><th scope="row">Regeneration</th><td>6.5 HP/s; 7 HP/s (RIF); 7.5 HP/s (RSU)</td></tr>
+              <tr><th scope="row">Walk speed</th><td>7 studs/s</td></tr>
+              <tr><th scope="row">Pursuit speed</th><td>8.5 studs/s; 16 studs/s when enraged</td></tr>
+              <tr><th scope="row">Primary equipment</th><td><a href="${axe}" target="_blank" rel="noopener noreferrer">Axe</a>; <a href="${axeReskins}" target="_blank" rel="noopener noreferrer">Sledgehammer</a> (RSU); <a href="${axeReskins}" target="_blank" rel="noopener noreferrer">Green Axe</a> (OZK)</td></tr>
+              <tr><th scope="row">Damage</th><td>45; 55 when enraged</td></tr>
+              <tr><th scope="row">Execution threshold</th><td>Below 65 HP; below 75 HP when enraged (listed stats)</td></tr>
+              <tr><th scope="row">Respawn time</th><td>5 minutes 10 seconds</td></tr>
+              <tr><th scope="row">Drop</th><td><a href="${axe}" target="_blank" rel="noopener noreferrer">Axe</a>; <a href="${axeReskins}" target="_blank" rel="noopener noreferrer">Sledgehammer</a> (RSU); <a href="${axeReskins}" target="_blank" rel="noopener noreferrer">Green Axe</a> (OZK)</td></tr>
+              <tr><th scope="row">Gender</th><td>Male</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Behavior and spawns</h3>
+        <p>Five Slashers spawn by default. Each variant has a prioritized spawn location, and a Slasher takes 5 minutes and 10 seconds to respawn after death.</p>
+        <div class="enemy-table-wrap">
+          <table class="enemy-stats spawn-table">
+            <thead><tr><th scope="col">Variant</th><th scope="col">Prioritized spawn location</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">HPCA</th><td><a href="${sector1}" target="_blank" rel="noopener noreferrer">Sector 1</a>, near the <a href="${sector3}" target="_blank" rel="noopener noreferrer">Sector 3</a> entrance</td></tr>
+              <tr><th scope="row">RSU</th><td>Sector 1, near <a href="${sector2}" target="_blank" rel="noopener noreferrer">Sector 2</a>'s emergency exit</td></tr>
+              <tr><th scope="row">MFD</th><td>Sector 1, near an intersection</td></tr>
+              <tr><th scope="row">RIF</th><td>Sector 2 chokepoint</td></tr>
+              <tr><th scope="row">OZK</th><td>Sector 3, in Subsector-1, near a pile of <a href="${examinationWiki}/Menlonian_Ground_Forces" target="_blank" rel="noopener noreferrer">MGF</a> soldiers' bodies</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Slashers wander at 7 studs/s until they spot a target, then chase at 8.5 studs/s. If the target stays out of sight for more than 10 seconds, a Slasher returns to wandering.</p>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Attacks and protection</h3>
+        <p>A Slasher strikes at medium range with its weapon, dealing 45 damage every 5 seconds. The attack details provided list its execution threshold as below 55 HP, which differs from the thresholds in the stat block above.</p>
+        <p>There is a 50% chance that an execution is replaced by a throat slice. The player slowly bleeds out and cannot use items, weapons, or voicelines.</p>
+        <p>After taking damage, a Slasher has a chance to stop and block its face with its weapon, partially obstructing headshots. This protection has an approximately 5-second cooldown.</p>
+        <ul>
+          <li><strong>Stagger Immunity:</strong> Slashers are not stunned by gunshots.</li>
+          <li><strong>Dreadnought:</strong> They open doors when walking up to them.</li>
+          <li><strong>Axe Parry:</strong> If a Slasher attacks while a player is swinging an <a href="${axe}" target="_blank" rel="noopener noreferrer">Axe</a> or one of its reskins, the attack is parried and deals no damage to the player.</li>
+          <li>The parry does not cancel the player's melee damage; the Slasher and other enemies can still be hit by the swing.</li>
+          <li>Parrying does not prevent an execution if the player is below 10 HP.</li>
+          <li><strong>Fire Resistance:</strong> The MFD variant takes one fewer tick of burn damage from the <a href="${examinationWiki}/SHC-23" target="_blank" rel="noopener noreferrer">SHC-23</a>.</li>
+        </ul>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Rage</h3>
+        <p>Near a <a href="${viralLeader}" target="_blank" rel="noopener noreferrer">Viral Leader</a>, a Slasher becomes enraged: its eyes turn red, it screams constantly, its damage increases to 55, its attack cooldown drops to 2 seconds, and it chases at 16 studs/s.</p>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Sounds</h3>
+        <p>Slasher idle — plays on loop.</p>
+        <audio class="enemy-audio" controls loop preload="none" src="https://static.wikitide.net/examinationwiki/2/23/Slasher_Idle.mp3">Your browser does not support audio playback.</audio>
+        <p>RSU Slasher idle — plays on loop.</p>
+        <audio class="enemy-audio" controls loop preload="none" src="https://static.wikitide.net/examinationwiki/0/05/RSU_Slasher_Idle.mp3">Your browser does not support audio playback.</audio>
+        <p>Dreadnought scream — plays when blocking.</p>
+        <audio class="enemy-audio" controls preload="none" src="https://static.wikitide.net/examinationwiki/1/1a/Dreadnought_Scream.mp3">Your browser does not support audio playback.</audio>
+        <p>Enraged Slasher — plays on loop while enraged.</p>
+        <audio class="enemy-audio" controls loop preload="none" src="https://static.wikitide.net/examinationwiki/d/d6/Enraged_Slasher.mp3">Your browser does not support audio playback.</audio>
+        <p>Slasher rage spotted — plays after spotting a target while enraged.</p>
+        <audio class="enemy-audio" controls preload="none" src="https://static.wikitide.net/examinationwiki/7/7e/Slasher_Rage_Spotted.mp3">Your browser does not support audio playback.</audio>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Gallery</h3>
+        <div class="enemy-variant-grid">
+          ${galleryImages.map((image) => {
+            const source = `${examinationWiki}/Special:FilePath/${encodeURIComponent(image.file)}`;
+            const page = `${examinationWiki}/File:${encodeURIComponent(image.file)}`;
+            return `
+              <figure class="enemy-variant">
+                <button class="enemy-variant-image" type="button" data-image-src="${source}" aria-label="View ${image.name}">
+                  <img src="${source}" alt="${image.name}" loading="lazy" />
+                </button>
+                <figcaption><a href="${page}" target="_blank" rel="noopener noreferrer">${image.name}</a></figcaption>
+              </figure>
+            `;
+          }).join("")}
+        </div>
+        <div class="animation-grid">
+          <button class="animation-card" type="button" data-video-src="${examinationWiki}/Special:FilePath/Slasher_Execution.mp4" aria-label="Play Slasher execution animation">
+            <span class="animation-play-icon" aria-hidden="true">▶</span>
+            <span>Execution animation</span>
+          </button>
+        </div>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Lore</h3>
+        <p>Slashers are Dreadnoughts infected with the <a href="${examinationWiki}/WE-30?action=edit&amp;redlink=1" target="_blank" rel="noopener noreferrer">WE-30 Pathogen</a>. Dreadnoughts retain their physical and intellectual features, as well as survival instincts, after infection.</p>
+        <p>Their physical resilience lets them endure severe injuries, and their retained intelligence allows them to operate weapons. Unlike regular infected, they have enough self-preservation to try to halt or limit harm done to them.</p>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Trivia</h3>
+        <ul>
+          <li>The Axe variant used to be the only Slasher variant in the game.</li>
+          <li>A green “WhatsApp” Slasher appears in <a href="${examinationWiki}/Yuri_Scarlet" target="_blank" rel="noopener noreferrer">Yuri Scarlet</a>'s <a href="${examinationWiki}/Blood_Handed_Retriever" target="_blank" rel="noopener noreferrer">simulation</a>, emitting WhatsApp notification sounds passively and during its execution.</li>
+          <li>The current execution animation is one of the oldest in the game and has been unchanged since 2025.</li>
+        </ul>
+      </section>
+    </article>
+  `;
+
+  bindEnemyMedia();
 }
 
 function renderShielderDetail(enemy) {
