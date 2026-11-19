@@ -643,6 +643,8 @@ function renderEnemyDetail(enemy) {
     renderLurkerDetail(enemy);
   } else if (currentEnemyId === "regulars-engineer") {
     renderEngineerDetail(enemy);
+  } else if (currentEnemyId === "regulars-vorax") {
+    renderVoraxDetail(enemy);
   } else if (currentEnemyId === "regulars-crawler") {
     renderCrawlerDetail(enemy);
   } else if (currentEnemyId === "regulars-grabby") {
@@ -787,6 +789,119 @@ function renderEngineerDetail(enemy) {
         <h3>Trivia</h3>
         <ul>
           <li>Vladimir's eyes used to glow white instead of orange.</li>
+        </ul>
+      </section>
+    </article>
+  `;
+
+  bindEnemyMedia();
+}
+
+function renderVoraxDetail(enemy) {
+  const sector1 = `${examinationWiki}/Sector_1`;
+  const variants = [
+    { name: "RSU", image: "https://static.wikitide.net/examinationwiki/d/d2/RSU_Vorax.png" },
+    { name: "MGF", image: "https://static.wikitide.net/examinationwiki/c/c0/MGF_Vorax.png" },
+  ];
+  const executionAnimation = `${examinationWiki}/Special:FilePath/Vorax_Execution.mp4`;
+  detailViewport.innerHTML = `
+    <article class="enemy-detail">
+      <header class="enemy-detail-hero">
+        <img class="enemy-detail-portrait" src="${enemy.image}" alt="${enemy.name}" />
+        <div>
+          <p class="enemy-category-label">Regulars · Combat Archive</p>
+          <h2>Vorax</h2>
+          <p><strong>“I'M SORRY.”</strong> <span>— RSU Vorax</span></p>
+          <p>The Vorax is a rare infected that deals heavy damage in bursts and ruptures when killed. Its close-range attacks and death burst make cramped rooms and chokepoints especially dangerous.</p>
+        </div>
+      </header>
+
+      <section class="enemy-info-section">
+        <h3>Variants</h3>
+        <div class="enemy-variant-grid">
+          ${variants.map((variant) => `
+            <figure class="enemy-variant">
+              <button class="enemy-variant-image" type="button" data-image-src="${variant.image}" aria-label="View ${variant.name} Vorax image">
+                <img src="${variant.image}" alt="${variant.name} Vorax" loading="lazy" />
+              </button>
+              <figcaption>${variant.name}</figcaption>
+            </figure>
+          `).join("")}
+        </div>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Health and stats</h3>
+        <div class="enemy-table-wrap">
+          <table class="enemy-stats">
+            <tbody>
+              <tr><th scope="row">Spawn location</th><td><a href="${sector1}" target="_blank" rel="noopener noreferrer">Sector 1</a></td></tr>
+              <tr><th scope="row">Health</th><td>750 HP</td></tr>
+              <tr><th scope="row">Regeneration</th><td>None</td></tr>
+              <tr><th scope="row">Walk speed</th><td>4 studs/s</td></tr>
+              <tr><th scope="row">Run speed</th><td>None</td></tr>
+              <tr><th scope="row">Primary equipment</th><td>Fists</td></tr>
+              <tr><th scope="row">Secondary equipment</th><td>Vomit</td></tr>
+              <tr><th scope="row">Punch damage</th><td>25</td></tr>
+              <tr><th scope="row">Vomit damage</th><td>4 every ~0.05 seconds</td></tr>
+              <tr><th scope="row">Execution threshold</th><td>Below 50 HP</td></tr>
+              <tr><th scope="row">Death explosion</th><td>60 damage within ~3 studs</td></tr>
+              <tr><th scope="row">Respawn time</th><td>1 minute 50 seconds</td></tr>
+              <tr><th scope="row">Drop</th><td>None</td></tr>
+              <tr><th scope="row">Gender</th><td>Male</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Behavior and spawns</h3>
+        <p>Vorax can spawn at various locations throughout <a href="${sector1}" target="_blank" rel="noopener noreferrer">Sector 1</a>, with up to three active at a time. It wanders at 4 studs/s until it spots a target, then pursues at the same speed. Vorax takes 1 minute and 50 seconds to respawn after death.</p>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Abilities</h3>
+        <h4>Melee</h4>
+        <p>Vorax punches at short range, dealing 25 damage with a 1-second cooldown. Backing away can avoid the attack. If it hits a player below 50 HP, it performs an execution.</p>
+        <h4>Vomit</h4>
+        <p>When it sees a target, Vorax stops and vomits for 3.5 seconds, slowly turning to follow them. This attack has a 13-second cooldown. Its hitbox is narrow but long, dealing 4 damage about every 0.05 seconds to targets caught in it. Hits cover the player's screen in blood for about 4 seconds; the effect clears on its own and cannot be wiped away.</p>
+        <p>The attack may leave blood puddles that deal 1 damage per second on contact and disappear after about 5 seconds.</p>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Death</h3>
+        <p>When Vorax reaches 0 HP, a 2-second death animation plays before it explodes, dealing 60 damage within roughly 3 studs. Its death also leaves a blood puddle like the one created by its vomit.</p>
+        <div class="animation-grid">
+          <button class="animation-card" type="button" data-video-src="${executionAnimation}" aria-label="Play Vorax execution animation">
+            <span class="animation-play-icon" aria-hidden="true">▶</span>
+            <span>Execution animation</span>
+          </button>
+        </div>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Attributes</h3>
+        <ul>
+          <li><strong>Stagger immunity:</strong> Gunshots do not stun Vorax.</li>
+        </ul>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Combat archive</h3>
+        <p>Field reports describe a body swollen around the torso and throat, its skin stretched and discolored by a pressurized, harmful fluid. The Vorax is drawn to groups, though it will attack lone targets too. At close range it sprays infected fluid that can blind and mark victims; the scent may draw nearby infected toward them.</p>
+        <p>Keep distance and avoid clustering near a Vorax. Ranged attacks are the safer response: a close-quarters takedown risks its spray, while a death at close range can trigger the same kind of burst. Do not let it hold a doorway or chokepoint.</p>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Lore</h3>
+        <p>The <a href="${examinationWiki}/WE-30?action=edit&amp;redlink=1" target="_blank" rel="noopener noreferrer">WE-30 Pathogen</a> can produce a Vorax when its host has a badly broken jaw or destroyed digestive system. The infected scavenges anything it can swallow, including garbage and other unsuitable material. A harmful fluid accumulates in its body—possibly a mixture of contaminated blood, stomach acid, and what it has consumed—causing its torso and throat to swell.</p>
+        <p>The liquid can infect people through wounds or other openings, and its scent attracts nearby infected. When the Vorax is killed, its body ruptures and sprays the fluid outward.</p>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Trivia</h3>
+        <ul>
+          <li>Vorax is the second infected type with a unique death animation, after <a href="${examinationWiki}/Chimera" target="_blank" rel="noopener noreferrer">Chimera</a> and before <a href="${examinationWiki}/Mikhail_Williams" target="_blank" rel="noopener noreferrer">Mikhail Williams</a>.</li>
         </ul>
       </section>
     </article>
