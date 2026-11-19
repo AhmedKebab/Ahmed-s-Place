@@ -152,68 +152,12 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
 const imageSceneDuration = 12000;
 const minimumBackgroundAspectRatio = 1.6;
 const settingsVersion = 3;
-const backgroundCueScenes = new Map([
-  [
-    backgroundRenders[2],
-    {
-      cues: [{
-        source: "assets/background-audio/render-03-pride-of-rasonia.ogg",
-        maxPlaybackSeconds: imageSceneDuration / 1000,
-      }],
-    },
-  ],
-  [
-    backgroundRenders[3],
-    { cues: [{ source: "assets/background-audio/render-04-gilbert-callingtroy1.ogg" }] },
-  ],
-  [
-    backgroundRenders[4],
-    { cues: [{ source: "assets/background-audio/render-05-gilbert-to-toc1.ogg" }] },
-  ],
-  [
-    backgroundRenders[5],
-    { cues: [{ source: "assets/background-audio/render-06-gilbert-playerkill2.ogg" }] },
-  ],
-  [
-    backgroundRenders[6],
-    { cues: [{ source: "assets/background-audio/render-07-bill-rif-squad.mp3" }] },
-  ],
-  [
-    backgroundRenders[7],
-    { cues: [{ source: "assets/background-audio/render-08-post-gilbert.mp3" }] },
-  ],
-  [
-    backgroundRenders[8],
-    {
-      cues: [{
-        source: "assets/background-audio/render-09-enraged-lurker.mp3",
-        maxPlaybackSeconds: 5,
-        muffled: true,
-      }],
-    },
-  ],
-  [
-    backgroundRenders[9],
-    {
-      cues: [
-        { source: "assets/background-audio/render-10-radio-5.mp3" },
-        { source: "assets/background-audio/render-10-radio-2.mp3" },
-        {
-          source: "assets/background-audio/render-10-radio-1.mp3",
-          trimEndSeconds: 7,
-        },
-      ],
-      waitForCues: true,
-    },
-  ],
-]);
 
 let renderQueue = [];
 let previousRenderIndex = -1;
 const recentRenderLimit = 7;
 const recentRenderIndices = [];
 const excludedRenderIndices = new Set();
-const uiSoundControlSelector = "button, .settings-menu summary, .settings-field select, .wiki-link";
 let carouselTimer;
 let activeScreen = introScreen;
 let pendingScreen = null;
@@ -223,14 +167,6 @@ let enemyCatalogScrollTop = 0;
 let activeMediaTrigger = null;
 let activeBackgroundImage = null;
 let activeBackgroundRender = null;
-let activeBackgroundCueAudio = null;
-let activeBackgroundCueCleanup = null;
-let backgroundCueGeneration = 0;
-let backgroundCueSequenceIsActive = false;
-let backgroundCueNeedsGesture = false;
-let backgroundCueAdvancePending = false;
-let backgroundAudioUnlocked = false;
-let uiAudioContext = null;
 let settingsMenuIsAnimating = false;
 let settingsPanelHasFinished = false;
 let settingsGearHasFinished = true;
@@ -291,104 +227,6 @@ function enableBackgroundMusic() {
   }
 }
 
-function scheduleUiTone(context, frequencyStart, frequencyEnd, duration, volume, waveform, offset = 0) {
-  const startedAt = context.currentTime + offset;
-  const oscillator = context.createOscillator();
-  const envelope = context.createGain();
-
-  oscillator.type = waveform;
-  oscillator.frequency.setValueAtTime(frequencyStart, startedAt);
-  oscillator.frequency.exponentialRampToValueAtTime(frequencyEnd, startedAt + duration);
-  envelope.gain.setValueAtTime(0.0001, startedAt);
-  envelope.gain.exponentialRampToValueAtTime(volume, startedAt + 0.008);
-  envelope.gain.exponentialRampToValueAtTime(0.0001, startedAt + duration);
-  oscillator.connect(envelope);
-  envelope.connect(context.destination);
-  oscillator.addEventListener("ended", () => {
-    oscillator.disconnect();
-    envelope.disconnect();
-  }, { once: true });
-  oscillator.start(startedAt);
-  oscillator.stop(startedAt + duration);
-}
-
-function scheduleGearTurn(context, isClosing) {
-  const startedAt = context.currentTime;
-  const duration = 0.9;
-  const oscillator = context.createOscillator();
-  const filter = context.createBiquadFilter();
-  const envelope = context.createGain();
-
-  oscillator.type = "sawtooth";
-  oscillator.frequency.setValueAtTime(isClosing ? 230 : 95, startedAt);
-  oscillator.frequency.exponentialRampToValueAtTime(isClosing ? 85 : 220, startedAt + duration);
-  filter.type = "lowpass";
-  filter.frequency.setValueAtTime(isClosing ? 720 : 560, startedAt);
-  filter.frequency.exponentialRampToValueAtTime(isClosing ? 300 : 980, startedAt + duration);
-  envelope.gain.setValueAtTime(0.0001, startedAt);
-  envelope.gain.exponentialRampToValueAtTime(0.028, startedAt + 0.04);
-  envelope.gain.exponentialRampToValueAtTime(0.0001, startedAt + duration);
-  oscillator.connect(filter);
-  filter.connect(envelope);
-  envelope.connect(context.destination);
-  oscillator.addEventListener("ended", () => {
-    oscillator.disconnect();
-    filter.disconnect();
-    envelope.disconnect();
-  }, { once: true });
-  oscillator.start(startedAt);
-  oscillator.stop(startedAt + duration);
-
-  for (let tick = 0; tick < 7; tick += 1) {
-    const frequency = isClosing ? 780 - tick * 48 : 420 + tick * 52;
-    scheduleUiTone(context, frequency, frequency * 0.82, 0.035, 0.012, "triangle", 0.06 + tick * 0.11);
-  }
-  scheduleUiTone(
-    context,
-    isClosing ? 340 : 760,
-    isClosing ? 180 : 960,
-    0.09,
-    0.026,
-    "sine",
-    0.78,
-  );
-}
-
-function playUiSound(kind) {
-  if (document.visibilityState !== "visible") return;
-
-  if (!uiAudioContext) {
-    const AudioContextConstructor = window.AudioContext ?? window.webkitAudioContext;
-    if (!AudioContextConstructor) {
-      console.error("Web Audio is not supported; interface sounds are unavailable.");
-      return;
-    }
-    uiAudioContext = new AudioContextConstructor();
-  }
-
-  const play = () => {
-    if (kind === "hover") {
-      scheduleUiTone(uiAudioContext, 760, 960, 0.065, 0.022, "sine");
-      return;
-    }
-    if (kind === "gear-open" || kind === "gear-close") {
-      scheduleGearTurn(uiAudioContext, kind === "gear-close");
-      return;
-    }
-    scheduleUiTone(uiAudioContext, 520, 310, 0.11, 0.05, "triangle");
-    scheduleUiTone(uiAudioContext, 780, 560, 0.08, 0.018, "sine");
-  };
-
-  if (uiAudioContext.state === "running") {
-    play();
-    return;
-  }
-  uiAudioContext.resume().then(play).catch((error) => {
-    if (error.name !== "NotAllowedError") {
-      console.error("Unable to resume interface sounds.", error);
-    }
-  });
-}
 
 function finishSettingsMenuTransition(force = false) {
   if (!settingsMenuIsAnimating) return;
@@ -526,157 +364,7 @@ function updateFrameScale() {
 
 window.addEventListener("resize", updateFrameScale);
 
-function stopBackgroundCue() {
-  backgroundCueGeneration += 1;
-  backgroundCueNeedsGesture = false;
-  backgroundCueSequenceIsActive = false;
-
-  const audio = activeBackgroundCueAudio;
-  const cleanup = activeBackgroundCueCleanup;
-  activeBackgroundCueAudio = null;
-  activeBackgroundCueCleanup = null;
-  audio?.pause();
-  cleanup?.();
-}
-
-function finishBackgroundCue(source, cues, cueIndex, generation) {
-  if (generation !== backgroundCueGeneration) return;
-  if (cueIndex + 1 < cues.length) {
-    playBackgroundCue(source, cues, cueIndex + 1, generation);
-    return;
-  }
-
-  backgroundCueSequenceIsActive = false;
-  if (
-    backgroundCueAdvancePending
-    && activeBackgroundRender === source
-    && mediaModal.hidden
-  ) {
-    backgroundCueAdvancePending = false;
-    showNextRender();
-  }
-}
-
-function playBackgroundCue(source, cues, cueIndex, generation) {
-  if (generation !== backgroundCueGeneration) return;
-
-  const cue = cues[cueIndex];
-  const audio = new Audio(cue.source);
-  audio.preload = "auto";
-  if (cue.muffled) audio.volume = 0.8;
-
-  let cueFinished = false;
-  let cleanupAudioGraph = () => {};
-  const releaseAudio = () => {
-    if (activeBackgroundCueAudio === audio) {
-      activeBackgroundCueAudio = null;
-      activeBackgroundCueCleanup = null;
-    }
-    cleanupAudioGraph();
-  };
-  const finishCue = () => {
-    if (cueFinished) return;
-    cueFinished = true;
-    audio.pause();
-    releaseAudio();
-    finishBackgroundCue(source, cues, cueIndex, generation);
-  };
-  const handlePlayFailure = (error) => {
-    if (cueFinished || generation !== backgroundCueGeneration) return;
-    if (error.name === "NotAllowedError") {
-      cueFinished = true;
-      backgroundCueSequenceIsActive = false;
-      backgroundCueNeedsGesture = true;
-      audio.pause();
-      releaseAudio();
-      return;
-    }
-    console.error(`Unable to play background cue ${cue.source}.`, error);
-    finishCue();
-  };
-  const checkPlaybackLimit = () => {
-    const sourceDuration = Number.isFinite(audio.duration)
-      ? audio.duration - (cue.trimEndSeconds ?? 0)
-      : Number.POSITIVE_INFINITY;
-    const playbackLimit = Math.min(
-      sourceDuration,
-      cue.maxPlaybackSeconds ?? Number.POSITIVE_INFINITY,
-    );
-    if (Number.isFinite(playbackLimit) && audio.currentTime >= playbackLimit) {
-      finishCue();
-    }
-  };
-
-  audio.addEventListener("ended", finishCue, { once: true });
-  audio.addEventListener("error", () => {
-    if (generation !== backgroundCueGeneration) return;
-    console.error(`Unable to load background cue ${cue.source}.`);
-    finishCue();
-  }, { once: true });
-  audio.addEventListener("loadedmetadata", checkPlaybackLimit);
-  audio.addEventListener("timeupdate", checkPlaybackLimit);
-
-  if (cue.muffled) {
-    const AudioContextConstructor = window.AudioContext ?? window.webkitAudioContext;
-    if (AudioContextConstructor) {
-      if (!uiAudioContext) uiAudioContext = new AudioContextConstructor();
-      const mediaSource = uiAudioContext.createMediaElementSource(audio);
-      const filter = uiAudioContext.createBiquadFilter();
-      filter.type = "lowpass";
-      filter.frequency.value = 900;
-      filter.Q.value = 0.7;
-      mediaSource.connect(filter);
-      filter.connect(uiAudioContext.destination);
-      cleanupAudioGraph = () => {
-        mediaSource.disconnect();
-        filter.disconnect();
-      };
-    } else {
-      console.error("Web Audio is unavailable; the render 9 cue cannot be muffled.");
-    }
-  }
-
-  activeBackgroundCueAudio = audio;
-  activeBackgroundCueCleanup = cleanupAudioGraph;
-  const startPlayback = () => {
-    if (cueFinished || generation !== backgroundCueGeneration) return;
-    const playback = audio.play();
-    if (playback) playback.catch(handlePlayFailure);
-  };
-  if (cue.muffled && uiAudioContext && uiAudioContext.state !== "running") {
-    uiAudioContext.resume().then(startPlayback).catch(handlePlayFailure);
-  } else {
-    startPlayback();
-  }
-}
-
-function startBackgroundCue(source) {
-  stopBackgroundCue();
-  const scene = backgroundCueScenes.get(source);
-  if (!scene) return;
-  if (!backgroundAudioUnlocked) {
-    backgroundCueNeedsGesture = true;
-    return;
-  }
-
-  const generation = backgroundCueGeneration;
-  backgroundCueSequenceIsActive = true;
-  playBackgroundCue(source, scene.cues, 0, generation);
-}
-
-function enableBackgroundAudio() {
-  backgroundAudioUnlocked = true;
-  if (backgroundCueNeedsGesture && activeBackgroundRender && mediaModal.hidden) {
-    startBackgroundCue(activeBackgroundRender);
-  }
-}
-
 function advanceAfterScene() {
-  const scene = backgroundCueScenes.get(activeBackgroundRender);
-  if (scene?.waitForCues && backgroundCueSequenceIsActive) {
-    backgroundCueAdvancePending = true;
-    return;
-  }
   showNextRender();
 }
 
@@ -722,8 +410,6 @@ function takeNextRenderIndex() {
 
 function showNextRender() {
   window.clearTimeout(carouselTimer);
-  backgroundCueAdvancePending = false;
-  stopBackgroundCue();
   previousRenderIndex = takeNextRenderIndex();
   if (previousRenderIndex === null) return;
   recentRenderIndices.push(previousRenderIndex);
