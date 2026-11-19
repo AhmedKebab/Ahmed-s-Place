@@ -111,6 +111,12 @@ const mediaFileDirectories = new Map([
   ["Lurker_Maul.mp4", "3d"],
   ["Barnacles_Alerted.mp4", "cb"],
   ["Barnacles_Death.mp4", "e9"],
+  ["Riser_execution.mp4", "09"],
+  ["Riser_save.mp4", "fd"],
+  ["Riser_stomp.mp4", "fd"],
+  ["Riser_dodge_2.mp4", "ee"],
+  ["Riser_Roll.mp4", "62"],
+  ["Riser_Fake_death.mp4", "28"],
   ["Enraged_Lurker.mp3", "cb"],
 ]);
 
@@ -1122,7 +1128,7 @@ function renderRiserDetail(enemy) {
         <h3>Animation gallery</h3>
         <div class="animation-grid">
           ${animations.map((animation) => `
-            <button class="animation-card" type="button" data-video-src="${examinationWiki}/Special:FilePath/${encodeURIComponent(animation.file)}" aria-label="Play ${animation.name}">
+            <button class="animation-card" type="button" data-video-src="${mediaFileUrl(animation.file)}" aria-label="Play ${animation.name}">
               <span class="animation-play-icon" aria-hidden="true">▶</span>
               <span>${animation.name}</span>
             </button>
