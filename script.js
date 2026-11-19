@@ -214,7 +214,7 @@ function createBackgroundMusicPlayer() {
     events: {
       onReady: (event) => {
         backgroundMusicPlayerReady = true;
-        event.target.setVolume(35);
+        event.target.setVolume(50);
         enableBackgroundMusic();
       },
       onStateChange: (event) => {
