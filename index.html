@@ -7,6 +7,7 @@
     <title>Examination</title>
     <link rel="icon" type="image/webp" href="favicon.webp" />
     <link rel="stylesheet" href="examination.css?v=analog-tape-v15" />
+    <script src="https://www.youtube.com/iframe_api"></script>
     <script src="script.js?v=gallery-media-v5" defer></script>
   </head>
   <body>
@@ -72,6 +73,10 @@
                   <option value="high" selected>High</option>
                   <option value="extreme">Extreme (RTX-style)</option>
                 </select>
+              </label>
+              <label class="settings-field settings-toggle">
+                <span>Background music</span>
+                <input id="background-music-setting" type="checkbox" checked />
               </label>
               <p class="settings-note" id="settings-status" role="status" hidden></p>
             </div>

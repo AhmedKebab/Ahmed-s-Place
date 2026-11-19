@@ -798,6 +798,30 @@ body {
   color: #fff;
 }
 
+.settings-toggle {
+  grid-template-columns: 1fr auto;
+  align-items: center;
+}
+
+.settings-toggle input {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--frame-warning);
+  cursor: pointer;
+}
+
+#background-music-player {
+  position: fixed;
+  left: -10px;
+  bottom: -10px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0;
+}
+
 .settings-note {
   margin: 0;
   color: #aeb8c5;

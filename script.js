@@ -136,6 +136,7 @@ const enemyWikiLink = document.querySelector("#enemy-wiki-link");
 const categoryBackButton = document.querySelector("#category-back-button");
 const themeSetting = document.querySelector("#theme-setting");
 const qualitySetting = document.querySelector("#quality-setting");
+const backgroundMusicSetting = document.querySelector("#background-music-setting");
 const settingsStatus = document.querySelector("#settings-status");
 const settingsMenu = document.querySelector(".settings-menu");
 const settingsMenuSummary = settingsMenu.querySelector("summary");
@@ -150,7 +151,7 @@ const backButton = document.querySelector("#back-button");
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 const imageSceneDuration = 12000;
 const minimumBackgroundAspectRatio = 1.6;
-const settingsVersion = 2;
+const settingsVersion = 3;
 const backgroundCueScenes = new Map([
   [
     backgroundRenders[2],
@@ -235,6 +236,60 @@ let settingsPanelHasFinished = false;
 let settingsGearHasFinished = true;
 let settingsMenuTransitionTimer;
 const settingsStorageKey = "examination-site-settings";
+const backgroundMusicVideoId = "2z5rMNH_yTI";
+let backgroundMusicPlayer = null;
+let backgroundMusicPlayerReady = false;
+
+function createBackgroundMusicPlayer() {
+  if (!backgroundMusicSetting.checked || backgroundMusicPlayer || typeof YT === "undefined") return;
+
+  const playerContainer = document.createElement("div");
+  playerContainer.id = "background-music-player";
+  playerContainer.setAttribute("aria-hidden", "true");
+  document.body.append(playerContainer);
+
+  backgroundMusicPlayer = new YT.Player(playerContainer, {
+    width: "1",
+    height: "1",
+    videoId: backgroundMusicVideoId,
+    playerVars: {
+      autoplay: 0,
+      loop: 1,
+      playlist: backgroundMusicVideoId,
+      controls: 0,
+      disablekb: 1,
+      fs: 0,
+      modestbranding: 1,
+      playsinline: 1,
+      rel: 0,
+    },
+    events: {
+      onReady: (event) => {
+        backgroundMusicPlayerReady = true;
+        event.target.setVolume(35);
+        if (backgroundMusicSetting.checked) event.target.playVideo();
+      },
+      onStateChange: (event) => {
+        if (!backgroundMusicSetting.checked) return;
+        if (event.data === YT.PlayerState.ENDED) event.target.playVideo();
+      },
+    },
+  });
+}
+
+window.onYouTubeIframeAPIReady = () => {
+  createBackgroundMusicPlayer();
+};
+
+function enableBackgroundMusic() {
+  if (!backgroundMusicSetting.checked) return;
+  if (!backgroundMusicPlayer) {
+    createBackgroundMusicPlayer();
+  }
+  if (backgroundMusicPlayerReady) {
+    backgroundMusicPlayer.playVideo();
+  }
+}
 
 function scheduleUiTone(context, frequencyStart, frequencyEnd, duration, volume, waveform, offset = 0) {
   const startedAt = context.currentTime + offset;
@@ -401,6 +456,11 @@ function loadSavedSettings() {
   } else if (hasCurrentSettings) {
     invalidFields.push("graphics quality");
   }
+  if (hasCurrentSettings && typeof savedSettings.backgroundMusic === "boolean") {
+    backgroundMusicSetting.checked = savedSettings.backgroundMusic;
+  } else if (hasCurrentSettings) {
+    invalidFields.push("background music");
+  }
   if (invalidFields.length > 0) {
     console.error(`Saved Examination settings have invalid fields: ${invalidFields.join(", ")}.`);
     setSettingsStatus(`Some saved settings were invalid and have been reset: ${invalidFields.join(", ")}.`);
@@ -416,6 +476,7 @@ function saveSettings() {
     version: settingsVersion,
     theme: themeSetting.value,
     quality: qualitySetting.value,
+    backgroundMusic: backgroundMusicSetting.checked,
   };
   try {
     window.localStorage.setItem(settingsStorageKey, JSON.stringify(settings));
@@ -430,6 +491,14 @@ function saveSettings() {
 function applyVisualSettings() {
   showcase.dataset.theme = themeSetting.value;
   showcase.dataset.quality = qualitySetting.value;
+}
+
+function applyBackgroundMusicSetting() {
+  if (!backgroundMusicSetting.checked) {
+    if (backgroundMusicPlayerReady) backgroundMusicPlayer.pauseVideo();
+    return;
+  }
+  enableBackgroundMusic();
 }
 
 function updateFrameScale() {
@@ -681,7 +750,7 @@ function showNextRender() {
     activeBackgroundImage = nextImage;
     activeBackgroundRender = source;
     updateFrameScale();
-    startBackgroundCue(source);
+    stopBackgroundCue();
     if (mediaModal.hidden) {
       scheduleNextRender();
     }
@@ -722,6 +791,7 @@ function transitionTo(screen) {
 }
 
 beginButton.addEventListener("click", () => {
+  enableBackgroundMusic();
   beginButton.disabled = true;
   transitionTo(categoryScreen);
 });
@@ -736,6 +806,10 @@ themeSetting.addEventListener("change", () => {
 });
 qualitySetting.addEventListener("change", () => {
   applyVisualSettings();
+  saveSettings();
+});
+backgroundMusicSetting.addEventListener("change", () => {
+  applyBackgroundMusicSetting();
   saveSettings();
 });
 reconstructEffect.addEventListener("animationend", (event) => {
@@ -1481,19 +1555,12 @@ document.addEventListener("fullscreenchange", () => {
   }
 });
 
-document.addEventListener("pointerover", (event) => {
-  if (event.pointerType !== "mouse" || !(event.target instanceof Element)) return;
-  const control = event.target.closest(uiSoundControlSelector);
-  if (!control || (event.relatedTarget instanceof Node && control.contains(event.relatedTarget))) return;
-  playUiSound("hover");
-});
-window.addEventListener("pointerdown", enableBackgroundAudio, { passive: true });
-window.addEventListener("keydown", enableBackgroundAudio);
+window.addEventListener("pointerdown", enableBackgroundMusic, { passive: true });
+window.addEventListener("keydown", enableBackgroundMusic);
 settingsMenuSummary.addEventListener("click", (event) => {
   event.preventDefault();
   if (settingsMenuIsAnimating) return;
   const isClosing = settingsMenu.open;
-  playUiSound(isClosing ? "gear-close" : "gear-open");
   settingsMenuIsAnimating = true;
   settingsPanelHasFinished = false;
   settingsGearHasFinished = false;
@@ -1548,11 +1615,6 @@ settingsMenu.querySelector(".settings-gear").addEventListener("animationend", (e
   settingsGearHasFinished = true;
   finishSettingsMenuTransition();
 });
-document.addEventListener("click", (event) => {
-  if (!(event.target instanceof Element) || !event.target.closest(uiSoundControlSelector)) return;
-  playUiSound("press");
-});
-
 mediaPlayer.addEventListener("pause", () => {
   if (mediaModal.hidden || mediaPlayer.ended || mediaPlayer.readyState === 0) return;
   const playback = mediaPlayer.play();
@@ -1587,4 +1649,5 @@ showcase.addEventListener("pointermove", (event) => {
 loadSavedSettings();
 applyVisualSettings();
 updateFrameScale();
+createBackgroundMusicPlayer();
 showNextRender();
