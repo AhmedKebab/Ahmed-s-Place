@@ -566,47 +566,51 @@ function renderEnemyCatalog() {
   detailViewport.querySelectorAll(".enemy-card").forEach((card) => {
     card.addEventListener("click", () => {
       enemyCatalogScrollTop = detailViewport.scrollTop;
-      currentEnemyId = card.dataset.enemyId;
       const enemy = enemyCatalog
         .flatMap((section) => section.enemies.map((item) => ({
           ...item,
           category: section.label,
           id: getEnemyId(section, item),
         })))
-        .find((item) => item.id === currentEnemyId);
+        .find((item) => item.id === card.dataset.enemyId);
       if (!enemy) {
-        console.error(`Unable to find enemy data for ${currentEnemyId}.`);
+        console.error(`Unable to find enemy data for ${card.dataset.enemyId}.`);
         return;
       }
 
-      detailTitle.textContent = enemy.name;
-      enemyWikiLink.hidden = true;
-      backButton.textContent = "Back to Enemies";
-      if (currentEnemyId === "regulars-lurker") {
-        renderLurkerDetail(enemy);
-      } else if (currentEnemyId === "regulars-crawler") {
-        renderCrawlerDetail(enemy);
-      } else if (currentEnemyId === "regulars-grabby") {
-        renderGrabbyDetail(enemy);
-      } else if (currentEnemyId === "regulars-barnacles") {
-        renderBarnaclesDetail(enemy);
-      } else if (currentEnemyId === "regulars-riser") {
-        renderRiserDetail(enemy);
-      } else if (currentEnemyId === "regulars-mutant") {
-        renderMutantDetail(enemy);
-      } else if (currentEnemyId === "regulars-kamikaze") {
-        renderKamikazeDetail(enemy);
-      } else if (currentEnemyId === "regulars-shielder") {
-        renderShielderDetail(enemy);
-      } else if (currentEnemyId === "city-infected-city-shielder") {
-        renderCityShielderDetail(enemy);
-      } else {
-        renderEnemyPlaceholder(enemy);
-      }
-      detailViewport.scrollTop = 0;
-      detailTitle.focus();
+      renderEnemyDetail(enemy);
     });
   });
+}
+
+function renderEnemyDetail(enemy) {
+  currentEnemyId = enemy.id;
+  detailTitle.textContent = enemy.name;
+  enemyWikiLink.hidden = true;
+  backButton.textContent = "Back to Enemies";
+  if (currentEnemyId === "regulars-lurker") {
+    renderLurkerDetail(enemy);
+  } else if (currentEnemyId === "regulars-crawler") {
+    renderCrawlerDetail(enemy);
+  } else if (currentEnemyId === "regulars-grabby") {
+    renderGrabbyDetail(enemy);
+  } else if (currentEnemyId === "regulars-barnacles") {
+    renderBarnaclesDetail(enemy);
+  } else if (currentEnemyId === "regulars-riser") {
+    renderRiserDetail(enemy);
+  } else if (currentEnemyId === "regulars-mutant") {
+    renderMutantDetail(enemy);
+  } else if (currentEnemyId === "regulars-kamikaze") {
+    renderKamikazeDetail(enemy);
+  } else if (currentEnemyId === "regulars-shielder") {
+    renderShielderDetail(enemy);
+  } else if (currentEnemyId === "city-infected-city-shielder") {
+    renderCityShielderDetail(enemy);
+  } else {
+    renderEnemyPlaceholder(enemy);
+  }
+  detailViewport.scrollTop = 0;
+  detailTitle.focus();
 }
 
 function renderEnemyPlaceholder(enemy) {
@@ -644,6 +648,7 @@ function renderShielderDetail(enemy) {
           <h2>Shielder</h2>
           <p>“Those were issued to the military for the refugees that camped here, before everything went off. They're full of hate and spite.”</p>
           <p><strong>Shielders</strong> are a relatively common type of <a href="${examinationWiki}/Enemies" target="_blank" rel="noopener noreferrer">Enemy</a> in Examination. They carry a shield and baton, advancing on their targets while their shield blocks most incoming damage.</p>
+          <button class="begin-button" type="button" data-related-enemy-id="city-infected-city-shielder">View City Shielder archive</button>
         </div>
       </header>
 
@@ -788,6 +793,7 @@ function renderCityShielderDetail(enemy) {
           <h2>City Shielder</h2>
           <p>“We held our ground until there was nothing left to hold.” — Sergeant Hermann Lutz</p>
           <p><strong>City Shielder</strong> is a unique variant of the <a href="${examinationWiki}/Shielder" target="_blank" rel="noopener noreferrer">Shielder</a>, with stronger defenses. Its shield blocks most incoming damage as it advances on the player.</p>
+          <button class="begin-button" type="button" data-related-enemy-id="regulars-shielder">View regular Shielder archive</button>
         </div>
       </header>
 
@@ -1709,6 +1715,23 @@ function renderKamikazeDetail(enemy) {
 }
 
 function bindEnemyMedia() {
+  detailViewport.querySelectorAll("[data-related-enemy-id]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const enemy = enemyCatalog
+        .flatMap((section) => section.enemies.map((item) => ({
+          ...item,
+          category: section.label,
+          id: getEnemyId(section, item),
+        })))
+        .find((item) => item.id === button.dataset.relatedEnemyId);
+      if (!enemy) {
+        console.error(`Unable to find related enemy data for ${button.dataset.relatedEnemyId}.`);
+        return;
+      }
+
+      renderEnemyDetail(enemy);
+    });
+  });
   detailViewport.querySelectorAll("[data-video-src]").forEach((button) => {
     button.addEventListener("click", () => openMediaVideo(button.dataset.videoSrc, button));
   });
