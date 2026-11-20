@@ -503,7 +503,6 @@ function showNextRender() {
     activeBackgroundImage = nextImage;
     activeBackgroundRender = source;
     updateFrameScale();
-    stopBackgroundCue();
     if (mediaModal.hidden) {
       scheduleNextRender();
     }
