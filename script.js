@@ -648,6 +648,8 @@ function renderEnemyDetail(enemy) {
     renderDeceiverDetail(enemy);
   } else if (currentEnemyId === "virals-viral-runner") {
     renderViralRunnerDetail(enemy);
+  } else if (currentEnemyId === "city-infected-runner") {
+    renderCityRunnerDetail(enemy);
   } else if (currentEnemyId === "regulars-crawler") {
     renderCrawlerDetail(enemy);
   } else if (currentEnemyId === "regulars-grabby") {
@@ -1130,7 +1132,8 @@ function renderViralRunnerDetail(enemy) {
 
       <section class="enemy-info-section">
         <h3>City variant</h3>
-        <p>The <a href="${cityRunner}" target="_blank" rel="noopener noreferrer">City Runner</a> is a unique Viral Runner variant that spawns during the <a href="${examinationWiki}/Mechanics#Relay_Station" target="_blank" rel="noopener noreferrer">Server Restart</a> event.</p>
+        <p>The <a href="${cityRunner}" target="_blank" rel="noopener noreferrer">City Runner</a> shares the Viral Runner's abilities but has 600 HP. Four spawn in the Streets during the <a href="${examinationWiki}/Mechanics#Relay_Station" target="_blank" rel="noopener noreferrer">Server Restart</a> event.</p>
+        <button class="begin-button" type="button" data-related-enemy-id="city-infected-runner">View City Runner archive</button>
       </section>
 
       <section class="enemy-info-section">
@@ -1169,6 +1172,173 @@ function renderViralRunnerDetail(enemy) {
         <ul>
           <li>It once had a “chain dodge” state, similar to the <a href="${examinationWiki}/Chimera" target="_blank" rel="noopener noreferrer">Chimera</a>, that continuously dodged attacks until it stopped taking damage.</li>
           <li>The Viral Runner was inspired by the <a href="https://gbp.miraheze.org/wiki/Viral_Runner" target="_blank" rel="noopener noreferrer">Viral Runner enemy</a> from <a href="https://gbp.miraheze.org/wiki/Main_Page" target="_blank" rel="noopener noreferrer">Guts &amp; Blackpowder</a>.</li>
+        </ul>
+      </section>
+    </article>
+  `;
+
+  bindEnemyMedia();
+}
+
+function renderCityRunnerDetail(enemy) {
+  const viralRunnerWiki = `${examinationWiki}/Viral_Runner`;
+  const viralMutation = `${examinationWiki}/Viral_Mutation`;
+  const streets = `${examinationWiki}/Locations#Streets`;
+  const serverRestart = `${examinationWiki}/Mechanics#Relay_Station`;
+  const tasc10 = `${examinationWiki}/TASC-10`;
+  const variants = [
+    { name: "Civilian 1", image: "https://static.wikitide.net/examinationwiki/3/3c/Civilian_City_Runner.png" },
+    { name: "Civilian 2", image: "https://static.wikitide.net/examinationwiki/4/43/Civilian_City_Runner_2.png" },
+    { name: "MGF MP", image: "https://static.wikitide.net/examinationwiki/e/e8/MGF_MP_City_Runner.png" },
+    { name: "IDO", image: "https://static.wikitide.net/examinationwiki/9/91/IDO_City_Runner.png" },
+  ];
+  const oldAppearances = [
+    "RCU_Viral_Runner_1.png",
+    "RCU_Viral_Runner_2.png",
+    "RCU_Viral_Runner_3.png",
+    "RCU_Viral_Runner_4.png",
+  ];
+  const sounds = [
+    {
+      label: "Idle — uses the Classless Viral Runner idle sound.",
+      file: "https://static.wikitide.net/examinationwiki/f/f9/Classless_Viral_Runner_Idle.mp3",
+      loop: true,
+    },
+    {
+      label: "Maul attack.",
+      file: "https://static.wikitide.net/examinationwiki/c/c1/Viralmaul.ogg",
+    },
+    {
+      label: "Execution.",
+      file: "https://static.wikitide.net/examinationwiki/e/e0/Viralexecution.ogg",
+    },
+  ];
+  const animations = [
+    { name: "Maul animation", file: "RCU_Runner_Maul.mp4" },
+    { name: "Execution animation", file: "RCU_Runner_Execution.mp4" },
+  ];
+
+  detailViewport.innerHTML = `
+    <article class="enemy-detail">
+      <header class="enemy-detail-hero">
+        <img class="enemy-detail-portrait" src="${enemy.image}" alt="${enemy.name}" />
+        <div>
+          <p class="enemy-category-label">City Infected · Combat Archive</p>
+          <h2>City Runner</h2>
+          <p><strong>“A bullet is mercy compared to what they truly are.”</strong> <span>— Private Ian Vaughan</span></p>
+          <p>City Runner is a unique variant of the <a href="${viralRunnerWiki}" target="_blank" rel="noopener noreferrer">Viral Runner</a>. It has the same abilities, with a larger health pool.</p>
+          <button class="begin-button" type="button" data-related-enemy-id="virals-viral-runner">View Viral Runner archive</button>
+        </div>
+      </header>
+
+      <section class="enemy-info-section">
+        <h3>Variants</h3>
+        <div class="enemy-variant-grid">
+          ${variants.map((variant) => `
+            <figure class="enemy-variant">
+              <button class="enemy-variant-image" type="button" data-image-src="${variant.image}" aria-label="View ${variant.name} City Runner">
+                <img src="${variant.image}" alt="${variant.name} City Runner" loading="lazy" />
+              </button>
+              <figcaption>${variant.name}</figcaption>
+            </figure>
+          `).join("")}
+        </div>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Health and stats</h3>
+        <div class="enemy-table-wrap">
+          <table class="enemy-stats">
+            <tbody>
+              <tr><th scope="row">Spawn location</th><td><a href="${streets}" target="_blank" rel="noopener noreferrer">Streets</a></td></tr>
+              <tr><th scope="row">Health</th><td>600 HP</td></tr>
+              <tr><th scope="row">Regeneration</th><td>None</td></tr>
+              <tr><th scope="row">Walk speed</th><td>8 studs/s</td></tr>
+              <tr><th scope="row">Run speed</th><td>26 studs/s</td></tr>
+              <tr><th scope="row">Primary equipment</th><td>Fists</td></tr>
+              <tr><th scope="row">Secondary equipment</th><td>Maul</td></tr>
+              <tr><th scope="row">Punch damage</th><td>8</td></tr>
+              <tr><th scope="row">Maul damage</th><td>45; cannot reduce a target below 1 HP</td></tr>
+              <tr><th scope="row">Execution threshold</th><td>Below 33 HP</td></tr>
+              <tr><th scope="row">Respawn time</th><td>None</td></tr>
+              <tr><th scope="row">Drop</th><td>None</td></tr>
+              <tr><th scope="row">Gender</th><td>Male</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Spawn and behavior</h3>
+        <p>Four City Runners spawn in the <a href="${streets}" target="_blank" rel="noopener noreferrer">Streets</a> during the <a href="${serverRestart}" target="_blank" rel="noopener noreferrer">Server Restart</a> event.</p>
+        <p>It wanders at 8 studs/s until it spots a target, then chases at 26 studs/s. If the target stays out of sight for more than 10 seconds, it resumes wandering.</p>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Abilities</h3>
+        <h4>Punch</h4>
+        <p>It punches at medium range for 8 damage per hit, with a 0.4-second cooldown. Hitting a player below 33 HP triggers an execution. The player becomes a <a href="${viralMutation}#Known_Mutations" target="_blank" rel="noopener noreferrer">Viral</a> upon death.</p>
+        <h4>Maul</h4>
+        <p>After four successful punches, its next hit mauls the player. The attack deals 45 damage, marks the target, and plays a special animation during which the City Runner is completely invincible. Maul damage cannot reduce the target below 1 HP. A marked player becomes a Viral on death even if they were not previously infected.</p>
+        <h4>Dodge</h4>
+        <p>When hit, it ducks to evade incoming gunfire for 1 second and cannot attack. This ability has an approximately 3-second cooldown. It has no movement penalty and grants no damage immunity; it cannot activate while the Runner is stunned by a bash.</p>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Attributes</h3>
+        <ul>
+          <li><strong>Stagger immunity:</strong> Gunshots do not stun it.</li>
+          <li><strong>Taser struggle:</strong> When stunned by the <a href="${tasc10}" target="_blank" rel="noopener noreferrer">TASC-10</a>, it stands in place instead of falling down.</li>
+        </ul>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Sounds</h3>
+        ${sounds.map((sound) => `
+          <p>${sound.label}</p>
+          <audio class="enemy-audio" controls preload="none" ${sound.loop ? "loop" : ""} aria-label="${sound.label}" src="${sound.file}">Your browser does not support audio playback.</audio>
+        `).join("")}
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Animation gallery</h3>
+        <div class="animation-grid">
+          ${animations.map((animation) => `
+            <button class="animation-card" type="button" data-video-src="${examinationWiki}/Special:FilePath/${animation.file}" aria-label="Play ${animation.name}">
+              <span class="animation-play-icon" aria-hidden="true">▶</span>
+              <span>${animation.name}</span>
+            </button>
+          `).join("")}
+        </div>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Lore</h3>
+        <p>For Viral lore, see <a href="${viralMutation}" target="_blank" rel="noopener noreferrer">Viral Mutation</a>. City Runners are civilians or armed personnel, including the <a href="${examinationWiki}/Menlonian_Ground_Forces" target="_blank" rel="noopener noreferrer">Menlonian Ground Forces</a> and members of the <a href="https://discord.com/channels/1349408407332847687/1390206196723748895" target="_blank" rel="noopener noreferrer">International Defense Organization</a>, who became infected with the <a href="${examinationWiki}/WE-30?action=edit&amp;redlink=1" target="_blank" rel="noopener noreferrer">WE-30 Pathogen</a>.</p>
+        <p>Because of the Viral Mutation, their in-game appearance and mechanics may not be canon: they show signs of irradiation while far from the <a href="${examinationWiki}/Itagura_Nuclear_Power_Plant" target="_blank" rel="noopener noreferrer">Itagura Nuclear Power Plant</a>. Their appearance in the non-canon Server Restart event is also not canon to the lore.</p>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Old appearances</h3>
+        <div class="enemy-variant-grid">
+          ${oldAppearances.map((file, index) => {
+            const image = `${examinationWiki}/Special:FilePath/${file}`;
+            return `
+              <figure class="enemy-variant">
+                <button class="enemy-variant-image" type="button" data-image-src="${image}" aria-label="View old City Runner appearance ${index + 1}">
+                  <img src="${image}" alt="Old City Runner appearance ${index + 1}" loading="lazy" />
+                </button>
+                <figcaption>Old appearance ${index + 1}</figcaption>
+              </figure>
+            `;
+          }).join("")}
+        </div>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Trivia</h3>
+        <ul>
+          <li>City Runner uses the same idle sound as the Classless Viral Runner.</li>
         </ul>
       </section>
     </article>
