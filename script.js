@@ -1056,6 +1056,7 @@ function renderViralRunnerDetail(enemy) {
           <h2>Viral Runner</h2>
           <p><strong>“You don't wanna mess with the fresh infected ones, things can get out of hand quickly.”</strong></p>
           <p>Also known as a Viral Riser, the Viral Runner is the most common Viral in Examination. It is fast, deals damage rapidly, and becomes especially dangerous in groups.</p>
+          <button class="begin-button" type="button" data-related-enemy-id="city-infected-runner">View City Runner archive</button>
         </div>
       </header>
 
@@ -1133,7 +1134,6 @@ function renderViralRunnerDetail(enemy) {
       <section class="enemy-info-section">
         <h3>City variant</h3>
         <p>The <a href="${cityRunner}" target="_blank" rel="noopener noreferrer">City Runner</a> shares the Viral Runner's abilities but has 600 HP. Four spawn in the Streets during the <a href="${examinationWiki}/Mechanics#Relay_Station" target="_blank" rel="noopener noreferrer">Server Restart</a> event.</p>
-        <button class="begin-button" type="button" data-related-enemy-id="city-infected-runner">View City Runner archive</button>
       </section>
 
       <section class="enemy-info-section">
