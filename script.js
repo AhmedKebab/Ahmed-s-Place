@@ -646,6 +646,8 @@ function renderEnemyDetail(enemy) {
     renderVoraxDetail(enemy);
   } else if (currentEnemyId === "regulars-deceiver") {
     renderDeceiverDetail(enemy);
+  } else if (currentEnemyId === "virals-viral-runner") {
+    renderViralRunnerDetail(enemy);
   } else if (currentEnemyId === "regulars-crawler") {
     renderCrawlerDetail(enemy);
   } else if (currentEnemyId === "regulars-grabby") {
@@ -979,6 +981,194 @@ function renderVoraxDetail(enemy) {
         <h3>Trivia</h3>
         <ul>
           <li>Vorax is the second infected type with a unique death animation, after <a href="${examinationWiki}/Chimera" target="_blank" rel="noopener noreferrer">Chimera</a> and before <a href="${examinationWiki}/Mikhail_Williams" target="_blank" rel="noopener noreferrer">Mikhail Williams</a>.</li>
+        </ul>
+      </section>
+    </article>
+  `;
+
+  bindEnemyMedia();
+}
+
+function renderViralRunnerDetail(enemy) {
+  const viralMutation = `${examinationWiki}/Viral_Mutation`;
+  const infection = `${examinationWiki}/Mechanics#Infection`;
+  const variants = [
+    { name: "Standard", image: "https://static.wikitide.net/examinationwiki/c/cf/Viral_Standard.png" },
+    { name: "Breacher", image: "https://static.wikitide.net/examinationwiki/2/24/Viral_Breacher.png" },
+    { name: "Medic", image: "https://static.wikitide.net/examinationwiki/e/ef/Viral_Medic.png" },
+    { name: "Operator", image: "https://static.wikitide.net/examinationwiki/b/bc/Viral_Operator.png" },
+    { name: "Pointman", image: "https://static.wikitide.net/examinationwiki/b/b8/Viral_Pointman.png" },
+    { name: "Corpsman", image: "https://static.wikitide.net/examinationwiki/1/13/Viral_Corpsman.png" },
+    { name: "Classless", image: "https://static.wikitide.net/examinationwiki/d/d1/Viral_Classless.png" },
+  ];
+  const sounds = [
+    {
+      label: "Idle — Standard Viral Runner.",
+      file: "https://static.wikitide.net/examinationwiki/b/b4/Viralidle.ogg",
+      loop: true,
+    },
+    {
+      label: "Idle — Viral Corpsman only.",
+      file: "https://static.wikitide.net/examinationwiki/d/d3/Viralcorpsmanidle.ogg",
+      loop: true,
+    },
+    {
+      label: "Idle — Classless Viral Runner only.",
+      file: "https://static.wikitide.net/examinationwiki/f/f9/Classless_Viral_Runner_Idle.mp3",
+      loop: true,
+    },
+    {
+      label: "Maul attack.",
+      file: "https://static.wikitide.net/examinationwiki/e/e0/Viralexecution.ogg",
+    },
+    {
+      label: "Execution.",
+      file: "https://static.wikitide.net/examinationwiki/e/e0/Viralexecution.ogg",
+    },
+    {
+      label: "Suicide.",
+      file: "https://static.wikitide.net/examinationwiki/7/79/Viralsuicide.ogg",
+    },
+    {
+      label: "Death explosion.",
+      file: "https://static.wikitide.net/examinationwiki/d/d1/Viralexplosion.ogg",
+    },
+  ];
+  const animations = [
+    { name: "Maul animation", file: "Viral_Maul.mp4" },
+    { name: "Execution animation", file: "Viral_Execution.mp4" },
+    { name: "Suicide animation", file: "Viral_Runner_Suicide.mp4" },
+  ];
+  const menlo = `${examinationWiki}/Menlo`;
+  const menlonianGroundForces = `${examinationWiki}/Menlonian_Ground_Forces`;
+  const menloSpecialTerrain = `${examinationWiki}/Menlo_Special_Terrain_and_Operations_Command`;
+  const tasc10 = `${examinationWiki}/TASC-10`;
+  const cityRunner = `${examinationWiki}/City_Runner`;
+
+  detailViewport.innerHTML = `
+    <article class="enemy-detail">
+      <header class="enemy-detail-hero">
+        <img class="enemy-detail-portrait" src="${enemy.image}" alt="${enemy.name}" />
+        <div>
+          <p class="enemy-category-label">Virals · Combat Archive</p>
+          <h2>Viral Runner</h2>
+          <p><strong>“You don't wanna mess with the fresh infected ones, things can get out of hand quickly.”</strong></p>
+          <p>Also known as a Viral Riser, the Viral Runner is the most common Viral in Examination. It is fast, deals damage rapidly, and becomes especially dangerous in groups.</p>
+        </div>
+      </header>
+
+      <section class="enemy-info-section">
+        <h3>Variants</h3>
+        <div class="enemy-variant-grid">
+          ${variants.map((variant) => `
+            <figure class="enemy-variant">
+              <button class="enemy-variant-image" type="button" data-image-src="${variant.image}" aria-label="View ${variant.name} Viral Runner">
+                <img src="${variant.image}" alt="${variant.name} Viral Runner" loading="lazy" />
+              </button>
+              <figcaption>${variant.name}</figcaption>
+            </figure>
+          `).join("")}
+        </div>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Health and stats</h3>
+        <div class="enemy-table-wrap">
+          <table class="enemy-stats">
+            <tbody>
+              <tr><th scope="row">Spawn location</th><td>See <a href="${examinationWiki}/Viral_Runner#Spawn" target="_blank" rel="noopener noreferrer">Spawn</a></td></tr>
+              <tr><th scope="row">Health</th><td>400 HP; 300 HP for Classless</td></tr>
+              <tr><th scope="row">Regeneration</th><td>None</td></tr>
+              <tr><th scope="row">Walk speed</th><td>8 studs/s</td></tr>
+              <tr><th scope="row">Run speed</th><td>26 studs/s</td></tr>
+              <tr><th scope="row">Primary equipment</th><td>Fists</td></tr>
+              <tr><th scope="row">Secondary equipment</th><td>Maul</td></tr>
+              <tr><th scope="row">Punch damage</th><td>8</td></tr>
+              <tr><th scope="row">Maul damage</th><td>45; cannot reduce a target below 1 HP</td></tr>
+              <tr><th scope="row">Execution threshold</th><td>Below 33 HP</td></tr>
+              <tr><th scope="row">Respawn time</th><td>None</td></tr>
+              <tr><th scope="row">Drop</th><td>None</td></tr>
+              <tr><th scope="row">Nationality</th><td><img class="enemy-national-flag" src="https://static.wikitide.net/examinationwiki/b/b3/Flag_of_Menlo.svg" alt="" /> <a href="${menlo}" target="_blank" rel="noopener noreferrer">Menlonian</a></td></tr>
+              <tr><th scope="row">Gender</th><td>Male</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Spawn</h3>
+        <p>Viral Runners do not spawn naturally. They can be created when a player without an <a href="${examinationWiki}/Axe" target="_blank" rel="noopener noreferrer">Axe</a> succumbs to the <a href="${infection}" target="_blank" rel="noopener noreferrer">infection</a> and fails the <a href="${examinationWiki}/Controllable_Infection" target="_blank" rel="noopener noreferrer">Hatred check</a>, dies in a late infection stage, or dies after being marked by a Viral Runner or an enraged <a href="${examinationWiki}/Lurker#Rage" target="_blank" rel="noopener noreferrer">Lurker</a>.</p>
+        <p><a href="${examinationWiki}/Classless" target="_blank" rel="noopener noreferrer">Classless</a> players become Classless Viral Runners instead, with 300 HP.</p>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Behavior</h3>
+        <p>It wanders at 8 studs/s until it spots a target, then chases at 26 studs/s. If the target stays out of sight for more than 10 seconds, it resumes wandering.</p>
+        <p>After 2 minutes and 30 seconds of life, it begins a suicide animation. It can still be damaged during the animation. If it survives long enough, it can stabilize and turn into a <a href="${examinationWiki}/Riser" target="_blank" rel="noopener noreferrer">Riser</a>.</p>
+        <p>On death, its body explodes after 2 seconds, dealing 50 damage within an approximately 8-stud radius.</p>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Abilities</h3>
+        <h4>Punch</h4>
+        <p>It punches at medium range for 8 damage per hit, with a 0.4-second cooldown. Hitting a player below 33 HP triggers an execution. The player becomes a <a href="${viralMutation}#Known_Mutations" target="_blank" rel="noopener noreferrer">Viral</a> upon death.</p>
+        <h4>Maul</h4>
+        <p>After four successful punches, its next hit mauls the player. The attack deals 45 damage, marks the target, and plays a special animation during which the Viral Runner is completely invincible. Maul damage cannot reduce the target below 1 HP. A marked player becomes a Viral on death even if they were not previously infected.</p>
+        <h4>Dodge</h4>
+        <p>When hit, it has a chance to duck and evade incoming gunfire for 1 second. It cannot attack during the dodge, but has no movement penalty and gains no damage immunity. It cannot dodge while stunned by a bash.</p>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Attributes</h3>
+        <ul>
+          <li><strong>Stagger immunity:</strong> Gunshots do not stun it.</li>
+          <li><strong>Taser struggle:</strong> When stunned by the <a href="${tasc10}" target="_blank" rel="noopener noreferrer">TASC-10</a>, it stands in place instead of falling down.</li>
+          <li><strong>Death explosion:</strong> Explodes after 2 seconds, dealing 50 damage in an approximately 8-stud radius.</li>
+          <li><strong>Suicide:</strong> Begins its suicide animation after 2 minutes and 30 seconds of life.</li>
+        </ul>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>City variant</h3>
+        <p>The <a href="${cityRunner}" target="_blank" rel="noopener noreferrer">City Runner</a> is a unique Viral Runner variant that spawns during the <a href="${examinationWiki}/Mechanics#Relay_Station" target="_blank" rel="noopener noreferrer">Server Restart</a> event.</p>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Sounds</h3>
+        ${sounds.map((sound) => `
+          <p>${sound.label}</p>
+          <audio class="enemy-audio" controls preload="none" ${sound.loop ? "loop" : ""} aria-label="${sound.label}" src="${sound.file}">Your browser does not support audio playback.</audio>
+        `).join("")}
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Animation gallery</h3>
+        <div class="animation-grid">
+          ${animations.map((animation) => `
+            <button class="animation-card" type="button" data-video-src="${examinationWiki}/Special:FilePath/${animation.file}" aria-label="Play ${animation.name}">
+              <span class="animation-play-icon" aria-hidden="true">▶</span>
+              <span>${animation.name}</span>
+            </button>
+          `).join("")}
+        </div>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Lore</h3>
+        <p>Viral Runners are soldiers of the <a href="${menlonianGroundForces}" target="_blank" rel="noopener noreferrer">Menlonian Ground Forces</a> or <a href="${menloSpecialTerrain}" target="_blank" rel="noopener noreferrer">Menlo Special Terrain and Operations Command</a> who became infected under particular circumstances. At the <a href="${examinationWiki}/Itagura_Nuclear_Power_Plant" target="_blank" rel="noopener noreferrer">Itagura NPP</a>, the <a href="${examinationWiki}/WE-30?action=edit&amp;redlink=1" target="_blank" rel="noopener noreferrer">WE-30 Pathogen</a> reacts with excess radiation, causing some infected who would normally become Risers to mutate into Viral Runners.</p>
+        <p>This mutation makes them unusually aggressive, agitated, and unstable. They push their bodies past their limits while retaining some self-preservation. Major organ failure can cause the body to explode, harming anyone nearby; their instability can also lead them to injure or kill themselves.</p>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Combat archive</h3>
+        <p>Freshly infected soldiers can become dangerous before anyone realizes what is happening. Viral Runners move quickly and punish groups that fail to deal with them, combining rapid punches, a devastating maul, and a delayed death explosion. Keep your distance and watch for the signs of infection before a fallen teammate turns on the squad.</p>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Trivia</h3>
+        <ul>
+          <li>It once had a “chain dodge” state, similar to the <a href="${examinationWiki}/Chimera" target="_blank" rel="noopener noreferrer">Chimera</a>, that continuously dodged attacks until it stopped taking damage.</li>
+          <li>The Viral Runner was inspired by the <a href="https://gbp.miraheze.org/wiki/Viral_Runner" target="_blank" rel="noopener noreferrer">Viral Runner enemy</a> from <a href="https://gbp.miraheze.org/wiki/Main_Page" target="_blank" rel="noopener noreferrer">Guts &amp; Blackpowder</a>.</li>
         </ul>
       </section>
     </article>

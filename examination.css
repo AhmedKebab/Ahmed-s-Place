@@ -1338,6 +1338,14 @@ body {
   background: rgba(255, 255, 255, 0.05);
 }
 
+.enemy-national-flag {
+  width: 24px;
+  height: 16px;
+  margin-right: 6px;
+  object-fit: cover;
+  vertical-align: -3px;
+}
+
 .enemy-audio {
   display: block;
   width: min(100%, 560px);
