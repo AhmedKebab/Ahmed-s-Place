@@ -803,6 +803,72 @@ function renderVoraxDetail(enemy) {
     { name: "RSU", image: "https://static.wikitide.net/examinationwiki/d/d2/RSU_Vorax.png" },
     { name: "MGF", image: "https://static.wikitide.net/examinationwiki/c/c0/MGF_Vorax.png" },
   ];
+  const sounds = [
+    {
+      label: "Idle — plays when idle.",
+      files: [
+        "https://static.wikitide.net/examinationwiki/5/58/Vorax_Idle.mp3",
+        "https://static.wikitide.net/examinationwiki/5/59/Vorax_Idle_2.mp3",
+        "https://static.wikitide.net/examinationwiki/9/91/Vorax_Idle_3.mp3",
+        "https://static.wikitide.net/examinationwiki/d/dd/Vorax_Idle_4.mp3",
+      ],
+    },
+    {
+      label: "Vomit start — plays when Vorax starts vomiting.",
+      files: [
+        "https://static.wikitide.net/examinationwiki/1/1b/Vorax_Vomit_Start_2.mp3",
+        "https://static.wikitide.net/examinationwiki/4/40/Vorax_Vomit_Start_3.mp3",
+        "https://static.wikitide.net/examinationwiki/4/4e/Vorax_Vomit_Start_4.mp3",
+        "https://static.wikitide.net/examinationwiki/7/71/Vorax_Vomit_Start_5.mp3",
+      ],
+    },
+    {
+      label: "Vomiting — plays while vomiting.",
+      files: [
+        "https://static.wikitide.net/examinationwiki/a/a6/Vorax_Vomit.mp3",
+        "https://static.wikitide.net/examinationwiki/6/63/Vorax_Vomit_2.mp3",
+        "https://static.wikitide.net/examinationwiki/b/b9/Vorax_Vomit_3.mp3",
+      ],
+    },
+    {
+      label: "Vomit hits a player.",
+      files: [
+        "https://static.wikitide.net/examinationwiki/4/45/Vorax_Vomit_Hit.mp3",
+        "https://static.wikitide.net/examinationwiki/c/c9/Vorax_Vomit_Hit_2.mp3",
+      ],
+    },
+    {
+      label: "Vomit hits an object.",
+      files: [
+        "https://static.wikitide.net/examinationwiki/2/2c/Vorax_Vomit_Object_Hit.mp3",
+        "https://static.wikitide.net/examinationwiki/2/20/Vorax_Vomit_Object_Hit_2.mp3",
+      ],
+    },
+    {
+      label: "Vomit end — plays after vomiting ends.",
+      files: [
+        "https://static.wikitide.net/examinationwiki/8/8c/Vorax_Vomit_End.mp3",
+        "https://static.wikitide.net/examinationwiki/3/35/Vorax_Vomit_End_2.mp3",
+        "https://static.wikitide.net/examinationwiki/8/86/Vorax_Vomit_End_3.mp3",
+      ],
+    },
+    {
+      label: "Death — plays when dying.",
+      files: [
+        "https://static.wikitide.net/examinationwiki/1/1b/Vorax_Death.mp3",
+        "https://static.wikitide.net/examinationwiki/a/af/Vorax_Death_2.mp3",
+        "https://static.wikitide.net/examinationwiki/4/41/Vorax_Death_3.mp3",
+        "https://static.wikitide.net/examinationwiki/6/6e/Vorax_Death_4.mp3",
+        "https://static.wikitide.net/examinationwiki/a/a4/Vorax_Death_5.mp3",
+      ],
+    },
+    {
+      label: "Explosion — plays when exploding.",
+      files: [
+        "https://static.wikitide.net/examinationwiki/c/c7/Vorax_Explosion.mp3",
+      ],
+    },
+  ];
   const executionAnimation = `${examinationWiki}/Special:FilePath/Vorax_Execution.mp4`;
   detailViewport.innerHTML = `
     <article class="enemy-detail">
@@ -866,6 +932,16 @@ function renderVoraxDetail(enemy) {
         <h4>Vomit</h4>
         <p>When it sees a target, Vorax stops and vomits for 3.5 seconds, slowly turning to follow them. This attack has a 13-second cooldown. Its hitbox is narrow but long, dealing 4 damage about every 0.05 seconds to targets caught in it. Hits cover the player's screen in blood for about 4 seconds; the effect clears on its own and cannot be wiped away.</p>
         <p>The attack may leave blood puddles that deal 1 damage per second on contact and disappear after about 5 seconds.</p>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Sounds</h3>
+        ${sounds.map((sound) => `
+          <p>${sound.label}</p>
+          ${sound.files.map((file, index) => `
+            <audio class="enemy-audio" controls preload="none" aria-label="${sound.label} Clip ${index + 1}" src="${file}">Your browser does not support audio playback.</audio>
+          `).join("")}
+        `).join("")}
       </section>
 
       <section class="enemy-info-section">
