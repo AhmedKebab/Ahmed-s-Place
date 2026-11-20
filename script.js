@@ -644,6 +644,8 @@ function renderEnemyDetail(enemy) {
     renderEngineerDetail(enemy);
   } else if (currentEnemyId === "regulars-vorax") {
     renderVoraxDetail(enemy);
+  } else if (currentEnemyId === "regulars-deceiver") {
+    renderDeceiverDetail(enemy);
   } else if (currentEnemyId === "regulars-crawler") {
     renderCrawlerDetail(enemy);
   } else if (currentEnemyId === "regulars-grabby") {
@@ -977,6 +979,209 @@ function renderVoraxDetail(enemy) {
         <h3>Trivia</h3>
         <ul>
           <li>Vorax is the second infected type with a unique death animation, after <a href="${examinationWiki}/Chimera" target="_blank" rel="noopener noreferrer">Chimera</a> and before <a href="${examinationWiki}/Mikhail_Williams" target="_blank" rel="noopener noreferrer">Mikhail Williams</a>.</li>
+        </ul>
+      </section>
+    </article>
+  `;
+
+  bindEnemyMedia();
+}
+
+function renderDeceiverDetail(enemy) {
+  const deceiverWiki = `${examinationWiki}/Deceiver`;
+  const reactor4 = `${examinationWiki}/Reactor_4`;
+  const variants = [
+    { name: "Standard", image: "https://static.wikitide.net/examinationwiki/e/e1/Standard_Deceiver.png" },
+    { name: "Breacher", image: "https://static.wikitide.net/examinationwiki/8/80/Breacher_Deceiver.png" },
+    { name: "Medic", image: "https://static.wikitide.net/examinationwiki/f/f0/Medic_Deceiver.png" },
+    { name: "Leader", image: "https://static.wikitide.net/examinationwiki/0/06/Leader_Deceiver.png" },
+    { name: "Operator", image: "https://static.wikitide.net/examinationwiki/3/34/Operator_Deceiver.png" },
+    { name: "Pointman", image: "https://static.wikitide.net/examinationwiki/d/d2/Pointman_Deceiver.png" },
+    { name: "Corpsman", image: "https://static.wikitide.net/examinationwiki/5/5e/Corpsman_Deceiver.png" },
+    { name: "Commander", image: "https://static.wikitide.net/examinationwiki/3/36/Commander_Deceiver.png" },
+    { name: "Enforcer", image: "https://static.wikitide.net/examinationwiki/6/64/Enforcer_Deceiver.png" },
+  ];
+  const classDifferences = [
+    { name: "Standard", difference: "Cracked gasmask lenses." },
+    { name: "Breacher", difference: "Cracked gasmask lenses." },
+    { name: "Medic", difference: "Cracked mask visor; carries a VGS-40 instead of an MPR-VII." },
+    { name: "Leader", difference: "Cracked gasmask lenses; the IA AR-56 is missing its bayonet." },
+    { name: "Operator", difference: "No visible class-specific difference." },
+    { name: "Pointman", difference: "The Halligan Bar is missing from its back." },
+    { name: "Corpsman", difference: "Opaque, bloodstained mask visor; carries a VIREL-M MedUnit instead of a MedTac." },
+    { name: "Commander", difference: "Cracked gasmask lens; the SR-58 is missing its bayonet." },
+    { name: "Enforcer", difference: "Opaque, bloodstained gasmask; uniform sleeves are not rolled up." },
+  ];
+  const sounds = [
+    {
+      label: "Radio mimic — plays when the Deceiver attempts to mimic a player's voice line.",
+      file: "https://static.wikitide.net/examinationwiki/e/e6/Deceiver_Radio.mp3",
+    },
+    {
+      label: "Enraged idle — loops after the Deceiver is damaged.",
+      file: "https://static.wikitide.net/examinationwiki/d/d3/Viralcorpsmanidle.ogg",
+      loop: true,
+    },
+  ];
+  const animations = [
+    { name: "Execution animation", file: "DeceiverExecution.mp4" },
+    { name: "Backstab execution animation", file: "DeceiverBackstabExecution.mp4" },
+  ];
+
+  detailViewport.innerHTML = `
+    <article class="enemy-detail">
+      <header class="enemy-detail-hero">
+        <img class="enemy-detail-portrait" src="${enemy.image}" alt="${enemy.name}" />
+        <div>
+          <p class="enemy-category-label">Regulars · Combat Archive</p>
+          <h2>Deceiver</h2>
+          <p><strong>“This is just what it wants! To pit us against each other!”</strong></p>
+          <p>One of the rarest infected in Examination, the Deceiver mimics a player's behavior to approach its target and execute them. It is especially dangerous to lone, inattentive players.</p>
+        </div>
+      </header>
+
+      <section class="enemy-info-section">
+        <h3>Variants</h3>
+        <p>These appearances represent different player classes the Deceiver can mimic.</p>
+        <div class="enemy-variant-grid">
+          ${variants.map((variant) => `
+            <figure class="enemy-variant">
+              <button class="enemy-variant-image" type="button" data-image-src="${variant.image}" aria-label="View ${variant.name} Deceiver">
+                <img src="${variant.image}" alt="${variant.name} Deceiver" loading="lazy" />
+              </button>
+              <figcaption>${variant.name}</figcaption>
+            </figure>
+          `).join("")}
+        </div>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Health and stats</h3>
+        <div class="enemy-table-wrap">
+          <table class="enemy-stats">
+            <tbody>
+              <tr><th scope="row">Health</th><td>450 HP</td></tr>
+              <tr><th scope="row">Regeneration</th><td>None</td></tr>
+              <tr><th scope="row">Walk speed</th><td>12 studs/s; 8.5 studs/s while mimicking a target</td></tr>
+              <tr><th scope="row">Run speed</th><td>20 studs/s while enraged</td></tr>
+              <tr><th scope="row">Primary equipment</th><td>Depends on mimicked class; see <a href="${deceiverWiki}#Weaponry" target="_blank" rel="noopener noreferrer">Weaponry</a></td></tr>
+              <tr><th scope="row">Mimic attack damage</th><td>1</td></tr>
+              <tr><th scope="row">Enraged attack damage</th><td>20</td></tr>
+              <tr><th scope="row">Mimic execution threshold</th><td>Below 102 HP</td></tr>
+              <tr><th scope="row">Enraged execution threshold</th><td>Below 40 HP</td></tr>
+              <tr><th scope="row">Respawn time</th><td>Chance-based; see <a href="${deceiverWiki}#Spawn" target="_blank" rel="noopener noreferrer">Spawn</a></td></tr>
+              <tr><th scope="row">Drop</th><td>None</td></tr>
+              <tr><th scope="row">Gender</th><td>Male</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Spawn</h3>
+        <p>The Deceiver can spawn in place of a regular infected anywhere on the map except <a href="${reactor4}" target="_blank" rel="noopener noreferrer">Reactor 4</a>. Each spawn attempt has a 5% chance to produce a Deceiver.</p>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Mimic appearance</h3>
+        <p>The Deceiver takes the appearance of a randomly chosen <a href="${examinationWiki}/Classes" target="_blank" rel="noopener noreferrer">class</a>, with a randomly generated name and rank and a username matching a random player in the server. Its black skin and damaged mask or equipment are the main visual giveaways.</p>
+        <div class="enemy-table-wrap">
+          <table class="enemy-stats">
+            <thead><tr><th scope="col">Mimicked class</th><th scope="col">Visible difference</th></tr></thead>
+            <tbody>
+              ${classDifferences.map((item) => `
+                <tr><th scope="row">${item.name}</th><td>${item.difference}</td></tr>
+              `).join("")}
+            </tbody>
+          </table>
+        </div>
+        <p>It appears on players' radars as a teammate with a green dot. The Leader and Commander variants also use a green dot, making them easier to spot.</p>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Behavior</h3>
+        <h4>Mimic state</h4>
+        <p>While wandering, the Deceiver moves at 12 studs/s. When a target is near or in sight, it approaches at 8.5 studs/s, follows them, and may briefly stop to stare. At about 5 studs, it pulls out its weapon and keeps advancing.</p>
+        <p>It occasionally attempts player voice lines and may use the same hand gestures as players. Classes other than Medic, Corpsman, and Enforcer hold their primary weapon; Medic and Corpsman Deceivers may hold a VIREL-M MedUnit.</p>
+        <p>After becoming enraged, it can no longer hold those items for the rest of its life. The weapon does not appear on its model, which can reveal its identity.</p>
+        <h4>Enraged state</h4>
+        <p>When enraged, it wanders at 12 studs/s and chases targets at 20 studs/s. If a target stays out of sight for more than 10 seconds, it resumes wandering. After a prolonged period without detecting or chasing a target, it may return to its mimic state.</p>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Abilities</h3>
+        <h4>Revealing itself</h4>
+        <p>The Deceiver reveals its glowing orange eyes and becomes enraged when any of these occur:</p>
+        <ul>
+          <li>A target backs off for at least 1 second after the Deceiver has drawn its weapon.</li>
+          <li>A player witnesses it execute another player.</li>
+          <li>It takes damage. When damaged, it also screams while chasing.</li>
+          <li>It spots a player who enraged it earlier in that same life.</li>
+        </ul>
+        <h4>Attacks</h4>
+        <p><strong>Mimic state:</strong> It stabs at medium range for 1 damage. A hit on a player below 102 HP triggers an execution; a back attack uses the special backstab execution.</p>
+        <p><strong>Enraged state:</strong> It stabs at medium range for 20 damage per hit, with a 0.5-second cooldown. A hit on a player below 40 HP triggers an execution, with the backstab animation used when attacked from behind.</p>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Weaponry</h3>
+        <p>Its weapon depends on the class it is mimicking. Medic and Corpsman variants use a scalpel; Leader and Commander variants use a bayonet; all other variants use a glass shard. These weapons have no stat differences.</p>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Voice lines</h3>
+        <p>During its mimic state, it may imitate player voice lines. The sound is a distinct radio effect, and subtitles show random symbols rather than real sentences. It may accompany the lines with player-like hand gestures.</p>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Sounds</h3>
+        ${sounds.map((sound) => `
+          <p>${sound.label}</p>
+          <audio class="enemy-audio" controls preload="none" ${sound.loop ? "loop" : ""} aria-label="${sound.label}" src="${sound.file}">Your browser does not support audio playback.</audio>
+        `).join("")}
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Animation gallery</h3>
+        <div class="animation-grid">
+          ${animations.map((animation) => `
+            <button class="animation-card" type="button" data-video-src="${examinationWiki}/Special:FilePath/${animation.file}" aria-label="Play ${animation.name}">
+              <span class="animation-play-icon" aria-hidden="true">▶</span>
+              <span>${animation.name}</span>
+            </button>
+          `).join("")}
+        </div>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Attributes</h3>
+        <ul>
+          <li><strong>Stagger immunity:</strong> Gunshots do not stun the Deceiver.</li>
+          <li><strong>Dreadnought:</strong> It opens doors when it walks up to them.</li>
+        </ul>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Lore</h3>
+        <p>Deceivers are rare, intelligent variants infected with the <a href="${examinationWiki}/WE-30?action=edit&amp;redlink=1" target="_blank" rel="noopener noreferrer">WE-30 Pathogen</a> that have undergone the Dreadnought mutation. Unlike most infected, they can imitate human behavior and use that ability to hunt, usually targeting people who are alone. They approach, speak, and follow until their target turns away, then attack with a sharp object and feast on the body.</p>
+        <p>They are resilient to low-caliber rounds and melee attacks, and more agile than most infected. Their voice can imitate a host's, but prolonged speech becomes deep and distorted. After being injured, they may retreat before returning with a more covert approach. Their glowing eyes can be suppressed while mimicking people; damaged equipment, bloodied clothing, wounds, and a distorted voice can give them away.</p>
+        <p>At Itagura NPP, Deceivers are primarily Menlonian Ground Forces soldiers who were infected and underwent the Dreadnought mutation. They use sharp objects as weapons, including bayonets for Leaders and Commanders, scalpels for Medics and Corpsmen, or improvised glass shards for other soldiers.</p>
+        <h4>HPCA research</h4>
+        <p>In starvation tests, a captured Deceiver ignored other infected placed in its cell, including Lurkers and Risers. When a Loner was later introduced, it studied the host's body to improve its mimicry and tried to lure an uninformed person into the cell using the host's voice. By day 10 it had killed and eaten the Loner, then became enraged and unstable before a security team tranquilized it. The tests suggest a starving Deceiver may kill and cannibalize weaker infected.</p>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Combat archive</h3>
+        <p>The Deceiver is one of the most unpredictable infected: a stealthy hunter that can mimic how people talk, walk, interact, and behave. It targets lone survivors, approaching and speaking to gain enough trust for its target to turn away before it strikes. Watch for visible wounds, a distorted voice, and excessive blood on its attire; pay close attention to anyone who approaches suspiciously.</p>
+      </section>
+
+      <section class="enemy-info-section">
+        <h3>Trivia</h3>
+        <ul>
+          <li>It shares its execution animation with the <a href="${examinationWiki}/Viral_Leader" target="_blank" rel="noopener noreferrer">Viral Leader</a>.</li>
+          <li>The voice-line mimic is a slowed and pitched-down version of a sound used when a player sends an in-game chat message.</li>
+          <li>Medic and Corpsman Deceivers holding a VIREL-M MedUnit immediately drop it when damaged, breaking it in half.</li>
+          <li>Its unique spawn animation briefly shows it patting dirt off its clothing and gear.</li>
         </ul>
       </section>
     </article>
